@@ -7,7 +7,7 @@ const loginController = expreeAsynceHandle(async (req, res) => {
     const uname = await User.findOne({ name })
     console.log(await uname.matchPassword(password));
     if (uname && (await uname.matchPassword(password))) {
-        res.status(201).json({
+        res.json({
             _id: uname._id,
             name: uname.name,
             email: uname.email,
@@ -54,4 +54,17 @@ const registerController = expreeAsynceHandle(async (req, res) => {
     }
 })
 
-module.exports = { loginController, registerController }
+const fetchUser = expreeAsynceHandle(async (req, res) => {
+    const keyword = req.query.search ? {
+        $or: [
+            { name: { $regex: req.query.search, $option: "i" } },
+            { email: { $regex: req.query.search, $option: "i" } }
+        ]
+    } : {}
+
+    const u = await User.find(keyword).find({ _id: { $ne: req.user._id } })
+    console.log(u);
+    res.send(u)
+})
+
+module.exports = { loginController, registerController, fetchUser }

@@ -12,7 +12,13 @@ const userEntity = mongooes.Schema({
     password: {
         required: true,
         type: String
-    }
+    },
+    friends: [
+        {
+            type: mongooes.Schema.Types.ObjectId,
+            ref: "User"
+        }
+    ]
 }, {
     TimeStamp: true
 })
@@ -22,6 +28,7 @@ userEntity.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 userEntity.pre("save", async function (next) {
+    //check mk đã băm hay chưa
     if (!this.isModified) {
         next()
     }

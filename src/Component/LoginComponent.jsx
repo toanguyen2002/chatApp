@@ -1,12 +1,13 @@
 import { Backdrop, CircularProgress } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { json, useNavigate } from 'react-router-dom'
 
 function LoginComponent() {
     const nav = useNavigate()
     const [data, setData] = useState({ name: "", password: "" })
     const [loading, setLoading] = useState(false)
+    const [login, setLogin] = useState("")
     const dataHandle = (e) => {
         setData({ ...data, [e.target.name]: e.target.value })
     }
@@ -20,6 +21,8 @@ function LoginComponent() {
                     headers: { "Content-type": "application/json" }
                 }
             )
+            setLogin({ msg: " success", key: Math.random() })
+            localStorage.setItem("userData", JSON.stringify(respone))
             setLoading(false)
             nav('app/welcome')
         } catch (error) {

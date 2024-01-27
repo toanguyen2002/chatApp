@@ -23,7 +23,6 @@ function RegisterComponent() {
                 }
             )
             console.log(respone);
-
             localStorage.setItem("userData", JSON.stringify(respone))
             setSignInText({ msg: " success", key: Math.random() })
             setLoading(false)

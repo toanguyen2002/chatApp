@@ -358,3 +358,10 @@
   justify-content: flex-end;
 
 }
+
+.modal-chat-box {
+  align-items: center;
+  justify-content: space-between;
+  display: flex;
+  padding: 10px;
+}
