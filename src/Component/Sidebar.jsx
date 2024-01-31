@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar';
 import { Button, IconButton } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
@@ -8,26 +8,31 @@ import ModeNightIcon from '@mui/icons-material/ModeNight';
 import SearchIcon from '@mui/icons-material/Search';
 import ChatBox from '../ComponentItem/ChatBox';
 import ModalComponent from './ModalComponent';
+import { myContext } from './MainComponent';
+import axios from 'axios';
 
 function Sidebar() {
-    const datademo = [
-        {
-            name: "Test 1",
-            lastMess: "last mess",
-            timeSend: "today"
-        }, {
-            name: "Test 2",
-            lastMess: "last mess",
-            timeSend: "today"
-        }, {
-            name: "Test 3",
-            lastMess: "last mess",
-            timeSend: "today"
+    const [users, setUsers] = useState([]);
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
+    const { refresh, setRefresh } = useContext(myContext);
+    const config = {
+        headers: {
+            Authorization: `Bearer ${userData.data.token}`,
         },
-    ]
+    };
+    useEffect(() => {
+        axios.get("http://localhost:5678/chat/", config).then((data) => {
+            setUsers(data.data);
+            // setRefresh(!refresh);
+        });
+    }, [
+        refresh
+    ]);
     const [showModal, setShowModal] = useState(false)
     const handClick = () => {
         setShowModal(true)
+
     }
 
     return (
@@ -61,14 +66,18 @@ function Sidebar() {
                 </div>
             </div>
             <div className="side-footer">
-                {datademo.map((item) => (
-                    <ChatBox props={item} key={item.name} />
+                {users.map((item, index) => (
+                    <div key={index} className="" onClick={() => {
+                        // console.log(users);
+                    }}>
+                        <ChatBox props={item} />
+                    </div>
                 ))}
             </div>
 
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
 
-        </div>
+        </div >
 
     )
 }

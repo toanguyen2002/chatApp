@@ -19,7 +19,7 @@ function App() {
         <Route path='/' element={<LoginComponent />} />
         <Route path='app' element={<MainComponent />} >
           <Route path='welcome' element={<WordArea />} />
-          <Route path='chat' element={<ChatAreaComponent />} />
+          <Route path='chat/:id' element={<ChatAreaComponent />} />
         </Route>
         <Route path='register' element={<RegisterComponent />} />
       </Routes>

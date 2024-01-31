@@ -5,9 +5,13 @@ const messageEntity = mongooes.Schema({
         type: mongooes.Schema.Types.ObjectId,
         ref: "User"
     },
+    content: {
+        type: String,
+        trim: true
+    },
     reciever: {
         type: mongooes.Schema.Types.ObjectId,
-        ref: "User"
+        ref: "User",
     },
     chat: {
         type: mongooes.Schema.Types.ObjectId,
@@ -17,5 +21,5 @@ const messageEntity = mongooes.Schema({
     TimeStamp: true
 })
 
-const Message = mongooes.Model("Message", messageEntity)
+const Message = mongooes.model("Message", messageEntity)
 module.exports = Message

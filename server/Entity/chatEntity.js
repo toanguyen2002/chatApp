@@ -14,14 +14,11 @@ const chatEntity = mongooes.Schema({
         ref: "User"
     }
     ,
-    typeMessage: {
-        type: String
-    },
     lastMessage: {
         type: mongooes.Schema.Types.ObjectId,
         ref: "Message"
     }
 })
 
-const Chat = mongooes.Model("Chat", chatEntity)
+const Chat = mongooes.model("Chat", chatEntity)
 module.exports = Chat

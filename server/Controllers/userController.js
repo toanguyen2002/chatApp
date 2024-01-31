@@ -55,15 +55,15 @@ const registerController = expreeAsynceHandle(async (req, res) => {
 })
 
 const fetchUser = expreeAsynceHandle(async (req, res) => {
-    const keyword = req.query.search ? {
+    const keyword = req.query.keyword ? {
         $or: [
-            { name: { $regex: req.query.search, $option: "i" } },
-            { email: { $regex: req.query.search, $option: "i" } }
+            { name: { $regex: req.query.search, $options: "i" } },
+            { email: { $regex: req.query.search, $options: "i" } }
         ]
     } : {}
-
+    // console.log(keyword);
     const u = await User.find(keyword).find({ _id: { $ne: req.user._id } })
-    console.log(u);
+    // console.log(u);
     res.send(u)
 })
 
