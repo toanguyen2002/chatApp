@@ -10,29 +10,84 @@ import ChatBox from '../ComponentItem/ChatBox';
 import ModalComponent from './ModalComponent';
 import { myContext } from './MainComponent';
 import axios from 'axios';
+import { io } from 'socket.io-client';
+import { useParams } from 'react-router-dom';
+import ModalChatOne from './ModalChatOne';
 
+var socket
 function Sidebar() {
     const [users, setUsers] = useState([]);
     const userData = JSON.parse(localStorage.getItem("userData"));
-
     const { refresh, setRefresh } = useContext(myContext);
-    const config = {
-        headers: {
-            Authorization: `Bearer ${userData.data.token}`,
-        },
-    };
-    useEffect(() => {
-        axios.get("http://localhost:5678/chat/", config).then((data) => {
-            setUsers(data.data);
-            // setRefresh(!refresh);
-        });
-    }, [
-        refresh
-    ]);
     const [showModal, setShowModal] = useState(false)
+    const [showOne, setShowOne] = useState(false)
+
+    const [search, setSearch] = useState("")
+    // useEffect(() => {
+    //     // http://localhost:5678/user/fetchUsers?search=toanguyen
+
+    // }, [])
+    useEffect(() => {
+        //http://localhost:5678/chat/findChatByName?chatName=Toan
+        const getChat = async () => {
+            try {
+                const chatData = await axios.get(`http://localhost:5678/chat/findChatByName?chatName=${search}`, {
+                    headers: {
+                        Authorization: `Bearer ${userData.data.token}`,
+                    }
+                })
+                setUsers(chatData.data)
+                // console.log(chatData.data)
+            } catch (error) {
+
+            }
+
+        }
+        getChat()
+    }, [search])
+    useEffect(() => {
+        socket = io("http://localhost:5678")
+        socket.on("connect", () => {
+            console.log("sidebar: ", socket);
+            socket.on("group-rcv", (data) => {
+                console.log("sidebar: ", socket.connected);
+                console.log([...users], data);
+                setUsers([...users], data)
+            })
+        })
+
+
+    }, [
+        refresh, users, userData.data._id,])
+
+    useEffect(() => {
+
+        axios.get("http://localhost:5678/chat/", {
+            headers: {
+                Authorization: `Bearer ${userData.data.token}`,
+            },
+        })
+            .then((data) => {
+                setUsers(data.data);
+            });
+    }, [
+        refresh, userData.data.token
+    ]);
+    // useEffect(() => {
+    //     socket.on("connect", () => {
+    //         socket.on("disconnect", () => {
+    //             console.log(`Socket disconnected: ${socket.id}`);
+    //         });
+    //     })
+    // }, [
+    //     refresh, users, userData.data._id,])
+
     const handClick = () => {
         setShowModal(true)
 
+    }
+    const handClickOne = () => {
+        setShowOne(true)
     }
 
     return (
@@ -45,7 +100,7 @@ function Sidebar() {
                     </IconButton>
                 </div>
                 <div >
-                    <IconButton>
+                    <IconButton onClick={handClickOne}>
                         <PersonAddIcon />
                     </IconButton>
                     <IconButton onClick={handClick}>
@@ -62,20 +117,28 @@ function Sidebar() {
             <div className="side-body">
                 <div className="side-search">
                     <SearchIcon />
-                    <input placeholder='search' className='search-box' />
+                    <input placeholder='search' className='search-box' onChange={e => setSearch(e.target.value)} />
                 </div>
             </div>
             <div className="side-footer">
-                {users.map((item, index) => (
-                    <div key={index} className="" onClick={() => {
-                        // console.log(users);
+                {users.map((item, index) => {
+                    if (item.isGroup == false) {
+                        item.chatName = item.users[1].name
+                        console.log(item.users[1].name);
+                    }
+                    return (<div key={index} className="" onClick={() => {
+                        console.log(item.isGroup);
                     }}>
+
                         <ChatBox props={item} />
-                    </div>
-                ))}
+
+                    </div>)
+                }
+                )}
             </div>
 
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
+            {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
 
         </div >
 

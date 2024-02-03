@@ -4,6 +4,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import { myContext } from './MainComponent';
 import axios from 'axios';
 import ChatBox from '../ComponentItem/ChatBox';
+import { io } from 'socket.io-client';
 function ModalComponent({ clockModal }) {
     const [users, setUsers] = useState([]);
     const [checkboxValues, setCheckboxValues] = useState([]);
@@ -11,6 +12,15 @@ function ModalComponent({ clockModal }) {
 
     const userData = JSON.parse(localStorage.getItem("userData"));
     const { refresh, setRefresh } = useContext(myContext);
+    const socket = io("http://localhost:5678")
+    useEffect(() => {
+        socket.on("connect", () => {
+            socket.on("disconnect", () => {
+                // console.log(`Socket disconnected: ${socket.id}`);
+            });
+
+        })
+    }, [])
     const handleCheckboxChange = (event) => {
         const value = event.target.value;
         const isChecked = event.target.checked;
@@ -25,29 +35,34 @@ function ModalComponent({ clockModal }) {
         });
     };
     const createGroupChat = async () => {
-        console.log(checkboxValues);
-        console.log(userData.data.token);
-
-        await axios.post("http://localhost:5678/chat/createGroupChat",
-            JSON.stringify({
-                name: nameGroup,
-                users: JSON.stringify(checkboxValues)
-            }),
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    Authorization: `Bearer ${userData.data.token}`,
+        try {
+            const response = await axios.post(
+                "http://localhost:5678/chat/createGroupChat",
+                {
+                    name: nameGroup,
+                    users: JSON.stringify(checkboxValues)
                 },
-            }).then(() => {
-                setRefresh(!refresh);
-            })
-            .then(() => {
-                clockModal(false)
-            })
-            .catch((error) => {
-                console.log(error);
-            })
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${userData.data.token}`,
+                    },
+                }
+            );
+
+            // Dữ liệu phản hồi có sẵn ở đây
+            const responseData = response.data;
+            console.log(responseData);
+
+            // Phát sự kiện "new-group" với dữ liệu phản hồi
+            socket.emit("new-group", responseData);
+
+            // Cập nhật trạng thái và đóng modal
+            setRefresh(!refresh);
+            clockModal(false);
+        } catch (error) {
+            console.log("error:", error);
+        }
 
     };
 

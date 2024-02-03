@@ -1,6 +1,6 @@
 import React from 'react'
 
-function MessageComponent() {
+function MessageComponent({ props }) {
     const mess = {
         name: "Võ Toàn",
         message: "Alo Alo 1234",
@@ -8,13 +8,13 @@ function MessageComponent() {
     }
     return (
         <div className='message-container'>
-            <p className='chat-icon'>{mess.name[0]}</p>
+            <p className='chat-icon'>{props.sender.name[0]}</p>
             <div className='text-content'>
-                <p className='chat-name'>{mess.name}</p>
-                <p className='chat-title'>{mess.message}</p>
-                <p className="chat-row-time">
+                <p className='chat-name'>{props.sender.name}</p>
+                <p className='chat-title'>{props.content}</p>
+                {/* <p className="chat-row-time">
                     12.am
-                </p>
+                </p> */}
             </div>
 
         </div>

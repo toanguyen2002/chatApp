@@ -8,8 +8,9 @@ const { Password } = require("@mui/icons-material")
 const { use } = require("../Router/chatRouter")
 
 const accessChat = asynceHandle(async (req, res) => {
-    const { userId } = req.body
+    const { userId, chatNameValue } = req.body
     console.log(userId);
+    console.log(chatNameValue);
 
     if (!userId) {
         res.send(400)
@@ -33,8 +34,8 @@ const accessChat = asynceHandle(async (req, res) => {
         res.send(ischat[0])
     } else {
         var chatData = {
-            chatName: req.user.name,
-            isGroupChat: false,
+            chatName: "sender",
+            isGroup: false,
             users: [req.user._id, userId]
         }
         try {
@@ -87,9 +88,9 @@ const fetchGroups = asynceHandle(async (req, res) => {
 });
 const createGroupChat = asynceHandle(async (req, res) => {
 
-    console.log(req.user);
-    console.log(req.body.users);
-    console.log(req.body.name);
+    // console.log(req.user);
+    // console.log(req.body.users);
+    // console.log(req.body.name);
 
     if (!req.body.users || !req.body.name) {
         return res.status(400).send({ message: "Data is insufficient" });
@@ -106,7 +107,7 @@ const createGroupChat = asynceHandle(async (req, res) => {
         const groupChat = await Chat.create({
             chatName: req.body.name,
             users: users,
-            isGroupChat: true,
+            isGroup: true,
             groupAdmin: req.user,
         });
 
@@ -177,6 +178,32 @@ const removeUserFromGroup = asynceHandle(async (req, res) => {
         res.json(remove)
     }
 })
+const findChatByName = asynceHandle(async (req, res) => {
+    try {
+        const results = await Chat.find({
+            chatName: { $regex: req.query.chatName, $options: "i" }
+        })
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password")
+            .populate("lastMessage")
+            .then(async (chat) => {
+                if (!chat) {
+                    return res.status(404).send("Chat not found");
+                }
+
+                const populatedChat = await User.populate(chat, {
+                    path: "lastMessage.sender",
+                    select: "name email",
+                });
+
+                console.log(populatedChat);
+                res.status(200).send(populatedChat);
+            });
+    } catch (error) {
+        console.error("Error in findChatByName:", error);
+        res.status(500).send("Internal Server Error");
+    }
+})
 module.exports = {
     accessChat,
     fetchChats,
@@ -184,7 +211,8 @@ module.exports = {
     createGroupChat,
     renameGroupChat,
     addUserToGroup,
-    removeUserFromGroup
+    removeUserFromGroup,
+    findChatByName
 
 
 }

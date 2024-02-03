@@ -1,6 +1,6 @@
 import React from 'react'
 
-function MyMessageConponent() {
+function MyMessageConponent({ props }) {
     const mess = {
         name: "Toán Nguyễn",
         message: "Nguyễn Quang Toán",
@@ -10,11 +10,11 @@ function MyMessageConponent() {
         <div className='my-message'>
             <div className="my-message-row">
                 <div className='text-content'>
-                    <p className='chat-title'>{mess.message}</p>
+                    <p className='chat-title'>{props.content}</p>
                 </div>
-                <p className="chat-row-time">
+                {/* <p className="chat-row-time">
                     12.am
-                </p>
+                </p> */}
             </div>
         </div>
     )
