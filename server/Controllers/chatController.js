@@ -9,8 +9,8 @@ const { use } = require("../Router/chatRouter")
 
 const accessChat = asynceHandle(async (req, res) => {
     const { userId, chatNameValue } = req.body
-    console.log(userId);
-    console.log(chatNameValue);
+    // console.log(userId);
+    // console.log(chatNameValue);
 
     if (!userId) {
         res.send(400)
@@ -54,7 +54,7 @@ const accessChat = asynceHandle(async (req, res) => {
 })
 const fetchChats = asynceHandle(async (req, res) => {
     try {
-        // console.log("Fetch Chats API: ", req);
+        // console.log("Fetch Chats : ", req);
 
         Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
             .populate("users", "-password")
@@ -69,7 +69,7 @@ const fetchChats = asynceHandle(async (req, res) => {
                 });
                 res.status(200).send(results);
             });
-        console.log();
+        // console.log();
     } catch (error) {
         res.status(400);
         throw new Error(error.message);
@@ -96,7 +96,7 @@ const createGroupChat = asynceHandle(async (req, res) => {
         return res.status(400).send({ message: "Data is insufficient" });
     }
     var users = JSON.parse(req.body.users);
-    console.log(users);
+    // console.log(users);
     if (users.length < 2) {
         res.status(400).send("more 2 to create group chat")
     }
@@ -181,7 +181,8 @@ const removeUserFromGroup = asynceHandle(async (req, res) => {
 const findChatByName = asynceHandle(async (req, res) => {
     try {
         const results = await Chat.find({
-            chatName: { $regex: req.query.chatName, $options: "i" }
+            chatName: { $regex: req.query.chatName, $options: "i" },
+            users: { $elemMatch: { $eq: req.user._id } }
         })
             .populate("users", "-password")
             .populate("groupAdmin", "-password")
@@ -196,7 +197,7 @@ const findChatByName = asynceHandle(async (req, res) => {
                     select: "name email",
                 });
 
-                console.log(populatedChat);
+                // console.log(populatedChat);
                 res.status(200).send(populatedChat);
             });
     } catch (error) {
