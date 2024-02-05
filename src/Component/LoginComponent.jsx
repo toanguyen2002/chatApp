@@ -1,7 +1,7 @@
 import { Backdrop, CircularProgress } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
-import { json, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 function LoginComponent() {
     const nav = useNavigate()

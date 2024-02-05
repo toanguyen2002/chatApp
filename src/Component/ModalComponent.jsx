@@ -5,22 +5,14 @@ import { myContext } from './MainComponent';
 import axios from 'axios';
 import ChatBox from '../ComponentItem/ChatBox';
 import { io } from 'socket.io-client';
+const socket = io("http://localhost:5678")
 function ModalComponent({ clockModal }) {
     const [users, setUsers] = useState([]);
     const [checkboxValues, setCheckboxValues] = useState([]);
     const [nameGroup, setNameGroup] = useState("")
-
+    const [nameUser, setNameUser] = useState("")
     const userData = JSON.parse(localStorage.getItem("userData"));
     const { refresh, setRefresh } = useContext(myContext);
-    const socket = io("http://localhost:5678")
-    useEffect(() => {
-        socket.on("connect", () => {
-            socket.on("disconnect", () => {
-                // console.log(`Socket disconnected: ${socket.id}`);
-            });
-
-        })
-    }, [])
     const handleCheckboxChange = (event) => {
         const value = event.target.value;
         const isChecked = event.target.checked;
@@ -52,7 +44,7 @@ function ModalComponent({ clockModal }) {
 
             // Dữ liệu phản hồi có sẵn ở đây
             const responseData = response.data;
-            console.log(responseData);
+            // console.log(responseData);
 
             // Phát sự kiện "new-group" với dữ liệu phản hồi
             socket.emit("new-group", responseData);
@@ -68,22 +60,24 @@ function ModalComponent({ clockModal }) {
 
 
     useEffect(() => {
-        console.log("Users refreshed");
-        const config = {
-            headers: {
-                Authorization: `Bearer ${userData.data.token}`,
-            },
-        };
-        axios.get("http://localhost:5678/user/fetchUsers", {
-            headers: {
-                Authorization: `Bearer ${userData.data.token}`,
-            },
-        }).then((data) => {
-            setUsers(data.data);
-            // setRefresh(!refresh);
-        });
+        const getUser = async () => {
+            setUsers([])
+            const dataUser = await axios.get(`http://localhost:5678/user/fetchUsers?search=${nameUser}`, {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            // .then((data) => {
+
+            //     // setRefresh(!refresh);
+            // }); 
+            // console.log(dataUser.data);
+
+            setUsers(dataUser.data);
+        }
+        getUser()
     }, [
-        refresh
+        refresh, nameUser
     ]);
     return (
         <div className='modal-container'>
@@ -95,7 +89,7 @@ function ModalComponent({ clockModal }) {
             </div>
             <div className="model-header">
                 <input placeholder='Nhập Tên Nhóm' onChange={(e) => setNameGroup(e.target.value)} />
-                <input name='search' placeholder='nhập tên người dùng' />
+                <input name='search' placeholder='nhập tên người dùng' onChange={e => setNameUser(e.target.value)} />
             </div>
             <div className="model-body">
                 {users.map((item, index) => (

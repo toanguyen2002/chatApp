@@ -16,7 +16,7 @@ app.use(express.json())
 const io = new Server(server, {
     pingTimeout: 6000,
     cors: {
-        origin: "*",
+        origin: "http://localhost:5173",
         methods: ["GET", "POST"]
 
     }
@@ -40,32 +40,40 @@ app.use("/chat", chatRouter)
 app.use("/message", messRouter)
 
 
-// io.on("connection", (socket) => {
-// console.log(socket.id + "connected");
+io.on("connection", (socket) => {
+    console.log(socket.id + ": connected");
 
-// socket.on("setup", (userData) => {
-//     socket.join(userData._id)
-//     socket.emit("connected")
-// })
-// socket.on("new-mes", (data) => {
-//     data.chat.users.map((item, index) => {
-//         if (data.sender._id !== item._id) return;
-//         else
-//             socket.emit("mess-rcv", data)
-//     })
-// })
-// socket.on("new-group", (data) => {
-//     data.users.map((item) => {
-//         socket.emit("group-rcv", data)
-//     })
+    socket.on("setup", (userData) => {
+        socket.join(userData._id)
+        socket.emit("connected")
+    })
+    socket.on("new-mes", (data) => {
+        console.log(data);
+        data.chat.users.map((item) => {
+            if (data.sender._id !== item._id) return;
+            else
+                socket.emit("mess-rcv", data)
 
-// })
+        })
+    })
+    socket.on("demo", (data) => {
+        console.log(data.mes);
+        socket.broadcast.emit("demo-rcv", data)
 
-// socket.off("setup", (userData) => {
-//     console.log(socket.id + "dis");
-//     socket.leave(userData._id)
-// })
-// });
+    })
+
+    socket.on("new-group", (data) => {
+        console.log(data);
+        socket.broadcast.emit("group-rcv", data)
+
+    })
+
+
+    socket.off("setup", (userData) => {
+        console.log(socket.id + ": dis");
+        socket.leave(userData._id)
+    })
+});
 
 
 

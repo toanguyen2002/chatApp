@@ -4,18 +4,22 @@ import { Button, IconButton } from '@mui/material';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import ModeNightIcon from '@mui/icons-material/ModeNight';
 import SearchIcon from '@mui/icons-material/Search';
 import ChatBox from '../ComponentItem/ChatBox';
 import ModalComponent from './ModalComponent';
 import { myContext } from './MainComponent';
 import axios from 'axios';
-import { io } from 'socket.io-client';
-import { useParams } from 'react-router-dom';
+// import { io } from 'socket.io-client';
+import { useNavigate, useParams } from 'react-router-dom';
 import ModalChatOne from './ModalChatOne';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { io } from 'socket.io-client';
 
-var socket
+const socket = io("http://localhost:5678")
 function Sidebar() {
+    const params = useParams()
+    // const [chat_id, chat_user] = params.id.split("&");
+    const nav = useNavigate()
     const [users, setUsers] = useState([]);
     const userData = JSON.parse(localStorage.getItem("userData"));
     const { refresh, setRefresh } = useContext(myContext);
@@ -23,12 +27,26 @@ function Sidebar() {
     const [showOne, setShowOne] = useState(false)
 
     const [search, setSearch] = useState("")
-    // useEffect(() => {
-    //     // http://localhost:5678/user/fetchUsers?search=toanguyen
+    const renderChatBox = async () => {
+        try {
+            const dataRender = await axios.get("http://localhost:5678/chat/", {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            setUsers(dataRender.data);
+        } catch (error) {
 
-    // }, [])
+        }
+    }
     useEffect(() => {
-        //http://localhost:5678/chat/findChatByName?chatName=Toan
+        renderChatBox()
+    }, [
+        refresh, userData.data.token
+    ]);
+
+
+    useEffect(() => {
         const getChat = async () => {
             try {
                 const chatData = await axios.get(`http://localhost:5678/chat/findChatByName?chatName=${search}`, {
@@ -37,7 +55,6 @@ function Sidebar() {
                     }
                 })
                 setUsers(chatData.data)
-                // console.log(chatData.data)
             } catch (error) {
 
             }
@@ -45,42 +62,8 @@ function Sidebar() {
         }
         getChat()
     }, [search])
-    useEffect(() => {
-        socket = io("http://localhost:5678")
-        socket.on("connect", () => {
-            console.log("sidebar: ", socket);
-            socket.on("group-rcv", (data) => {
-                console.log("sidebar: ", socket.connected);
-                console.log([...users], data);
-                setUsers([...users], data)
-            })
-        })
 
 
-    }, [
-        refresh, users, userData.data._id,])
-
-    useEffect(() => {
-
-        axios.get("http://localhost:5678/chat/", {
-            headers: {
-                Authorization: `Bearer ${userData.data.token}`,
-            },
-        })
-            .then((data) => {
-                setUsers(data.data);
-            });
-    }, [
-        refresh, userData.data.token
-    ]);
-    // useEffect(() => {
-    //     socket.on("connect", () => {
-    //         socket.on("disconnect", () => {
-    //             console.log(`Socket disconnected: ${socket.id}`);
-    //         });
-    //     })
-    // }, [
-    //     refresh, users, userData.data._id,])
 
     const handClick = () => {
         setShowModal(true)
@@ -89,6 +72,27 @@ function Sidebar() {
     const handClickOne = () => {
         setShowOne(true)
     }
+    const clickToLogout = () => {
+        // socket = io("http://localhost:5678")
+        // nav("/")
+        // socket.disconnect()
+        socket.emit("demo", { mes: "demo" })
+    }
+    useEffect(() => {
+        // console.log("sidebar: ", socket);
+        socket.on("group-rcv", (data) => {
+            console.log("render");
+            renderChatBox()
+            // setUsers([...users], data)
+        })
+    }, [socket])
+    useEffect(() => {
+        socket.on("demo-rcv", () => {
+
+
+        })
+
+    }, [socket])
 
     return (
 
@@ -109,8 +113,8 @@ function Sidebar() {
                     <IconButton>
                         <AddCircleIcon />
                     </IconButton>
-                    <IconButton>
-                        <ModeNightIcon />
+                    <IconButton onClick={() => clickToLogout()}>
+                        <LogoutIcon />
                     </IconButton>
                 </div>
             </div>
@@ -123,11 +127,17 @@ function Sidebar() {
             <div className="side-footer">
                 {users.map((item, index) => {
                     if (item.isGroup == false) {
-                        item.chatName = item.users[1].name
-                        console.log(item.users[1].name);
+                        // console.log(userData);
+                        if (userData.data._id == item.users[0]._id) {
+                            item.chatName = item.users[1].name
+                            // console.log(item.users[1].name);
+                        }
+                        else {
+                            item.chatName = item.users[0].name
+                        }
                     }
                     return (<div key={index} className="" onClick={() => {
-                        console.log(item.isGroup);
+                        // console.log(item.isGroup);
                     }}>
 
                         <ChatBox props={item} />

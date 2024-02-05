@@ -1,8 +1,7 @@
 import React, { createContext, useState } from 'react'
 import './StyleComponent.css'
-import WordArea from './WordArea';
+
 import Sidebar from './Sidebar';
-import ModalComponent from './ModalComponent';
 import { Outlet } from 'react-router-dom';
 
 export const myContext = createContext()

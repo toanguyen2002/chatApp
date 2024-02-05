@@ -1,11 +1,6 @@
 import React from 'react'
 
 function MessageComponent({ props }) {
-    const mess = {
-        name: "Võ Toàn",
-        message: "Alo Alo 1234",
-
-    }
     return (
         <div className='message-container'>
             <p className='chat-icon'>{props.sender.name[0]}</p>
