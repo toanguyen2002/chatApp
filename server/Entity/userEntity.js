@@ -36,5 +36,14 @@ userEntity.pre("save", async function (next) {
     const salt = await bcrypt.genSalt(10)
     this.password = await bcrypt.hash(this.password, salt)
 })
+userEntity.pre("findOneAndUpdate", async function (next) {
+    //check mk đã băm hay chưa
+    if (!this.isModified) {
+        next()
+    }
+
+    const salt = await bcrypt.genSalt(10)
+    this.password = await bcrypt.hash(this.password, salt)
+})
 const User = mongooes.model("User", userEntity)
 module.exports = User

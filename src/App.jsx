@@ -6,6 +6,7 @@ import WordArea from './Component/WordArea'
 import { Route, Routes } from 'react-router-dom'
 import ChatAreaComponent from './Component/ChatAreaComponent'
 import RegisterComponent from './Component/RegisterComponent'
+import ResetPassWord from './Component/ResetPassWord'
 
 
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='chat/:id' element={<ChatAreaComponent />} />
         </Route>
         <Route path='register' element={<RegisterComponent />} />
+        <Route path='resetPass' element={<ResetPassWord />} />
       </Routes>
     </div>
 

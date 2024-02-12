@@ -16,6 +16,9 @@ const messageEntity = mongooes.Schema({
     chat: {
         type: mongooes.Schema.Types.ObjectId,
         ref: "Chat"
+    },
+    typeMess: {
+        type: String
     }
 }, {
     TimeStamp: true

@@ -1,17 +1,12 @@
 const asynceHandle = require("express-async-handler")
 const Chat = require("../Entity/chatEntity")
 const User = require("../Entity/userEntity")
-
-
 const { protect } = require("../middleware/auth")
 const { Password } = require("@mui/icons-material")
 const { use } = require("../Router/chatRouter")
 
 const accessChat = asynceHandle(async (req, res) => {
     const { userId, chatNameValue } = req.body
-    // console.log(userId);
-    // console.log(chatNameValue);
-
     if (!userId) {
         res.send(400)
     }
