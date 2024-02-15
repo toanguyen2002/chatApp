@@ -24,35 +24,6 @@ export default function ChatAreaComponent() {
     const fileRef = useRef()
     const [imageData, setImageData] = useState(null)
 
-    const cvImgToBase64 = async (e) => {
-
-        const reader = new FileReader()
-        await reader.readAsDataURL(e.target.files[0])
-        reader.onload = async () => {
-            console.log(typeof reader.result);
-            // const dataSend = await axios.post(
-            //     "http://localhost:5678/message/", {
-            //     chatId: chat_id,
-            //     content: reader.result,
-            //     typeMess: "image"
-            // },
-            //     {
-            //         headers: {
-            //             Authorization: `Bearer ${userData.data.token}`,
-            //             "Content-Type": "application/json"
-            //         }
-            //     }
-            // )
-            //     .then(({ data }) => {
-            //         setContentMess("")
-            //         socket.emit("new-mes", data)
-            //         messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
-            //     }).catch((error) => {
-            //         console.log(error);
-            //     })
-        }
-    }
-
 
     const scrollTobottom = () => {
         messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
