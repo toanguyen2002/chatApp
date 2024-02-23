@@ -2,17 +2,18 @@ const expressAsyncHandler = require("express-async-handler");
 const Message = require("../Entity/MessageEntity");
 const User = require("../Entity/userEntity");
 const Chat = require("../Entity/chatEntity");
-
 const { promisify } = require("util");
 const crypto = require('crypto')
+
 const accessKeyId = process.env.ACCESS_KEY
 const BUCKET_NAME = process.env.BUCKET_NAME
 const REGION = process.env.REGION
 const secretAccessKey = process.env.SECRET_KEY
+
 const AWS = require('aws-sdk')
 
 const multers3 = require('multer-s3');
-const { json } = require("react-router-dom");
+// const { json } = require("react-router-dom");
 const { log } = require("console");
 const { send } = require("process");
 const randomBytes = promisify(crypto.randomBytes)
@@ -63,12 +64,12 @@ const uploadImage = async (imageData) => {
         };
         // Sử dụng await để đợi kết quả từ promise được trả về từ phương thức putObject
         const uploadResult = await s3client.putObject(params).promise();
-        console.log("Upload result:", uploadResult);
+        // console.log("Upload result:", uploadResult);
         const imageUrl = `https://upload-file-img.s3.amazonaws.com/${imageName}`;
         return imageUrl;
     } catch (error) {
         console.error("Error uploading image:", error);
-        throw error; // Ném lỗi để hàm gọi uploadImage có thể xử lý lỗi nếu cần
+        throw error;
     }
 };
 
