@@ -78,10 +78,10 @@ export default function ChatAreaComponent() {
     }, [chat_id, mess])
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
-    const sendMess = async () => {
+    const sendMessImg = async () => {
         const formData = new FormData();
         formData.append('fileImage', fileRef.current.files[0]);
-        console.log(fileRef.current.files[0]);
+        // console.log(fileRef.current.files[0]);
         try {
             const respone = await axios.post("http://localhost:5678/message/messImage",
                 formData,
@@ -107,14 +107,41 @@ export default function ChatAreaComponent() {
             )
 
             socket.emit("new-mes", dataSend.data)
+
+            messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             setContentMess("")
-            // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
         } catch (error) {
             console.error("Error uploading image:", error);
         }
     };
     const enterMess = async (e) => {
         if (e.key == "Enter" && mess) {
+            try {
+                const dataSend = await axios.post(
+                    "http://localhost:5678/message/", {
+                    chatId: chat_id,
+                    content: contentMess,
+                    typeMess: "text"
+                },
+                    {
+                        headers: {
+                            Authorization: `Bearer ${userData.data.token}`,
+                        }
+                    }
+                )
+                socket.emit("new-mes", dataSend.data)
+                setContentMess("")
+
+                // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+
+    }
+    const sendMess = async (e) => {
+        if (mess) {
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
@@ -175,13 +202,14 @@ export default function ChatAreaComponent() {
                 </div>
 
                 {/* <div className="" ref={messageEndRef}></div> */}
+
                 <div className="chat-area-footer">
                     <input onKeyDown={enterMess} placeholder='Enter Message....' className='box-input' onChange={(e) => setContentMess(e.target.value)} value={contentMess} />
                     <div className="">
                         <IconButton>
                             <label htmlFor="">
                                 <AttachFileIcon />
-                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => console.log(fileRef.current.files)} />
+                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => sendMessImg()} />
                             </label>
                         </IconButton>
                         <IconButton onClick={sendMess}>
