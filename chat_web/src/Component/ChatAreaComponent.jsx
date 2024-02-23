@@ -22,7 +22,7 @@ export default function ChatAreaComponent() {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [loading, setLoading] = useState(false)
     const fileRef = useRef()
-    const [imageData, setImageData] = useState(null)
+    const [imageData, setImageData] = useState([])
 
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
@@ -105,9 +105,10 @@ export default function ChatAreaComponent() {
                     }
                 }
             )
-            setContentMess("")
+
             socket.emit("new-mes", dataSend.data)
-            messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+            setContentMess("")
+            // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
         } catch (error) {
             console.error("Error uploading image:", error);
         }
@@ -127,9 +128,10 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                setContentMess("")
                 socket.emit("new-mes", dataSend.data)
-                messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+                setContentMess("")
+
+                // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
                 console.log(error);
             }
@@ -179,7 +181,7 @@ export default function ChatAreaComponent() {
                         <IconButton>
                             <label htmlFor="">
                                 <AttachFileIcon />
-                                <input type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => setImageData(fileRef.current.files[0])} />
+                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => console.log(fileRef.current.files)} />
                             </label>
                         </IconButton>
                         <IconButton onClick={sendMess}>
