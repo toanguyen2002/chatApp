@@ -7,8 +7,9 @@ function ChatBox({ props }) {
         <div className='chat-box' onClick={() => nav("chat/" + props._id + "&" + props.chatName)}>
             <p className='chat-icon'>{props.chatName[0]}</p>
             <p className='chat-name'>{props.chatName}</p>
-            <p className='chat-title'>{props.lastMessage}</p>
+            {props.lastMessage ? props.lastMessage.typeMess == 'text' ? <p className='chat-title'>{props.lastMessage.content}</p> : <p className='chat-title'>hình ảnh</p> : <p></p>}
             <p className='chat-time'>{props.timeSend}</p>
+            {console.log()}
         </div>
     )
 }

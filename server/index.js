@@ -67,12 +67,15 @@ io.on("connection", (socket) => {
         socket.broadcast.emit("group-rcv", data)
 
     })
-
+    socket.on("render-box-chat", (data) => {
+        socket.broadcast.emit("render-box-chat-rcv", !data)
+    })
 
     socket.off("setup", (userData) => {
         console.log(socket.id + ": dis");
         socket.leave(userData._id)
     })
+
 });
 
 
