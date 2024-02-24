@@ -54,7 +54,7 @@ function Sidebar() {
     useEffect(() => {
         renderChatBox()
     }, [
-        refresh, userData.data.token
+        refresh, userData.data.token, socket
     ]);
 
 
@@ -85,26 +85,25 @@ function Sidebar() {
         setShowOne(true)
     }
     const clickToLogout = () => {
-        // socket = io("http://localhost:5678")
-        // nav("/")
-        // socket.disconnect()
         socket.emit("demo", { mes: "demo" })
     }
     useEffect(() => {
-        // console.log("sidebar: ", socket);
         socket.on("group-rcv", (data) => {
-            console.log("render");
+            // console.log("render");
             renderChatBox()
             // setUsers([...users], data)
         })
-    }, [socket])
-    useEffect(() => {
-        socket.on("demo-rcv", () => {
-
-
+        socket.on("render-box-chat-rcv", () => {
+            renderChatBox()
         })
-
     }, [socket])
+    // useEffect(() => {
+    // socket.on("demo-rcv", () => {
+
+
+    // })
+
+    // }, [socket])
 
     return (
 

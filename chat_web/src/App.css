@@ -276,6 +276,13 @@
   align-self: center;
 }
 
+.chat-title {
+  color: #aaa;
+  font-weight: 200;
+  overflow: hidden;
+
+}
+
 .chat-area {
   display: flex;
   flex-direction: column;

@@ -12,7 +12,7 @@ const secretAccessKey = process.env.SECRET_KEY
 
 const AWS = require('aws-sdk')
 
-const multers3 = require('multer-s3');
+// const multers3 = require('multer-s3');
 // const { json } = require("react-router-dom");
 const { log } = require("console");
 const { send } = require("process");
@@ -119,7 +119,8 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
         select: "name email",
     });
 
-    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+    await Chat.findByIdAndUpdate(req.body.chatId, { lastMessage: message });
+    // console.log(Chat.find({ _id: req.body.chatId }));
     res.json(message);
 })
 

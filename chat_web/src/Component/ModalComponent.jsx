@@ -50,7 +50,7 @@ function ModalComponent({ clockModal }) {
             socket.emit("new-group", responseData);
 
             // Cập nhật trạng thái và đóng modal
-            setRefresh(!refresh);
+            // setRefresh(!refresh);
             clockModal(false);
         } catch (error) {
             console.log("error:", error);
