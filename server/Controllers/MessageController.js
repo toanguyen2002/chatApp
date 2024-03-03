@@ -5,24 +5,27 @@ const Chat = require("../Entity/chatEntity");
 const { promisify } = require("util");
 const crypto = require('crypto')
 
-const accessKeyId = process.env.ACCESS_KEY
-const BUCKET_NAME = process.env.BUCKET_NAME
-const REGION = process.env.REGION
-const secretAccessKey = process.env.SECRET_KEY
-const SECRET_KEY = process.env.SECRET_KEY
+
+
 
 const AWS = require('aws-sdk')
 
+// const multers3 = require('multer-s3');
+// const { json } = require("react-router-dom");
 const { log } = require("console");
 const { send } = require("process");
 const randomBytes = promisify(crypto.randomBytes)
 
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const region = process.env.AWS_REGION;
+
 
 
 const s3client = new AWS.S3({
-    accessKeyId: secretAccessKey,
-    secretAccessKey: SECRET_KEY,
-    region: REGION,
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+    region: region,
     // signatureVersion: "v4"
 });
 
