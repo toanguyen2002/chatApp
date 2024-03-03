@@ -19,6 +19,7 @@ import { io } from 'socket.io-client';
 
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import FindAndAddFriendComponent from './FindAndAddFriendComponent';
 
 
 const socket = io("http://localhost:5678")
@@ -37,6 +38,7 @@ function Sidebar() {
     const { refresh, setRefresh } = useContext(myContext);
     const [showModal, setShowModal] = useState(false)
     const [showOne, setShowOne] = useState(false)
+    const [showListFriend, setShowListFriend] = useState(true)
 
     const [search, setSearch] = useState("")
     const renderChatBox = async () => {
@@ -160,6 +162,7 @@ function Sidebar() {
 
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
             {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
+            {showListFriend ? <FindAndAddFriendComponent /> : <div></div>}
             <Modal open={open} onClose={handleClose}>
                 <div className="modal-style">
                     <div className="modal-header">Thông Tin Cá Nhân</div>

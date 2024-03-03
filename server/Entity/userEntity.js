@@ -15,8 +15,17 @@ const userEntity = mongooes.Schema({
     },
     friends: [
         {
-            type: mongooes.Schema.Types.ObjectId,
-            ref: "User"
+            friend: {
+                type: mongooes.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            sender: {
+                type: mongooes.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            accept: {
+                type: Boolean
+            }
         }
     ]
 }, {
