@@ -4,6 +4,11 @@ const User = require("../Entity/userEntity");
 const expreeAsynceHandle = require("express-async-handler");
 const generateToken = require("../config/generateToken");
 
+
+// const mongoose = require('mongoose');
+// const ObjectId = mongoose.Types.ObjectId;
+
+
 const loginController = expreeAsynceHandle(async (req, res) => {
     const { name, password } = req.body;
     const uname = await User.findOne({ name })
@@ -57,7 +62,6 @@ const registerController = expreeAsynceHandle(async (req, res) => {
         throw new Error('register False')
     }
 })
-
 const fetchUser = expreeAsynceHandle(async (req, res) => {
     const keyword = req.query.keyword ? {
         $or: [
@@ -70,20 +74,15 @@ const fetchUser = expreeAsynceHandle(async (req, res) => {
     // console.log(u);
     res.send(u)
 })
-
-
 const resetPassword = expreeAsynceHandle(async (req, res) => {
     const name = req.body.name;
     // Tìm người dùng theo tên
-
-
-
     try {
         const user = await User.findOne({ name });
 
         let newPassword = '';
         for (let index = 0; index < 5; index++) {
-            newPassword += Math.floor((Math.random() * (20 - 5)) + 5).toString();
+            newPassword += Math.floor((Math.random() * (20 - 10)) + 5).toString();
         }
 
         user.password = newPassword;
@@ -99,7 +98,7 @@ const resetPassword = expreeAsynceHandle(async (req, res) => {
             from: 'toanguyen120921@gmail.com',
             to: user.email,
             subject: 'ResetPass Word',
-            text: 'your new password: ' + newPassword
+            text: 'Mật khẩu mới của bạn là: ' + newPassword
         };
         transporter.sendMail(mailOptions)
 
@@ -109,5 +108,117 @@ const resetPassword = expreeAsynceHandle(async (req, res) => {
     }
 });
 
+const addFriend = expreeAsynceHandle(async (req, res) => {
+    // const userId = req.body.userid
+    const friendId = req.body.friendId
+    const friend = await User.findOne({ _id: friendId }).select('-password');
+    const user = await User.findOne({ _id: req.body.userid })
+    console.log(user);
+    try {
+        const status = await User.findOneAndUpdate(user,
+            {
+                $push: {
+                    friends: {
+                        friend: friend,
+                        sender: user,
+                        accept: false
+                    }
+                }
+            },
+            { new: true })
+        await User.findOneAndUpdate(friend,
+            {
+                $push: {
+                    friends: {
+                        friend: user,
+                        sender: user,
+                        accept: false
+                    }
+                }
+            },
+            { new: true })
+        res.status(200).send(status)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
+const removeAddFriend = expreeAsynceHandle(async (req, res) => {
+    // const userId = req.body.userid
+    const friendId = req.body.friendId
+    const friend = await User.findOne({ _id: friendId }).select('-password');
+    const user = await User.findOne({ _id: req.body.userid })
+    console.log(user);
+    try {
+        const status = await User.findOneAndUpdate(user,
+            {
+                $pull: {
+                    friends: {
+                        friend: friend,
+                    }
+                }
+            },
+            { new: true })
+        await User.findOneAndUpdate(friend,
+            {
+                $pull: {
+                    friends: {
+                        friend: user,
+                    }
+                }
+            },
+            { new: true })
+        res.status(200).send(status)
+    } catch (error) {
+        res.status(400).send(error)
+    }
+});
+const acceptFriend = expreeAsynceHandle(async (req, res) => {
+    const friendId = req.body.friendId
+    const user = await User.findOne({ _id: req.body.userid })
+    const friend = await User.findOne({ _id: friendId }).select('-password');
+    try {
+        const status = await User.findOneAndUpdate(
+            {
+                _id: req.body.userid,
+                'friends.friend': friend
+            },
+            { $set: { 'friends.$.accept': true } },
 
-module.exports = { loginController, registerController, fetchUser, resetPassword }
+        );
+        await User.findOneAndUpdate(
+            {
+                'friends.friend': user
+            },
+            { $set: { 'friends.$.accept': true } },
+        );
+        res.status(200).send(status)
+    } catch (error) {
+        res.send(error)
+    }
+});
+const fetchInvitationFromClient = expreeAsynceHandle(async (req, res) => {
+    const admin = req.body.admin
+    // console.log({ _id: ObjectId(userId) });
+    try {
+        // const result = await User.find({ _id: Object(req.body.userid) })
+        const result = await User.aggregate([
+            { $match: { name: admin } }
+            , {
+                $project: {
+                    friends: {
+                        $filter: {
+                            input: "$friends",
+                            as: "friend",
+                            cond: { $eq: ["$$friend.accept", false] }
+                        }
+                    }
+                }
+            }
+        ]);
+        res.send(result)
+    } catch (error) {
+        res.send(error)
+    }
+})
+
+module.exports = { removeAddFriend, fetchInvitationFromClient, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend }

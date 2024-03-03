@@ -9,45 +9,20 @@ const accessKeyId = process.env.ACCESS_KEY
 const BUCKET_NAME = process.env.BUCKET_NAME
 const REGION = process.env.REGION
 const secretAccessKey = process.env.SECRET_KEY
+const SECRET_KEY = process.env.SECRET_KEY
 
 const AWS = require('aws-sdk')
 
-// const multers3 = require('multer-s3');
-// const { json } = require("react-router-dom");
 const { log } = require("console");
 const { send } = require("process");
 const randomBytes = promisify(crypto.randomBytes)
 
 
 
-// const s3client = new AWS.S3({
-//     accessKeyId,
-//     secretAccessKey,
-//     region: REGION,
-//     signatureVersion: "v4"
-// })
-// const uploadImage = async () => {
-//     const bytes = await randomBytes(16)
-//     const imageName = bytes.toString('hex')
-//     const param = ({
-//         Bucket: BUCKET_NAME,
-//         Key: imageName,
-//         expires: 60
-//     })
-//     const signUrl = s3client.getSignedUrlPromise("putObject", param)
-//     console.log(signUrl);
-//     return signUrl;
-// }
-
-
-// const sendMessImage = expressAsyncHandler(async (req, res) => {
-//     const url = await uploadImage()
-//     res.status(200), json({ url })
-// })
 const s3client = new AWS.S3({
-    accessKeyId: "AKIA3XVHCQD7VYXQ4IFV",
-    secretAccessKey: "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",
-    region: "us-east-1",
+    accessKeyId: secretAccessKey,
+    secretAccessKey: SECRET_KEY,
+    region: REGION,
     // signatureVersion: "v4"
 });
 
