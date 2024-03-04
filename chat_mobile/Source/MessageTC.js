@@ -1,37 +1,38 @@
 import React from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, } from "react-native";
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity,TextInput, } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+import { AntDesign } from "@expo/vector-icons";
 
 const messages = [
   {
     id: "1",
     sender: "Alice",
     message: "Hello!",
-    image: require("../assets/zalo.png"),
+    image: require("../assets/avt2.png"),
   },
   {
     id: "2",
     sender: "Bob",
     message: "Hi there!",
-    image: require("../assets/zalo.png"),
+    image: require("../assets/avt3.png"),
   },
   {
     id: "3",
-    sender: "Bob",
+    sender: "Judy",
     message: "Hi there!",
-    image: require("../assets/zalo.png"),
+    image: require("../assets/avt4.png"),
   },
   {
     id: "4",
-    sender: "Bob",
+    sender: "James",
     message: "Hi there!",
-    image: require("../assets/zalo.png"),
+    image: require("../assets/avt5.png"),
   },
   {
     id: "5",
-    sender: "Bob",
+    sender: "Michel",
     message: "Hi there!",
-    image: require("../assets/zalo.png"),
+    image: require("../assets/avt6.png"),
   },
 ];
 
@@ -57,12 +58,31 @@ const MessageTC = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Image
-          style={styles.imageContainer}
-          source={require("../assets/zalo.png")}
-          placeholder="tìm kiếm"
-          // Icon ++++
-        />
+      <View>
+        <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
+          {/* Icon tìm kiếm */}
+          <AntDesign name="search1" size={25} color="white" />
+          <View style={{ marginLeft: 20, marginTop: 2 }}>
+            {/* Text hiển thị "Tìm kiếm" */}
+            <TextInput
+              placeholder="Tìm kiếm"
+              style={{
+                width: 200,
+                fontSize: 18,
+                color: "white",
+                outlineStyle: "none",
+              }}
+            ></TextInput>
+          </View>
+          {/* ----- */}
+
+          {/* Icon thêm bạn bè */}
+          <View style={{ marginLeft: 100 }}>
+            <AntDesign name="adduser" size={30} color="white" />
+          </View>
+        </View>
+      </View>
+
         
       </View>
       <View style={styles.container1}>
@@ -104,6 +124,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     marginRight: 10,
+    resizeMode:'contain'
   },
   messageContent: {
     backgroundColor: "#fff",
