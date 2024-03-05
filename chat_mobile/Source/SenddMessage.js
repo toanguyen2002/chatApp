@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, FlatList, Image, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, FlatList, Image, TouchableOpacity, Alert, Pressable } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 
-const SendMessage = () => {
+const SendMessage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
 
@@ -42,6 +44,12 @@ const SendMessage = () => {
 
   return (
     <View style={styles.container}>
+      <Pressable
+        onPress={() => { navigation.navigate('MessageTC') }}
+
+      >
+        <AntDesign name="back" size={24} color="black" />
+      </Pressable>
       <FlatList
         data={messages}
         renderItem={renderItem}
@@ -56,7 +64,7 @@ const SendMessage = () => {
           placeholder="Nhập tin nhắn..."
         />
         <TouchableOpacity onPress={handleSend}>
-          <Image source={require('../assets/zalo.png')} style={styles.sendIcon} />
+          <Ionicons name="send" size={24} color="black" />
         </TouchableOpacity>
       </View>
     </View>
