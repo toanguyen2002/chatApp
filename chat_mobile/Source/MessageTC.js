@@ -1,20 +1,36 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import { io } from 'socket.io-client';
+import { io } from "socket.io-client";
 //123
 const MessageItem = (props) => {
   const navigation = useNavigation();
+
   const handlePress = () => {
-    navigation.navigate('SenddMessage'); // Navigate to SendMessage screen
+    navigation.navigate("SenddMessage", props); // Navigate to SendMessage screen
   };
 
   return (
     <TouchableOpacity onPress={handlePress}>
       <Text style={{ fontSize: 20 }}>{props.chatName[0]}</Text>
-      <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{props.chatName}</Text>
-      {props.lastMessage ? (props.lastMessage.typeMess === 'text' ? <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text> : <Text style={{ fontSize: 14 }}>hình ảnh</Text>) : <Text></Text>}
+      <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.chatName}</Text>
+      {props.lastMessage ? (
+        props.lastMessage.typeMess === "text" ? (
+          <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text>
+        ) : (
+          <Text style={{ fontSize: 14 }}>hình ảnh</Text>
+        )
+      ) : (
+        <Text></Text>
+      )}
       <Text style={{ fontSize: 12 }}>{props.timeSend}</Text>
     </TouchableOpacity>
   );
@@ -24,8 +40,7 @@ const MessageTC = () => {
   const rou = useRoute();
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [dataChatBox, setDataChatBox] = useState([]);
-  
-  
+
   const [search, setSearch] = useState("");
   const [users, setUsers] = useState([]);
 
@@ -50,12 +65,16 @@ const MessageTC = () => {
   useEffect(() => {
     const getChat = async () => {
       try {
-        const chatData = await axios.get(`http://localhost:5678/chat/findChatByName?chatName=${search}`, {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
+        const chatData = await axios.get(
+          `http://localhost:5678/chat/findChatByName?chatName=${search}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            },
           }
-        });
+        );
         setUsers(chatData.data);
+        console.log(chatData.data);
       } catch (error) {
         console.log("Error fetching chat data by name");
       }
@@ -94,7 +113,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#0000FF",
     width: "100%",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   imageContainer: {
     width: 40,

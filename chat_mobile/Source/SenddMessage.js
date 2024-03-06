@@ -9,20 +9,59 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useNavigation } from '@react-navigation/native'; 
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
 
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
+  const route = useRoute();
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
   const handleGoBack = () => {
-    navigation.goBack(); 
+    navigation.goBack();
   };
+
+  const rerenderMessage = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:5678/message/${route.params._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      setMessages(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    rerenderMessage();
+  }, []);
 
   const handleSend = async () => {
     try {
-      // Code gửi tin nhắn tới server
+      const response = await axios.post(
+        `http://localhost:5678/message/${route.params._id}`,
+        {
+          content: text,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      if (response.status === 200) {
+        setMessages([...messages, { id: Date.now().toString(), content: text }]);
+        setText("");
+      } else {
+        throw new Error("Failed to send message");
+      }
     } catch (error) {
       Alert.alert("Error", error.message);
     }
@@ -30,16 +69,19 @@ const SendMessage = () => {
 
   const renderItem = ({ item }) => (
     <View style={styles.message}>
-      <Text style={styles.content}>{item.content}</Text>
+      <Text>{item.content}</Text>
     </View>
   );
 
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleGoBack}>
         <Text>Trở về</Text>
       </TouchableOpacity>
-      
+      <View>
+        <Text>{route.params.chatName}</Text>
+      </View>
       <FlatList
         data={messages}
         renderItem={renderItem}
