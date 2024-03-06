@@ -44,12 +44,17 @@ const SendMessage = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Pressable
-        onPress={() => { navigation.navigate('MessageTC') }}
+      <View style={{ width: '100%', height: 50, backgroundColor: 'blue' }}>
+        <Pressable
+          onPress={() => { navigation.navigate('MessageTC') }}
+          style={{ justifyContent: 'center', top: 10, left: 10 }}
 
-      >
-        <AntDesign name="back" size={24} color="black" />
-      </Pressable>
+        >
+          <AntDesign name="arrowleft" size={26} color="white" />
+        </Pressable>
+        
+
+      </View>
       <FlatList
         data={messages}
         renderItem={renderItem}
