@@ -1,52 +1,50 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity, } from "react-native";
+import { View, Text, FlatList, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation, useRoute } from '@react-navigation/native';
 import axios from "axios";
 import { io } from 'socket.io-client';
-// const socket = io("http://localhost:5678")
-//slidebar
-
-
-//
-
+//123
 const MessageItem = (props) => {
   const navigation = useNavigation();
   const handlePress = () => {
-    navigation.navigate('SenddMessage'); // Chuyển hướng sang màn hình Send
+    navigation.navigate('SenddMessage'); // Navigate to SendMessage screen
   };
 
   return (
     <TouchableOpacity onPress={handlePress}>
-    <Text style={{ fontSize: 20 }}>{props.chatName[0]}</Text>
-    <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{props.chatName}</Text>
-    {props.lastMessage ? (props.lastMessage.typeMess === 'text' ? <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text> : <Text style={{ fontSize: 14 }}>hình ảnh</Text>) : <Text></Text>}
-    <Text style={{ fontSize: 12 }}>{props.timeSend}</Text>
-  </TouchableOpacity>
+      <Text style={{ fontSize: 20 }}>{props.chatName[0]}</Text>
+      <Text style={{ fontSize: 16, fontWeight: 'bold' }}>{props.chatName}</Text>
+      {props.lastMessage ? (props.lastMessage.typeMess === 'text' ? <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text> : <Text style={{ fontSize: 14 }}>hình ảnh</Text>) : <Text></Text>}
+      <Text style={{ fontSize: 12 }}>{props.timeSend}</Text>
+    </TouchableOpacity>
   );
 };
 
 const MessageTC = () => {
-  const rou = useRoute()
+  const rou = useRoute();
   const userData = JSON.parse(localStorage.getItem("userData"));
   const [dataChatBox, setDataChatBox] = useState([]);
-  const [search, setSearch] = useState("")
+  
+  
+  const [search, setSearch] = useState("");
+  const [users, setUsers] = useState([]);
+
   const renderChatBox = async () => {
     try {
       const dataRender = await axios.get("http://localhost:5678/chat/", {
         headers: {
           Authorization: `Bearer ${userData.token}`,
         },
-      })
+      });
       setDataChatBox(dataRender.data);
       console.log(dataRender.data);
     } catch (error) {
       console.log("khong lay duoc list chat box tu database");
     }
-  }
-
+  };
 
   useEffect(() => {
-    renderChatBox()
+    renderChatBox();
   }, []);
 
   useEffect(() => {
@@ -56,49 +54,36 @@ const MessageTC = () => {
           headers: {
             Authorization: `Bearer ${userData.token}`,
           }
-        })
-        setUsers(chatData.data)
+        });
+        setUsers(chatData.data);
       } catch (error) {
-
+        console.log("Error fetching chat data by name");
       }
-
-    }
-    getChat()
-  }, [])
+    };
+    getChat();
+  }, [search]);
 
   return (
     <View style={{ flex: 1 }}>
-
       <View style={styles.container}>
         <Image
           style={styles.imageContainer}
           source={require("../assets/zalo.png")}
           placeholder="tìm kiếm"
-        // Icon ++++
         />
         <Text>{userData.name}</Text>
-
       </View>
       <View style={styles.container1}>
-        {/* {dataChatBox.map((item, index)=>{
-           if (item.isGroup == false) {
-            // console.log(userData);
-            if (userData._id == item.users[0]._id) {
-                item.chatName = item.users[1].name
+        {dataChatBox.map((item, index) => {
+          if (item.isGroup === false) {
+            if (userData._id === item.users[0]._id) {
+              item.chatName = item.users[1].name;
+            } else {
+              item.chatName = item.users[0].name;
             }
-            else {
-                item.chatName = item.users[0].name
-            }
-        } 
-        return( <MessageItem props = {item} />)
-        })} */}
-        {/* <FlatList
-          data={dataChatBox}
-        renderItem={({ item }) => <MessageItem props = {item} />}
-
-        keyExtractor={(item) => item._id}
-
-        /> */}
+          }
+          return <MessageItem {...item} key={index} />;
+        })}
       </View>
     </View>
   );
@@ -112,8 +97,8 @@ const styles = StyleSheet.create({
     flexDirection: "row"
   },
   imageContainer: {
-    width: "40px",
-    height: "40px",
+    width: 40,
+    height: 40,
     top: 12,
   },
   container1: {
