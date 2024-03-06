@@ -9,15 +9,15 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation hook
+import { useNavigation } from '@react-navigation/native'; 
 
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
-  const navigation = useNavigation(); // Sử dụng useNavigation hook để lấy đối tượng navigation
+  const navigation = useNavigation(); 
 
   const handleGoBack = () => {
-    navigation.goBack(); // Gọi phương thức goBack để quay lại trang trước đó
+    navigation.goBack(); 
   };
 
   const handleSend = async () => {
@@ -39,6 +39,7 @@ const SendMessage = () => {
       <TouchableOpacity onPress={handleGoBack}>
         <Text>Trở về</Text>
       </TouchableOpacity>
+      
       <FlatList
         data={messages}
         renderItem={renderItem}
