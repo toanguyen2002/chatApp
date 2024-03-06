@@ -44,27 +44,27 @@ const SendMessage = () => {
   }, []);
 
   const handleSend = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:5678/message/${route.params._id}`,
-        {
-          content: text,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
-      if (response.status === 200) {
-        setMessages([...messages, { id: Date.now().toString(), content: text }]);
-        setText("");
-      } else {
-        throw new Error("Failed to send message");
-      }
-    } catch (error) {
-      Alert.alert("Error", error.message);
-    }
+    // try {
+    //   const response = await axios.post(
+    //     `http://localhost:5678/message/${route.params._id}`,
+    //     {
+    //       content: text,
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: `Bearer ${userData.token}`,
+    //       },
+    //     }
+    //   );
+    //   if (response.status === 200) {
+    //     setMessages([...messages, { id: Date.now().toString(), content: text }]);
+    //     setText("");
+    //   } else {
+    //     throw new Error("Failed to send message");
+    //   }
+    // } catch (error) {
+    //   Alert.alert("Error", error.message);
+    // }
   };
 
   const renderItem = ({ item }) => (
@@ -73,7 +73,7 @@ const SendMessage = () => {
     </View>
   );
 
-  
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleGoBack}>
