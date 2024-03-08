@@ -26,6 +26,13 @@ const SendMessage = () => {
     navigation.goBack();
   };
 
+  const scrollTobottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  };
+  
+
   const rerenderMessage = async () => {
     try {
       const response = await axios.get(
@@ -36,25 +43,18 @@ const SendMessage = () => {
           },
         }
       );
+      scrollTobottom();
       setMessages(response.data);
+      
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     rerenderMessage();
+    scrollTobottom();
   }, []);
-
-  useEffect(() => {
-    if (flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: true });
-    }
-  }, [messages]);
-
-  // const handleSend = async () => {
-  //   // Your send message logic here
-  // };
 
 
   useEffect(() => {
@@ -128,7 +128,11 @@ const SendMessage = () => {
         )
         socket.emit("new-mes", dataSend.data)
         socket.emit("render-box-chat", true)
+        
+        setMessages(prevMessages => [...prevMessages, dataSend.data]);
+        scrollTobottom()
         setText("")
+        flatListRef.current.scrollToEnd({ animated: true });
       } catch (error) {
         console.log(error);
       }
@@ -155,6 +159,7 @@ const SendMessage = () => {
         <Text>{route.params.chatName}</Text>
       </View>
       <FlatList
+       
         ref={flatListRef}
         data={messages}
         renderItem={renderItem}
@@ -172,7 +177,10 @@ const SendMessage = () => {
           <Image
             source={require("../assets/zalo.png")}
             style={styles.sendIcon}
+            
           />
+          
+
         </TouchableOpacity>
       </View>
     </View>
@@ -185,6 +193,7 @@ const styles = StyleSheet.create({
   },
   messagesList: {
     flex: 1,
+    
   },
   message: {
     padding: 10,
@@ -215,6 +224,7 @@ const styles = StyleSheet.create({
   viewMess: {
     flex: 1,
     alignItems: "flex-end",
+    
   },
   image: {
     width: 150,
@@ -224,3 +234,4 @@ const styles = StyleSheet.create({
 });
 
 export default SendMessage;
+
