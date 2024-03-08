@@ -11,7 +11,9 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-//1234444444444444444444444444444444
+import { io } from 'socket.io-client';
+
+const socket = io("http://localhost:5678")
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -50,9 +52,88 @@ const SendMessage = () => {
     }
   }, [messages]);
 
-  const handleSend = async () => {
-    // Your send message logic here
+  // const handleSend = async () => {
+  //   // Your send message logic here
+  // };
+
+
+  useEffect(() => {
+
+    socket.emit("setup", userData)
+    socket.on("connect", () => {
+      socket.on("disconnect", () => {
+        console.log("mess", socket);
+        console.log(`Socket disconnected: ${socket.id}`);
+      });
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on("mess-rcv", (data) => {
+      // console.log("mess", data);
+      setMessages([...messages], data)
+    })
+  }, [])
+
+  const sendMessImg = async () => {
+    const formData = new FormData();
+    formData.append('fileImage', fileRef.current.files[0]);
+    // console.log(fileRef.current.files[0]);
+    try {
+      const respone = await axios.post("http://localhost:5678/message/messImage",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+
+      );
+
+      const dataSend = await axios.post(
+        "http://localhost:5678/message/", {
+        chatId: route.params._id,
+        content: respone.data.url,
+        typeMess: "image"
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          }
+        }
+      )
+      socket.emit("new-mes", dataSend.data)
+      socket.emit("render-box-chat", true)
+      setText("")
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
   };
+
+ 
+  const sendMess = async () => {
+    if (messages) {
+      try {
+        const dataSend = await axios.post(
+          "http://localhost:5678/message/", {
+          chatId: route.params._id,
+          content: text,
+          typeMess: "text"
+        },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            }
+          }
+        )
+        socket.emit("new-mes", dataSend.data)
+        socket.emit("render-box-chat", true)
+        setText("")
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 
   const renderItem = ({ item }) => (
     <View style={styles.viewMess}>
@@ -87,7 +168,7 @@ const SendMessage = () => {
           onChangeText={setText}
           placeholder="Nhập tin nhắn..."
         />
-        <TouchableOpacity onPress={handleSend}>
+        <TouchableOpacity onPress={sendMess}>
           <Image
             source={require("../assets/zalo.png")}
             style={styles.sendIcon}
