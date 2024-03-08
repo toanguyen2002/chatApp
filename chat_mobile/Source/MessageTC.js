@@ -10,6 +10,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from "socket.io-client";
+
 //123
 const MessageItem = (props) => {
   const navigation = useNavigation();
@@ -52,7 +53,7 @@ const MessageTC = () => {
         },
       });
       setDataChatBox(dataRender.data);
-      console.log(dataRender.data);
+      // console.log(dataRender.data);
     } catch (error) {
       console.log("khong lay duoc list chat box tu database");
     }
@@ -74,7 +75,7 @@ const MessageTC = () => {
           }
         );
         setUsers(chatData.data);
-        console.log(chatData.data);
+        // console.log(chatData.data);
       } catch (error) {
         console.log("Error fetching chat data by name");
       }

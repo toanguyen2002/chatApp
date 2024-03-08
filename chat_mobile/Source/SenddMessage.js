@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
   Text,
@@ -18,6 +18,7 @@ const SendMessage = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const userData = JSON.parse(localStorage.getItem("userData"));
+  const flatListRef = useRef(null);
 
   const handleGoBack = () => {
     navigation.goBack();
@@ -43,46 +44,37 @@ const SendMessage = () => {
     rerenderMessage();
   }, []);
 
+  useEffect(() => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
+
   const handleSend = async () => {
-    // try {
-    //   const response = await axios.post(
-    //     `http://localhost:5678/message/${route.params._id}`,
-    //     {
-    //       content: text,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${userData.token}`,
-    //       },
-    //     }
-    //   );
-    //   if (response.status === 200) {
-    //     setMessages([...messages, { id: Date.now().toString(), content: text }]);
-    //     setText("");
-    //   } else {
-    //     throw new Error("Failed to send message");
-    //   }
-    // } catch (error) {
-    //   Alert.alert("Error", error.message);
-    // }
+    // Your send message logic here
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.message}>
-      <Text>{item.content}</Text>
+    <View style={styles.viewMess}>
+      {item.typeMess === "text" ? (
+        <Text>{item.content}</Text>
+      ) : (
+        <Image style={styles.image} source={{ uri: item.content }} />
+      )}
     </View>
   );
-
 
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleGoBack}>
+        {/* //Icon */}
         <Text>Trở về</Text>
       </TouchableOpacity>
       <View>
         <Text>{route.params.chatName}</Text>
       </View>
       <FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -138,6 +130,15 @@ const styles = StyleSheet.create({
   sendIcon: {
     width: 20,
     height: 20,
+  },
+  viewMess: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  image: {
+    width: 150,
+    height: 200,
+    marginBottom: 20,
   },
 });
 
