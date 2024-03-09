@@ -37,7 +37,15 @@ export default function ChatAreaComponent() {
     useEffect(() => {
         socket.on("mess-rcv", (data) => {
             // console.log("mess", data);
+<<<<<<< HEAD
             // setMess([...mess], data)
+=======
+<<<<<<< HEAD
+            setMess([...mess], data)
+=======
+            // setMess([...mess], data)
+>>>>>>> 5398061 (update socket *)
+>>>>>>> main
         })
     }, [])
 
@@ -133,7 +141,11 @@ export default function ChatAreaComponent() {
                     }
                 )
                 socket.emit("new-mes", dataSend.data)
+<<<<<<< HEAD
                 // setContentMess("")
+=======
+                setContentMess("")
+>>>>>>> main
                 // textRef.current.value = ' ';
                 socket.emit("render-box-chat", true)
 
@@ -162,7 +174,11 @@ export default function ChatAreaComponent() {
                 )
                 socket.emit("new-mes", dataSend.data)
                 socket.emit("render-box-chat", true)
+<<<<<<< HEAD
                 // setContentMess("")
+=======
+                setContentMess("")
+>>>>>>> main
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
                 console.log(error);

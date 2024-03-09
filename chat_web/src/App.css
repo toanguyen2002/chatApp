@@ -21,7 +21,15 @@
 
 .get-users-modal {
   position: absolute;
+<<<<<<< HEAD
   width: 350px;
+=======
+<<<<<<< HEAD
+  width: 350px;
+=======
+  width: 600px;
+>>>>>>> 5398061 (update socket *)
+>>>>>>> main
   height: 500px;
   left: 50%;
   top: 25%;
@@ -366,6 +374,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.54);
+  
 
 
 }
@@ -386,7 +395,11 @@
   border-radius: 50%;
   justify-self: center;
   align-self: center;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> main
 }
 
 .chat-title {
