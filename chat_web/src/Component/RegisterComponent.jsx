@@ -41,13 +41,10 @@ function RegisterComponent() {
                 <CircularProgress color="inherit" />
             </Backdrop>
             < div className='login-container' >
-                <div className="login-container-left">
-                    <img width={300} height={300} src="https://inducdung.vn/wp-content/uploads/2020/11/Logo-don-gian-1.jpg" alt="" />
-                </div>
                 <div className="login-container-right">
                     <div className="login-form-container">
                         <div className="login-form-header">
-                            <p>Đăng Ký</p>
+                            <p className='dnname'>Đăng Ký</p>
                         </div>
                         <div className="login-form-body">
                             <input className='txtLogin' name='name' placeholder='username' type='text' onChange={dataHandle} />
@@ -55,7 +52,7 @@ function RegisterComponent() {
                             <input className='txtLogin' name='email' placeholder='Email' type='email' onChange={dataHandle} />
                             <button onClick={registerHandle} className='btn-login'>Đăng Ký</button>
                             <div className="login-link">
-                                <a href='/' className='form-link'>Đã có tài khoản</a>
+                                <a href='/' className='form-link2'>Đã có tài khoản</a>
                             </div>
                         </div>
                     </div>

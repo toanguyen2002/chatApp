@@ -177,6 +177,7 @@ function Sidebar() {
                     <div className="modal-footer">
                         <a href='/'>Chỉnh Sửa Thông Tin</a>
                     </div>
+                    
                 </div>
             </Modal>
         </div >
