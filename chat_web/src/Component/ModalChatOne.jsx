@@ -27,7 +27,8 @@ function ModalChatOne({ clockModal }) {
                 }
             }
             )
-            navigate("chat/" + respone.data._id + "&" + respone.data.users[1])
+            console.log(respone.data);
+            navigate("chat/" + respone.data._id + "&" + respone.data.users[1].name)
             setRefresh(!refresh)
             console.log(respone.data);
 
