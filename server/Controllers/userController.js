@@ -220,5 +220,33 @@ const fetchInvitationFromClient = expreeAsynceHandle(async (req, res) => {
         res.send(error)
     }
 })
+const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
+    console.log(req.body.userId);
 
-module.exports = { removeAddFriend, fetchInvitationFromClient, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend }
+    try {
+        const result = await User.aggregate([
+            {
+                $match: { name: { $ne: req.body.name } } // Lọc ra tất cả các người dùng không phải Alice
+            },
+            {
+                $lookup:
+                {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "friends.friend",
+                    as: "friends_docs"
+                }
+            }
+            , {
+                $match: {
+                    "friends_docs.name": { $nin: [req.body.name] } // Lọc ra các tài liệu không có bạn bè
+                }
+            }
+        ])
+        // console.log(result);
+        res.send(result)
+    } catch (error) {
+        res.send(error)
+    }
+})
+module.exports = { getUserNoAccept, removeAddFriend, fetchInvitationFromClient, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend }

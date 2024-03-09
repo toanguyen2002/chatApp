@@ -38,7 +38,7 @@ function Sidebar() {
     const { refresh, setRefresh } = useContext(myContext);
     const [showModal, setShowModal] = useState(false)
     const [showOne, setShowOne] = useState(false)
-    const [showListFriend, setShowListFriend] = useState(false)
+    const [showListFriend, setShowListFriend] = useState(true)
 
     const [search, setSearch] = useState("")
     const renderChatBox = async () => {
@@ -124,7 +124,7 @@ function Sidebar() {
                         <GroupAddIcon />
                     </IconButton>
                     <IconButton>
-                        <AddCircleIcon />
+                        <AddCircleIcon onClick={() => setShowListFriend(true)} />
                     </IconButton>
                     <IconButton onClick={() => clickToLogout()}>
                         <LogoutIcon />
@@ -162,7 +162,7 @@ function Sidebar() {
 
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
             {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
-            {showListFriend ? <FindAndAddFriendComponent /> : <div></div>}
+            {showListFriend ? <FindAndAddFriendComponent closemodal={setShowListFriend} /> : <div></div>}
             <Modal open={open} onClose={handleClose}>
                 <div className="modal-style">
                     <div className="modal-header">Thông Tin Cá Nhân</div>
