@@ -38,7 +38,11 @@ function Sidebar() {
     const { refresh, setRefresh } = useContext(myContext);
     const [showModal, setShowModal] = useState(false)
     const [showOne, setShowOne] = useState(false)
+<<<<<<< HEAD
     const [showListFriend, setShowListFriend] = useState(true)
+=======
+    const [showListFriend, setShowListFriend] = useState(false)
+>>>>>>> 5398061 (update socket *)
 
     const [search, setSearch] = useState("")
     const renderChatBox = async () => {
@@ -162,7 +166,11 @@ function Sidebar() {
 
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
             {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
+<<<<<<< HEAD
             {showListFriend ? <FindAndAddFriendComponent closemodal={setShowListFriend} /> : <div></div>}
+=======
+            {showListFriend ? <FindAndAddFriendComponent /> : <div></div>}
+>>>>>>> 5398061 (update socket *)
             <Modal open={open} onClose={handleClose}>
                 <div className="modal-style">
                     <div className="modal-header">Thông Tin Cá Nhân</div>

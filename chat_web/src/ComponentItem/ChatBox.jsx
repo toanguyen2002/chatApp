@@ -9,6 +9,7 @@ function ChatBox({ props }) {
             <p className='chat-name'>{props.chatName}</p>
             {props.lastMessage ? props.lastMessage.typeMess == 'text' ? <p className='chat-title'>{props.lastMessage.content}</p> : <p className='chat-title'>hình ảnh</p> : <p></p>}
             <p className='chat-time'>{props.timeSend}</p>
+            {console.log()}
         </div>
     )
 }
