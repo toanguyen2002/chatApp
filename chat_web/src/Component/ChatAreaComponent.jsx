@@ -37,7 +37,7 @@ export default function ChatAreaComponent() {
     useEffect(() => {
         socket.on("mess-rcv", (data) => {
             // console.log("mess", data);
-            // setMess([...mess], data)
+            setMess([...mess], data)
         })
     }, [])
 

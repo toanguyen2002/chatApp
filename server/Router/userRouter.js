@@ -1,6 +1,6 @@
 const express = require('express')
 const Router = express.Router()
-const { fetchInvitationFromClient, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend, removeAddFriend } = require('../Controllers/userController')
+const { fetchInvitationFromClient, getUserNoAccept, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend, removeAddFriend } = require('../Controllers/userController')
 const { protect } = require('../middleware/auth')
 
 
@@ -11,6 +11,7 @@ Router.get('/fetchUsers', protect, fetchUser)
 Router.post('/addfriend', addFriend)
 Router.post('/acceptFriend', acceptFriend)
 Router.post('/removeAddFriend', removeAddFriend)
+Router.get('/getUserNotFriend', getUserNoAccept)
 Router.get('/fetchInvitationFromClient', fetchInvitationFromClient)
 
 

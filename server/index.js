@@ -14,7 +14,7 @@ require('dotenv').config()
 app.use(cors())
 app.use(express.json())
 const io = new Server(server, {
-    pingTimeout: 6000,
+    pingTimeout: 5000,
     cors: {
         origin: "*",
         methods: ["GET", "POST"]
