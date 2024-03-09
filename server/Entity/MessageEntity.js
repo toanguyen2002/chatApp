@@ -1,5 +1,5 @@
 const mongooes = require("mongoose")
-
+const bcrypt = require("bcryptjs")
 const messageEntity = mongooes.Schema({
     sender: {
         type: mongooes.Schema.Types.ObjectId,

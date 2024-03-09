@@ -5,49 +5,27 @@ const Chat = require("../Entity/chatEntity");
 const { promisify } = require("util");
 const crypto = require('crypto')
 
-const accessKeyId = process.env.ACCESS_KEY
-const BUCKET_NAME = process.env.BUCKET_NAME
-const REGION = process.env.REGION
-const secretAccessKey = process.env.SECRET_KEY
+
+
 
 const AWS = require('aws-sdk')
 
-const multers3 = require('multer-s3');
+// const multers3 = require('multer-s3');
 // const { json } = require("react-router-dom");
 const { log } = require("console");
 const { send } = require("process");
 const randomBytes = promisify(crypto.randomBytes)
 
+const accessKeyId = process.env.AWS_ACCESS_KEY_ID;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+const region = process.env.AWS_REGION;
 
 
-// const s3client = new AWS.S3({
-//     accessKeyId,
-//     secretAccessKey,
-//     region: REGION,
-//     signatureVersion: "v4"
-// })
-// const uploadImage = async () => {
-//     const bytes = await randomBytes(16)
-//     const imageName = bytes.toString('hex')
-//     const param = ({
-//         Bucket: BUCKET_NAME,
-//         Key: imageName,
-//         expires: 60
-//     })
-//     const signUrl = s3client.getSignedUrlPromise("putObject", param)
-//     console.log(signUrl);
-//     return signUrl;
-// }
 
-
-// const sendMessImage = expressAsyncHandler(async (req, res) => {
-//     const url = await uploadImage()
-//     res.status(200), json({ url })
-// })
 const s3client = new AWS.S3({
-    accessKeyId: "AKIA3XVHCQD7VYXQ4IFV",
-    secretAccessKey: "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",
-    region: "us-east-1",
+    accessKeyId: accessKeyId,
+    secretAccessKey: secretAccessKey,
+    region: region,
     // signatureVersion: "v4"
 });
 
@@ -119,7 +97,8 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
         select: "name email",
     });
 
-    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
+    await Chat.findByIdAndUpdate(req.body.chatId, { lastMessage: message });
+    // console.log(Chat.find({ _id: req.body.chatId }));
     res.json(message);
 })
 

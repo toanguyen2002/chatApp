@@ -1,48 +1,166 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TextInput, FlatList, Image, TouchableOpacity, Alert } from 'react-native';
+import React, { useState, useEffect, useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
+import { io } from 'socket.io-client';
 
+const socket = io("http://localhost:5678")
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
+  const navigation = useNavigation();
+  const route = useRoute();
+  const userData = JSON.parse(localStorage.getItem("userData"));
+  const flatListRef = useRef(null);
 
-  useEffect(() => {
-    // Lấy dữ liệu tin nhắn từ server
-    // Cập nhật state messages với dữ liệu lấy được
-  }, []);
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
 
-  const handleSend = async () => {
+  const scrollTobottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  };
+  
+
+  const rerenderMessage = async () => {
     try {
-      // Gửi tin nhắn đến server
-      const response = await fetch('YOUR_API_ENDPOINT', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: text,
-          // Các thông tin khác nếu cần thiết
-        }),
-      });
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
-      // Cập nhật state messages với tin nhắn mới
-      setMessages([...messages, { id: messages.length.toString(), content: text }]);
-      setText(''); // Xóa nội dung tin nhắn trong TextInput sau khi gửi
+      const response = await axios.get(
+        `http://localhost:5678/message/${route.params._id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      scrollTobottom();
+      setMessages(response.data);
+      
     } catch (error) {
-      Alert.alert('Error', error.message);
+      console.log(error);
     }
   };
 
+  useEffect(() => { 
+    rerenderMessage();
+    scrollTobottom();
+  }, []);
+
+
+  useEffect(() => {
+
+    socket.emit("setup", userData)
+    socket.on("connect", () => {
+      socket.on("disconnect", () => {
+        console.log("mess", socket);
+        console.log(`Socket disconnected: ${socket.id}`);
+      });
+    })
+  }, [])
+
+  useEffect(() => {
+    socket.on("mess-rcv", (data) => {
+      // console.log("mess", data);
+      setMessages([...messages], data)
+    })
+  }, [])
+
+  const sendMessImg = async () => {
+    const formData = new FormData();
+    formData.append('fileImage', fileRef.current.files[0]);
+    // console.log(fileRef.current.files[0]);
+    try {
+      const respone = await axios.post("http://localhost:5678/message/messImage",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+
+      );
+
+      const dataSend = await axios.post(
+        "http://localhost:5678/message/", {
+        chatId: route.params._id,
+        content: respone.data.url,
+        typeMess: "image"
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          }
+        }
+      )
+      socket.emit("new-mes", dataSend.data)
+      socket.emit("render-box-chat", true)
+      setText("")
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+ 
+  const sendMess = async () => {
+    if (messages) {
+      try {
+        const dataSend = await axios.post(
+          "http://localhost:5678/message/", {
+          chatId: route.params._id,
+          content: text,
+          typeMess: "text"
+        },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            }
+          }
+        )
+        socket.emit("new-mes", dataSend.data)
+        socket.emit("render-box-chat", true)
+        
+        setMessages(prevMessages => [...prevMessages, dataSend.data]);
+        scrollTobottom()
+        setText("")
+        flatListRef.current.scrollToEnd({ animated: true });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   const renderItem = ({ item }) => (
-    <View style={styles.message}>
-      <Text style={styles.content}>{item.content}</Text>
+    <View style={styles.viewMess}>
+      {item.typeMess === "text" ? (
+        <Text>{item.content}</Text>
+      ) : (
+        <Image style={styles.image} source={{ uri: item.content }} />
+      )}
     </View>
   );
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={handleGoBack}>
+        {/* //Icon */}
+        <Text>Trở về</Text>
+      </TouchableOpacity>
+      <View>
+        <Text>{route.params.chatName}</Text>
+      </View>
       <FlatList
+       
+        ref={flatListRef}
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -55,8 +173,14 @@ const SendMessage = () => {
           onChangeText={setText}
           placeholder="Nhập tin nhắn..."
         />
-        <TouchableOpacity onPress={handleSend}>
-          <Image source={require('../assets/zalo.png')} style={styles.sendIcon} />
+        <TouchableOpacity onPress={sendMess}>
+          <Image
+            source={require("../assets/zalo.png")}
+            style={styles.sendIcon}
+            
+          />
+          
+
         </TouchableOpacity>
       </View>
     </View>
@@ -69,21 +193,22 @@ const styles = StyleSheet.create({
   },
   messagesList: {
     flex: 1,
+    
   },
   message: {
     padding: 10,
     borderBottomWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   content: {
     fontSize: 16,
   },
   footer: {
     height: 50,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
   },
   input: {
@@ -96,6 +221,17 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+  viewMess: {
+    flex: 1,
+    alignItems: "flex-end",
+    
+  },
+  image: {
+    width: 150,
+    height: 200,
+    marginBottom: 20,
+  },
 });
 
 export default SendMessage;
+
