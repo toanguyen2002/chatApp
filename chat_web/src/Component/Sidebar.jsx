@@ -124,16 +124,16 @@ function Sidebar() {
                 </div>
                 <div >
                     <IconButton onClick={handClickOne}>
-                        <PersonAddIcon />
+                        <PersonAddIcon className='iconColor' />
                     </IconButton>
                     <IconButton onClick={handClick}>
-                        <GroupAddIcon />
+                        <GroupAddIcon className='iconColor'/>
                     </IconButton>
                     <IconButton>
-                        <AddCircleIcon onClick={() => setShowListFriend(true)} />
+                        <AddCircleIcon onClick={() => setShowListFriend(true)} className='iconColor' />
                     </IconButton>
                     <IconButton onClick={() => clickToLogout()}>
-                        <LogoutIcon />
+                        <LogoutIcon className='iconColor'/>
                     </IconButton>
                 </div>
             </div>
