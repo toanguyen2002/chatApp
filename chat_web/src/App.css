@@ -22,6 +22,8 @@
 .get-users-modal {
   position: absolute;
   width: 350px;
+  width: 350px;
+  width: 600px;
   height: 500px;
   left: 50%;
   top: 25%;
@@ -56,6 +58,7 @@
 
 .model-body {
   flex: 1;
+  overflow: scroll;
 }
 
 .model-footer {}
@@ -365,7 +368,8 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-weight: bold;
   color: rgba(0, 0, 0, 0.54);
-  
+
+
 
 }
 
@@ -385,7 +389,6 @@
   border-radius: 50%;
   justify-self: center;
   align-self: center;
-  
 }
 
 .chat-title {
@@ -493,6 +496,7 @@
   justify-content: space-between;
   display: flex;
   padding: 10px;
+
 }
 
 .modal-style {

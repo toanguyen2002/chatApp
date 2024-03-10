@@ -47,24 +47,24 @@ function LoginComponent() {
                 <div className='tname'>Đăng nhập tài khoản Zalo</div>
                 <div className='tname'>để kết nối với ứng dụng zalo.me</div>
 
-                    <div className="login-form-container">
-                        <div className="login-form-header">
-                            <p className='dnname'>Đăng Nhập</p>
-                        </div>
-                        <div className="login-form-body">
-                            {
-                                falseMess ?
-                                    <p></p> : <b className='error-text'>Thông tin đăng nhập không hợp lệ vui lòng kiểm tra lại</b>
-                            }
-                            <input className='txtLogin' name='name' placeholder='username' type='text' onChange={dataHandle} />
-                            <input className='txtLogin' name='password' placeholder='password' type='password' onChange={dataHandle} />
-                            <button onClick={loginUser} className='btn-login'>Đăng nhập với mật khẩu</button>
-                            <div className="login-link">
-                                <a href='/resetPass' className='form-link'>Quên mật khẩu ?  </a>
-                                <a href='/register' className='form-link'>Chưa có tài khoản</a>
-                            </div>
+                <div className="login-form-container">
+                    <div className="login-form-header">
+                        <p className='dnname'>Đăng Nhập</p>
+                    </div>
+                    <div className="login-form-body">
+                        {
+                            falseMess ?
+                                <p></p> : <b className='error-text'>Thông tin đăng nhập không hợp lệ vui lòng kiểm tra lại</b>
+                        }
+                        <input className='txtLogin' name='name' placeholder='username' type='text' onChange={dataHandle} />
+                        <input className='txtLogin' name='password' placeholder='password' type='password' onChange={dataHandle} />
+                        <button onClick={loginUser} className='btn-login'>Đăng nhập với mật khẩu</button>
+                        <div className="login-link">
+                            <a href='/resetPass' className='form-link'>Quên mật khẩu ?  </a>
+                            <a href='/register' className='form-link'>Chưa có tài khoản</a>
                         </div>
                     </div>
+                </div>
 
             </div>
         </>
