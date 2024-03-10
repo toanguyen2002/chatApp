@@ -12,6 +12,7 @@ function ModalComponent({ clockModal }) {
     const [nameGroup, setNameGroup] = useState("")
     const [nameUser, setNameUser] = useState("")
     const userData = JSON.parse(localStorage.getItem("userData"));
+    // console.log(userData);
     const { refresh, setRefresh } = useContext(myContext);
     const handleCheckboxChange = (event) => {
         const value = event.target.value;
@@ -42,15 +43,11 @@ function ModalComponent({ clockModal }) {
                 }
             );
 
-            // Dữ liệu phản hồi có sẵn ở đây
-            const responseData = response.data;
-            // console.log(responseData);
 
-            // Phát sự kiện "new-group" với dữ liệu phản hồi
+            const responseData = response.data;
+
             socket.emit("new-group", responseData);
 
-            // Cập nhật trạng thái và đóng modal
-            // setRefresh(!refresh);
             clockModal(false);
         } catch (error) {
             console.log("error:", error);
@@ -62,16 +59,17 @@ function ModalComponent({ clockModal }) {
     useEffect(() => {
         const getUser = async () => {
             setUsers([])
-            const dataUser = await axios.get(`http://localhost:5678/user/fetchUsers?search=${nameUser}`, {
+            const dataUser = await axios.post(`http://localhost:5678/user/getUserAccept`, {
+                name: userData.data.name,
+                userId: userData.data._id
+            }, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
                 },
             })
-            // .then((data) => {
-
-            //     // setRefresh(!refresh);
-            // }); 
             // console.log(dataUser.data);
+            // console.log(userData.name);
+            // console.log(userData._id);
 
             setUsers(dataUser.data);
         }
