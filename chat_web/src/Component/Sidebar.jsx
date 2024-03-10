@@ -38,11 +38,9 @@ function Sidebar() {
     const { refresh, setRefresh } = useContext(myContext);
     const [showModal, setShowModal] = useState(false)
     const [showOne, setShowOne] = useState(false)
-    const [showListFriend, setShowListFriend] = useState(true)
+    const [showListFriend, setShowListFriend] = useState(false)
 
-    // const [showListFriend, setShowListFriend] = useState(true)
 
-    // const [showListFriend, setShowListFriend] = useState(false)
 
     const [search, setSearch] = useState("")
     const renderChatBox = async () => {

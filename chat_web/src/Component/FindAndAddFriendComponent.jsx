@@ -9,7 +9,7 @@ function FindAndAddFriendComponent({ closemodal }) {
 
     const [users, setUsers] = useState([])
     const userData = JSON.parse(localStorage.getItem("userData"));
-    console.log(userData.data.token);
+    // console.log(userData.data.token);
     const [nameUser, setNameUser] = useState('')
     const { refresh, setRefresh } = useContext(myContext);
     useEffect(() => {
@@ -23,10 +23,11 @@ function FindAndAddFriendComponent({ closemodal }) {
                     Authorization: `Bearer ${userData.data.token}`,
                 },
             })
+
             setUsers(dataUser.data);
+            // console.log(dataUser.data);
         }
         getUser()
-
     }, [
         refresh
     ]);
@@ -58,6 +59,7 @@ function FindAndAddFriendComponent({ closemodal }) {
                     </IconButton>
                 </div>
                 <div className="list-body">
+                    {/* {console.log(users.)} */}
                     {users.map((item, index) => (
                         <div className="">
                             <UserComponent props={item} clickToAdd={clickToaddFriend} />

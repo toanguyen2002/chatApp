@@ -4,11 +4,6 @@ const User = require("../Entity/userEntity");
 const expreeAsynceHandle = require("express-async-handler");
 const generateToken = require("../config/generateToken");
 
-
-// const mongoose = require('mongoose');
-// const ObjectId = mongoose.Types.ObjectId;
-
-
 const loginController = expreeAsynceHandle(async (req, res) => {
     const { name, password } = req.body;
     const uname = await User.findOne({ name })
@@ -69,8 +64,13 @@ const fetchUser = expreeAsynceHandle(async (req, res) => {
             { email: { $regex: req.query.search, $options: "i" } }
         ]
     } : {}
-    // console.log(keyword);
     const u = await User.find(keyword).find({ _id: { $ne: req.user._id } })
+    // console.log(u);
+    res.send(u)
+})
+const fetchUserById = expreeAsynceHandle(async (req, res) => {
+
+    const u = await User.find({ _id: req.body.userId })
     // console.log(u);
     res.send(u)
 })
@@ -147,7 +147,7 @@ const removeAddFriend = expreeAsynceHandle(async (req, res) => {
     const friendId = req.body.friendId
     const friend = await User.findOne({ _id: friendId }).select('-password');
     const user = await User.findOne({ _id: req.body.userid })
-    console.log(user);
+    // console.log(user);
     try {
         const status = await User.findOneAndUpdate(user,
             {
@@ -226,7 +226,6 @@ const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
     const { name, userId } = req.body
     console.log(userId);
     console.log(name);
-
     try {
         const result = await User.aggregate([
             {
@@ -243,18 +242,115 @@ const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
             }
             , {
                 $match: {
-
                     "friends_docs.name": { $nin: [name] }, // Lọc ra các tài liệu không có bạn bè
-
-                    "friends_docs.name": { $nin: [req.body.name] } // Lọc ra các tài liệu không có bạn bè
-
                 }
             }
         ])
-        // console.log(result);
+        console.log(result);
         res.send(result)
+        // console.log(result);
     } catch (error) {
         res.send(error)
     }
 })
-module.exports = { getUserNoAccept, removeAddFriend, fetchInvitationFromClient, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend }
+const getUserwaitAccept = expreeAsynceHandle(async (req, res) => {
+    const { name, userId } = req.body;
+    try {
+        const result = await User.aggregate([
+            {
+                $match: { name: { $ne: name } }
+            },
+            {
+                $unwind: "$friends" // Giải nén mảng "friends"
+            },
+            {
+                $lookup:
+                {
+                    from: "users",
+                    let: { senderId: "$friends.sender" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$senderId"] },
+                                "friends.accept": false
+                            }
+                        },
+                        {
+                            $project: { _id: 1, name: 1, accept: 1 }
+                        }
+                    ],
+                    as: "friends_docs"
+                }
+            },
+            {
+                $match: {
+                    "friends_docs.0": { $exists: true },
+                    "friends.accept": false
+
+                }
+            }
+        ]);
+        // console.log(result);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+const getUserAccept = expreeAsynceHandle(async (req, res) => {
+    const { name, userId } = req.body;
+    try {
+        const result = await User.aggregate([
+            {
+                $match: { name: { $ne: name } }
+            },
+            {
+                $unwind: "$friends" // Giải nén mảng "friends"
+            },
+            {
+                $lookup:
+                {
+                    from: "users",
+                    let: { senderId: "$friends.sender" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$senderId"] },
+                                "friends.accept": true
+                            }
+                        },
+                        {
+                            $project: { _id: 1, name: 1, accept: 1 }
+                        }
+                    ],
+                    as: "friends_docs"
+                }
+            },
+            {
+                $match: {
+                    "friends_docs.0": { $exists: true },
+                    "friends.accept": true
+
+                }
+            }
+        ]);
+        // console.log(result);
+        res.send(result);
+    } catch (error) {
+        res.send(error);
+    }
+});
+
+module.exports = {
+    fetchUserById,
+    getUserAccept,
+    getUserNoAccept,
+    removeAddFriend,
+    fetchInvitationFromClient,
+    loginController,
+    registerController,
+    fetchUser,
+    resetPassword,
+    addFriend,
+    acceptFriend,
+    getUserwaitAccept
+}
