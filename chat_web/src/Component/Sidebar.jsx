@@ -38,15 +38,11 @@ function Sidebar() {
     const { refresh, setRefresh } = useContext(myContext);
     const [showModal, setShowModal] = useState(false)
     const [showOne, setShowOne] = useState(false)
-<<<<<<< HEAD
     const [showListFriend, setShowListFriend] = useState(true)
-=======
-<<<<<<< HEAD
-    const [showListFriend, setShowListFriend] = useState(true)
-=======
-    const [showListFriend, setShowListFriend] = useState(false)
->>>>>>> 5398061 (update socket *)
->>>>>>> main
+
+    // const [showListFriend, setShowListFriend] = useState(true)
+
+    // const [showListFriend, setShowListFriend] = useState(false)
 
     const [search, setSearch] = useState("")
     const renderChatBox = async () => {
@@ -122,11 +118,9 @@ function Sidebar() {
             <div className="side-header">
                 <div>
                     <IconButton onClick={() => setOpen(true)}>
-<<<<<<< HEAD
                         <Avatar alt={userData.data.name} src="https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/411522943_373985608348589_889785018101940738_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEamTt0rJAFTB6RfoXS4ngnxYyL2_YybPbFjIvb9jJs9pt9zhvp6TRX4bZZNJL476Ruij8pCjz8clb5RsQTbvLj&_nc_ohc=a4wxphwpC7cAX-Y_7Id&_nc_ht=scontent.fsgn5-3.fna&cb_e2o_trans=t&oh=00_AfDA9wMo0eBbIVcTT3TWosffHErD26nEGK5TDEw6AXV28g&oe=65ADAABD" sx={{ width: 48, height: 48, backgroundColor: '#1E90FF' }} />
-=======
-                        <Avatar alt={userData.data.name} src="https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/411522943_373985608348589_889785018101940738_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEamTt0rJAFTB6RfoXS4ngnxYyL2_YybPbFjIvb9jJs9pt9zhvp6TRX4bZZNJL476Ruij8pCjz8clb5RsQTbvLj&_nc_ohc=a4wxphwpC7cAX-Y_7Id&_nc_ht=scontent.fsgn5-3.fna&cb_e2o_trans=t&oh=00_AfDA9wMo0eBbIVcTT3TWosffHErD26nEGK5TDEw6AXV28g&oe=65ADAABD" sx={{ width: 48, height: 48, backgroundColor:'#1E90FF' }} />
->>>>>>> main
+
+                        {/* <Avatar alt={userData.data.name} src="https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/411522943_373985608348589_889785018101940738_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEamTt0rJAFTB6RfoXS4ngnxYyL2_YybPbFjIvb9jJs9pt9zhvp6TRX4bZZNJL476Ruij8pCjz8clb5RsQTbvLj&_nc_ohc=a4wxphwpC7cAX-Y_7Id&_nc_ht=scontent.fsgn5-3.fna&cb_e2o_trans=t&oh=00_AfDA9wMo0eBbIVcTT3TWosffHErD26nEGK5TDEw6AXV28g&oe=65ADAABD" sx={{ width: 48, height: 48, backgroundColor: '#1E90FF' }} /> */}
                     </IconButton>
 
                 </div>
@@ -176,15 +170,7 @@ function Sidebar() {
 
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
             {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
-<<<<<<< HEAD
             {showListFriend ? <FindAndAddFriendComponent closemodal={setShowListFriend} /> : <div></div>}
-=======
-<<<<<<< HEAD
-            {showListFriend ? <FindAndAddFriendComponent closemodal={setShowListFriend} /> : <div></div>}
-=======
-            {showListFriend ? <FindAndAddFriendComponent /> : <div></div>}
->>>>>>> 5398061 (update socket *)
->>>>>>> main
             <Modal open={open} onClose={handleClose}>
                 <div className="modal-style">
                     <div className="modal-header">Thông Tin Cá Nhân</div>
@@ -199,11 +185,9 @@ function Sidebar() {
                     <div className="modal-footer">
                         <a href='/'>Chỉnh Sửa Thông Tin</a>
                     </div>
-<<<<<<< HEAD
 
-=======
-                    
->>>>>>> main
+
+
                 </div>
             </Modal>
         </div >

@@ -221,23 +221,16 @@ const fetchInvitationFromClient = expreeAsynceHandle(async (req, res) => {
     }
 })
 const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
-<<<<<<< HEAD
+
 
     const { name, userId } = req.body
     console.log(userId);
     console.log(name);
-    try {
-        const result = await User.aggregate([
-            {
-                $match: { name: { $ne: name } } // Lọc ra tất cả các người dùng không phải Alice
-=======
-    console.log(req.body.userId);
 
     try {
         const result = await User.aggregate([
             {
-                $match: { name: { $ne: req.body.name } } // Lọc ra tất cả các người dùng không phải Alice
->>>>>>> main
+                $match: { name: { $ne: name } } // Lọc ra tất cả các người dùng không phải Alice
             },
             {
                 $lookup:
@@ -250,11 +243,11 @@ const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
             }
             , {
                 $match: {
-<<<<<<< HEAD
-                    "friends_docs.name": { $nin: [name] } // Lọc ra các tài liệu không có bạn bè
-=======
+
+                    "friends_docs.name": { $nin: [name] }, // Lọc ra các tài liệu không có bạn bè
+
                     "friends_docs.name": { $nin: [req.body.name] } // Lọc ra các tài liệu không có bạn bè
->>>>>>> main
+
                 }
             }
         ])
