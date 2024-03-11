@@ -12,16 +12,17 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from 'socket.io-client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const socket = io("http://localhost:5678")
+const socket = io("http://192.168.1.6:5678")
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const userData = JSON.parse(AsyncStorage.getItem("userData"));
   const flatListRef = useRef(null);
-  const fileRef = useRef()
+
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -36,7 +37,7 @@ const SendMessage = () => {
   const rerenderMessage = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5678/message/${route.params._id}`,
+        `http://192.168.1.6:5678/message/${route.params._id}`,
         {
           headers: {
             Authorization: `Bearer ${userData.token}`,
@@ -75,47 +76,47 @@ const SendMessage = () => {
     })
   }, [])
 
-  const sendMessImg = async () => {
-    const formData = new FormData();
-    formData.append('fileImage', fileRef.current.files[0]);
-    // console.log(fileRef.current.files[0]);
-    try {
-      const respone = await axios.post("http://localhost:5678/message/messImage",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data"
-          }
-        }
+  // const sendMessImg = async () => {
+  //   const formData = new FormData();
+  //   formData.append('fileImage', fileRef.current.files[0]);
+  //   // console.log(fileRef.current.files[0]);
+  //   try {
+  //     const respone = await axios.post("http://192.168.1.6:5678/message/messImage",
+  //       formData,
+  //       {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data"
+  //         }
+  //       }
 
-      );
+  //     );
 
-      const dataSend = await axios.post(
-        "http://localhost:5678/message/", {
-        chatId: route.params._id,
-        content: respone.data.url,
-        typeMess: "image"
-      },
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          }
-        }
-      )
-      socket.emit("new-mes", dataSend.data)
-      socket.emit("render-box-chat", true)
-      setText("")
-    } catch (error) {
-      console.error("Error uploading image:", error);
-    }
-  };
+  //     const dataSend = await axios.post(
+  //       "http://192.168.1.6:5678/message/", {
+  //       chatId: route.params._id,
+  //       content: respone.data.url,
+  //       typeMess: "image"
+  //     },
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${userData.token}`,
+  //         }
+  //       }
+  //     )
+  //     socket.emit("new-mes", dataSend.data)
+  //     socket.emit("render-box-chat", true)
+  //     setText("")
+  //   } catch (error) {
+  //     console.error("Error uploading image:", error);
+  //   }
+  // };
 
  
   const sendMess = async () => {
     if (messages) {
       try {
         const dataSend = await axios.post(
-          "http://localhost:5678/message/", {
+          "http://192.168.1.6:5678/message/", {
           chatId: route.params._id,
           content: text,
           typeMess: "text"
@@ -126,7 +127,6 @@ const SendMessage = () => {
             }
           }
         )
-
         socket.emit("new-mes", dataSend.data)
         socket.emit("render-box-chat", true)
         
@@ -166,17 +166,14 @@ const SendMessage = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         style={styles.messagesList}
-        scr
       />
       <View style={styles.footer}>
-        
         <TextInput
           style={styles.input}
           value={text}
           onChangeText={setText}
           placeholder="Nhập tin nhắn..."
         />
-        
         <TouchableOpacity onPress={sendMess}>
           <Image
             source={require("../assets/zalo.png")}
@@ -238,4 +235,3 @@ const styles = StyleSheet.create({
 });
 
 export default SendMessage;
-

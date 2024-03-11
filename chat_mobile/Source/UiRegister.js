@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, Button, View, Image, Pressable } from 'react-native';
 
+
 const UiRegister = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -9,7 +10,7 @@ const UiRegister = () => {
   const handleRegister = async () => {
     try {
       const data = { name, email, password };
-      const response = await fetch("http://localhost:5678/user/register", {
+      const response = await fetch("http://192.168.1.6:5678/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

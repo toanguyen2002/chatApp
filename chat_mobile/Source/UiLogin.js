@@ -7,13 +7,13 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import axios from "axios";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin", password: "123" });
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:5678/user/login", {
+      const response = await fetch("http://192.168.1.6:5678/user/login", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -21,19 +21,18 @@ const UiLogin = ({ navigation }) => {
         },
         body: JSON.stringify(data),
       });
-
+      
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error('Network response was not ok');
       }
-
       const responseData = await response.json();
-      localStorage.setItem("userData", JSON.stringify(responseData));
+      await AsyncStorage.setItem("userData", JSON.stringify(responseData));
       navigation.navigate("MessageTC", { token: responseData.token });
+      
     } catch (error) {
       console.log(error);
     }
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>

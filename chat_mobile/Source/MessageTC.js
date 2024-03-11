@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,9 +9,84 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import { io } from "socket.io-client";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-//123
+const MessageTC = () => {
+  const rou = useRoute();
+  const [userData, setUserData] = useState(null);
+  const [dataChatBox, setDataChatBox] = useState([]);
+  const [search, setSearch] = useState("");
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userDataString = await AsyncStorage.getItem("userData");
+        const userDataObject = JSON.parse(userDataString);
+        setUserData(userDataObject);
+
+        const response = await axios.get("http://192.168.1.6:5678/chat/", {
+          headers: {
+            Authorization: `Bearer ${userDataObject.token}`,
+          },
+        });
+        setDataChatBox(response.data);
+        console.log(response.data)
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   const getChat = async () => {
+  //     try {
+  //       const chatData = await axios.get(
+  //         `http://192.168.1.6:5678/chat/findChatByName?chatName=${search}`,
+  //         {
+  //           headers: {
+  //             Authorization: `Bearer ${userData.token}`,
+  //           },
+  //         }
+  //       );
+  //       setUsers(chatData.data);
+  //       console.log(chatData.data)
+  //     } catch (error) {
+  //       console.log("lỗi không tìm thấy tên ", error);
+  //     }
+  //   };
+  //   getChat();
+  // }, [search, userData]);
+
+  return (
+    <View style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <Image
+          style={styles.imageContainer}
+          source={require("../assets/zalo.png")}
+          placeholder="tìm kiếm"
+        />
+        <Text>{userData && userData.name}</Text>
+      </View>
+
+      <View style={styles.container1}>
+        {dataChatBox.map((item, index) => {
+          if (item.isGroup === false) {
+            if (userData && userData._id === item.users[0]._id) {
+              item.chatName = item.users[1].name;
+            } else {
+              item.chatName = item.users[0].name;
+            }
+          }
+          return <MessageItem {...item} key={index} />;
+        })}
+      </View>
+    </View>
+  );
+};
+
 const MessageItem = (props) => {
   const navigation = useNavigation();
 
@@ -37,82 +112,10 @@ const MessageItem = (props) => {
   );
 };
 
-const MessageTC = () => {
-  const rou = useRoute();
-  const userData = JSON.parse(localStorage.getItem("userData"));
-  const [dataChatBox, setDataChatBox] = useState([]);
-
-  const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([]);
-
-  const renderChatBox = async () => {
-    try {
-      const dataRender = await axios.get("http://localhost:5678/chat/", {
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
-        },
-      });
-      setDataChatBox(dataRender.data);
-      // console.log(dataRender.data);
-    } catch (error) {
-      console.log("khong lay duoc list chat box tu database");
-    }
-  };
-
-  useEffect(() => {
-    renderChatBox();
-  }, []);
-
-  useEffect(() => {
-    const getChat = async () => {
-      try {
-        const chatData = await axios.get(
-          `http://localhost:5678/chat/findChatByName?chatName=${search}`,
-          {
-            headers: {
-              Authorization: `Bearer ${userData.token}`,
-            },
-          }
-        );
-        setUsers(chatData.data);
-        // console.log(chatData.data);
-      } catch (error) {
-        console.log("Error fetching chat data by name");
-      }
-    };
-    getChat();
-  }, [search]);
-
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <Image
-          style={styles.imageContainer}
-          source={require("../assets/zalo.png")}
-          placeholder="tìm kiếm"
-        />
-        <Text>{userData.name}</Text>
-      </View>
-      <View style={styles.container1}>
-        {dataChatBox.map((item, index) => {
-          if (item.isGroup === false) {
-            if (userData._id === item.users[0]._id) {
-              item.chatName = item.users[1].name;
-            } else {
-              item.chatName = item.users[0].name;
-            }
-          }
-          return <MessageItem {...item} key={index} />;
-        })}
-      </View>
-    </View>
-  );
-};
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#0000FF",
+    backgroundColor: "red",
     width: "100%",
     flexDirection: "row",
   },
@@ -123,30 +126,8 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 9,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: "blue",
     padding: 10,
-  },
-  messageContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    marginBottom: 10,
-  },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    marginRight: 10,
-  },
-  messageContent: {
-    backgroundColor: "#fff",
-    padding: 10,
-    borderRadius: 10,
-    maxWidth: "80%",
-  },
-  sender: {
-    fontWeight: "bold",
-    marginBottom: 5,
   },
 });
 
