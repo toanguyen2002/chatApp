@@ -37,7 +37,9 @@ export default function ChatAreaComponent() {
     useEffect(() => {
         socket.on("mess-rcv", (data) => {
             // console.log("mess", data);
+            // setMess([...mess], data)
             setMess([...mess], data)
+            // setMess([...mess], data)
         })
     }, [])
 
@@ -133,6 +135,7 @@ export default function ChatAreaComponent() {
                     }
                 )
                 socket.emit("new-mes", dataSend.data)
+                // setContentMess("")
                 setContentMess("")
                 // textRef.current.value = ' ';
                 socket.emit("render-box-chat", true)
@@ -162,6 +165,8 @@ export default function ChatAreaComponent() {
                 )
                 socket.emit("new-mes", dataSend.data)
                 socket.emit("render-box-chat", true)
+
+                // setContentMess("")
                 setContentMess("")
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
@@ -181,8 +186,10 @@ export default function ChatAreaComponent() {
             <div className='chat-area'>
                 <div className="chat-area-header">
                     <p className='chat-icon'>{chat_user[0]}</p>
+
                     <div className="chat-area-text">
                         <p className='chat-name'>{chat_user}</p>
+                        <div className="online">online</div>
                         {/* <p className='chat-time'>{data.timeSend}</p> */}
                     </div>
                     <IconButton onClick={() => console.log(chat_id)}>
@@ -203,6 +210,7 @@ export default function ChatAreaComponent() {
 
                     })}
                     {/* <div>a</div> */}
+                    <div className="" ref={messageEndRef}></div>
                     <div className="" ref={messageEndRef}></div>
                 </div>
 
