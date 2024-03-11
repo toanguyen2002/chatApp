@@ -21,7 +21,7 @@ const SendMessage = () => {
   const route = useRoute();
   const userData = JSON.parse(localStorage.getItem("userData"));
   const flatListRef = useRef(null);
-
+  const fileRef = useRef()
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -126,8 +126,10 @@ const SendMessage = () => {
             }
           }
         )
+
         socket.emit("new-mes", dataSend.data)
         socket.emit("render-box-chat", true)
+        setMessages(prevMessages => [...prevMessages, dataSend.data]);
         setText("")
       } catch (error) {
         console.log(error);
@@ -160,14 +162,17 @@ const SendMessage = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         style={styles.messagesList}
+        scr
       />
       <View style={styles.footer}>
+        
         <TextInput
           style={styles.input}
           value={text}
           onChangeText={setText}
           placeholder="Nhập tin nhắn..."
         />
+        
         <TouchableOpacity onPress={sendMess}>
           <Image
             source={require("../assets/zalo.png")}
