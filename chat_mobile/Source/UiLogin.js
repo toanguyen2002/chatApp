@@ -13,19 +13,22 @@ const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin", password: "123" });
   const handleLogin = async () => {
     try {
-      const response = await axios.post(
-        "http://localhost:5678/user/login",
-        data,
-        {
-          headers: { "Content-type": "application/json" },
-        }
-      );
-      localStorage.setItem("userData", JSON.stringify(response.data));
-      // setData({ name: "", password: "" });
+      const response = await fetch("http://localhost:5678/user/login", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-      const data1 = response.data
-      navigation.navigate("MessageTC", { token: data1.token });
-      
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const responseData = await response.json();
+      localStorage.setItem("userData", JSON.stringify(responseData));
+      navigation.navigate("MessageTC", { token: responseData.token });
     } catch (error) {
       console.log(error);
     }
