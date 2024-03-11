@@ -84,7 +84,7 @@ export default function ChatAreaComponent() {
     const sendMessImg = async () => {
         const formData = new FormData();
         formData.append('fileImage', fileRef.current.files[0]);
-        // console.log(fileRef.current.files[0]);
+        console.log(fileRef.current.files[0]);
         try {
             const respone = await axios.post("http://localhost:5678/message/messImage",
                 formData,
@@ -145,8 +145,6 @@ export default function ChatAreaComponent() {
                 console.log(error);
             }
         }
-
-
     }
     const sendMess = async () => {
         if (mess) {
