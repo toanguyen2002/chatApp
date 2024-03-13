@@ -11,18 +11,20 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import { io } from 'socket.io-client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { io } from "socket.io-client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const socket = io("http://192.168.1.6:5678")
+const socket = io("http://localhost:5678");
+
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
-  const userData = JSON.parse(AsyncStorage.getItem("userData"));
   const flatListRef = useRef(null);
-
+  const [userData, setUserData] = useState(null);
+  
+  
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -32,113 +34,113 @@ const SendMessage = () => {
       flatListRef.current.scrollToEnd({ animated: true });
     }
   };
-  
 
   const rerenderMessage = async () => {
+    const userDataString = await AsyncStorage.getItem("userData");
+    const userData = JSON.parse(userDataString);
+    setUserData(userData);
     try {
-      const response = await axios.get(
-        `http://192.168.1.6:5678/message/${route.params._id}`,
+      const response = await fetch(`http://192.168.1.4:5678/message/${route.params._id}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userData.token}`,
+        }
+      });
+      const responseData = await response.json();
+      scrollTobottom();
+      setMessages(responseData);
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+
+  useEffect(() => {
+    rerenderMessage();
+    scrollTobottom();
+  }, []);
+
+  useEffect(() => {
+    socket.emit("setup", userData);
+    socket.on("connect", () => {
+      socket.on("disconnect", () => {
+        console.log("mess", socket);
+        console.log(`Socket disconnected: ${socket.id}`);
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("mess-rcv", (data) => {
+      // console.log("mess", data);
+      setMessages([...messages], data);
+    });
+  }, []);
+
+  const sendMessImg = async () => {
+    const formData = new FormData();
+    formData.append("fileImage", fileRef.current.files[0]);
+    // console.log(fileRef.current.files[0]);
+    try {
+      const respone = await axios.post(
+        "http://192.168.1.4:5678/message/messImage",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const dataSend = await axios.post(
+        "http://192.168.1.4:5678/message/",
+        {
+          chatId: route.params._id,
+          content: respone.data.url,
+          typeMess: "image",
+        },
         {
           headers: {
             Authorization: `Bearer ${userData.token}`,
           },
         }
       );
-      scrollTobottom();
-      setMessages(response.data);
-      
+      socket.emit("new-mes", dataSend.data);
+      socket.emit("render-box-chat", true);
+      setText("");
     } catch (error) {
-      console.log(error);
+      console.error("Error uploading image:", error);
     }
   };
 
-  useEffect(() => { 
-    rerenderMessage();
-    scrollTobottom();
-  }, []);
-
-
-  useEffect(() => {
-
-    socket.emit("setup", userData)
-    socket.on("connect", () => {
-      socket.on("disconnect", () => {
-        console.log("mess", socket);
-        console.log(`Socket disconnected: ${socket.id}`);
-      });
-    })
-  }, [])
-
-  useEffect(() => {
-    socket.on("mess-rcv", (data) => {
-      // console.log("mess", data);
-      setMessages([...messages], data)
-    })
-  }, [])
-
-  // const sendMessImg = async () => {
-  //   const formData = new FormData();
-  //   formData.append('fileImage', fileRef.current.files[0]);
-  //   // console.log(fileRef.current.files[0]);
-  //   try {
-  //     const respone = await axios.post("http://192.168.1.6:5678/message/messImage",
-  //       formData,
-  //       {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data"
-  //         }
-  //       }
-
-  //     );
-
-  //     const dataSend = await axios.post(
-  //       "http://192.168.1.6:5678/message/", {
-  //       chatId: route.params._id,
-  //       content: respone.data.url,
-  //       typeMess: "image"
-  //     },
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${userData.token}`,
-  //         }
-  //       }
-  //     )
-  //     socket.emit("new-mes", dataSend.data)
-  //     socket.emit("render-box-chat", true)
-  //     setText("")
-  //   } catch (error) {
-  //     console.error("Error uploading image:", error);
-  //   }
-  // };
-
- 
   const sendMess = async () => {
     if (messages) {
       try {
         const dataSend = await axios.post(
-          "http://192.168.1.6:5678/message/", {
-          chatId: route.params._id,
-          content: text,
-          typeMess: "text"
-        },
+          "http://192.168.1.4:5678/message/",
+          {
+            chatId: route.params._id,
+            content: text,
+            typeMess: "text",
+          },
           {
             headers: {
               Authorization: `Bearer ${userData.token}`,
-            }
+            },
           }
-        )
-        socket.emit("new-mes", dataSend.data)
-        socket.emit("render-box-chat", true)
-        
-        setMessages(prevMessages => [...prevMessages, dataSend.data]);
-        scrollTobottom()
-        setText("")
+        );
+
+        setMessages((prevMessages) => [...prevMessages, dataSend.data]);
+        scrollTobottom();
+        setText("");
         flatListRef.current.scrollToEnd({ animated: true });
+     
       } catch (error) {
         console.log(error);
       }
     }
-  }
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.viewMess}>
@@ -160,7 +162,6 @@ const SendMessage = () => {
         <Text>{route.params.chatName}</Text>
       </View>
       <FlatList
-       
         ref={flatListRef}
         data={messages}
         renderItem={renderItem}
@@ -178,10 +179,7 @@ const SendMessage = () => {
           <Image
             source={require("../assets/zalo.png")}
             style={styles.sendIcon}
-            
           />
-          
-
         </TouchableOpacity>
       </View>
     </View>
@@ -194,7 +192,6 @@ const styles = StyleSheet.create({
   },
   messagesList: {
     flex: 1,
-    
   },
   message: {
     padding: 10,
@@ -225,7 +222,6 @@ const styles = StyleSheet.create({
   viewMess: {
     flex: 1,
     alignItems: "flex-end",
-    
   },
   image: {
     width: 150,
