@@ -74,7 +74,7 @@ const SendMessage = () => {
       setMessages([...messages], data)
     })
   }, [])
-
+// gửi ảnh
   const sendMessImg = async () => {
     const formData = new FormData();
     formData.append('fileImage', fileRef.current.files[0]);
