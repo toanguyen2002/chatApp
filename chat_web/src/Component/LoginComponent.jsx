@@ -3,6 +3,8 @@ import { Backdrop, CircularProgress } from '@mui/material'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import PersonIcon from '@mui/icons-material/Person';
+import LockIcon from '@mui/icons-material/Lock';
 
 function LoginComponent() {
     const nav = useNavigate()
@@ -45,7 +47,7 @@ function LoginComponent() {
             <div className='login-container'>
                 <h1 className='zname'>ZALO</h1>
                 <div className='tname'>Đăng nhập tài khoản Zalo</div>
-                <div className='tname'>để kết nối với ứng dụng zalo.me</div>
+                <div className='tname'>để kết nối với ứng dụng Zalo Web</div>
 
                 <div className="login-form-container">
                     <div className="login-form-header">
@@ -56,8 +58,18 @@ function LoginComponent() {
                             falseMess ?
                                 <p></p> : <b className='error-text'>Thông tin đăng nhập không hợp lệ vui lòng kiểm tra lại</b>
                         }
-                        <input className='txtLogin' name='name' placeholder='username' type='text' onChange={dataHandle} />
-                        <input className='txtLogin' name='password' placeholder='password' type='password' onChange={dataHandle} />
+
+                        <div className='Txtbox'>
+                            <PersonIcon className='icon'></PersonIcon>
+                            <input className='txtLogin' name='name' placeholder='username' type='text' onChange={dataHandle} />
+
+                        </div>
+
+                        <div className='Txtbox'>
+                            <LockIcon className='icon'></LockIcon>
+                            <input className='txtLogin' name='password' placeholder='password' type='password' onChange={dataHandle} />
+
+                        </div>
                         <button onClick={loginUser} className='btn-login'>Đăng nhập với mật khẩu</button>
                         <div className="login-link">
                             <a href='/resetPass' className='form-link'>Quên mật khẩu ?  </a>
