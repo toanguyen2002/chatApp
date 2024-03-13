@@ -34,7 +34,7 @@ const SendMessage = () => {
       flatListRef.current.scrollToEnd({ animated: true });
     }
   };
-
+////12321312123213213213213213213
   const rerenderMessage = async () => {
     const userDataString = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(userDataString);
