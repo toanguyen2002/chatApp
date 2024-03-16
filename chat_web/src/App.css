@@ -83,8 +83,11 @@
 }
 
 .error-text {
-  font-size: 12px;
+  font-size: 11px;
   color: red;
+  left: 8px;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .side-bar {
