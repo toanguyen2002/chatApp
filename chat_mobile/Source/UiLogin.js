@@ -13,7 +13,7 @@ const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin", password: "123" });
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.110.193:5678/user/login", {
+      const response = await fetch("http://172.20.10.3:5678/user/login", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -21,7 +21,6 @@ const UiLogin = ({ navigation }) => {
         },
         body: JSON.stringify(data),
       });
-      
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
@@ -30,7 +29,10 @@ const UiLogin = ({ navigation }) => {
       navigation.navigate("MessageTC", { token: responseData.token });
       
     } catch (error) {
-      console.log(error);
+      console.log(error);   
+
+
+  
     }
   };
   return (
