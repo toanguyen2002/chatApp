@@ -9,7 +9,7 @@ function FindAndAddFriendComponent({ closemodal }) {
 
     const [users, setUsers] = useState([])
     const userData = JSON.parse(localStorage.getItem("userData"));
-    // console.log(userData.data.token);
+    console.log(userData.data.token);
     const [nameUser, setNameUser] = useState('')
     const { refresh, setRefresh } = useContext(myContext);
     useEffect(() => {
@@ -25,7 +25,7 @@ function FindAndAddFriendComponent({ closemodal }) {
             })
 
             setUsers(dataUser.data);
-            // console.log(dataUser.data);
+            console.log(dataUser.data);
         }
         getUser()
     }, [
@@ -53,9 +53,9 @@ function FindAndAddFriendComponent({ closemodal }) {
 
             <div className="get-users-modal">
                 <div className="modal-title">
-                    <h3 className='capfr'>Những Người Bạn Có Thể Biết</h3>
+                    <h3>Những Người Bạn Có Thể Biết</h3>
                     <IconButton onClick={() => closemodal(false)}>
-                        <ClearIcon className='clearicon'/>
+                        <ClearIcon />
                     </IconButton>
                 </div>
                 <div className="list-body">
@@ -70,5 +70,6 @@ function FindAndAddFriendComponent({ closemodal }) {
         </div>
     )
 }
+
 
 export default FindAndAddFriendComponent

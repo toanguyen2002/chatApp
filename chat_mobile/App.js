@@ -4,7 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
-
+import { AsyncStorage } from 'react-native';
 
 import { MessageTC, Personal, PhoneBook, SenddMessage, UiLogin, UiRegister, Diary, Discover } from "./Source";
 import Phonebook from "./Source/Phonebook";
@@ -58,10 +58,10 @@ function MyTabs() {
             );
           } else if (route.name === "Khám phá") {
             iconComponent = (
-              <AntDesign 
-              name="windows" 
-              size={25} 
-              color={focused ? "#0000FF" : "black"} />
+              <AntDesign
+                name="windows"
+                size={25}
+                color={focused ? "#0000FF" : "black"} />
             );
             labelComponent = (
               <Text
