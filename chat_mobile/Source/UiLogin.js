@@ -13,7 +13,7 @@ const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin", password: "123" });
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://172.20.10.3:5678/user/login", {
+      const response = await fetch("http://192.168.1.4:5678/user/login", {
         method: "POST",
         headers: {
           Accept: "application/json",

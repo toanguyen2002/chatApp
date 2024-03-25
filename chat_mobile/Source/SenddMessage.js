@@ -18,7 +18,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from "@expo/vector-icons";
 
 import * as ImagePicker from "expo-image-picker";
-
+//làm ơn nhớ pullllllllllllllllllllllllllllllllllllllllllll
+/// nam mô a di đà phật
 const socket = io("http://localhost:5678");
 
 const SendMessage = () => {
@@ -49,7 +50,7 @@ const SendMessage = () => {
     setUserData(userData);
     try {
       const response = await fetch(
-        `http://172.20.10.3:5678/message/${route.params._id}`,
+        `http://192.168.1.4:5678/message/${route.params._id}`,
         {
           method: "GET",
           headers: {
@@ -99,7 +100,7 @@ const SendMessage = () => {
   
     try {
       const response = await fetch(
-        "http://172.20.10.3:5678/message/messImage",
+        "http://192.168.1.4:5678/message/messImage",
         {
           method: "POST",
           body: formData,
@@ -117,7 +118,7 @@ const SendMessage = () => {
   
       const responseData = await response.json();
   
-      const messageResponse = await fetch("http://172.20.10.3:5678/message/", {
+      const messageResponse = await fetch("http://192.168.1.4:5678/message/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -175,7 +176,7 @@ const pickImage = async () => {
     if (messages) {
       try {
         const dataSend = await axios.post(
-          "http://172.20.10.3:5678/message/",
+          "http://192.168.1.4:5678/message/",
           {
             chatId: route.params._id,
             content: text,
