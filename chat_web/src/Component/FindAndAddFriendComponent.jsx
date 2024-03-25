@@ -71,4 +71,5 @@ function FindAndAddFriendComponent({ closemodal }) {
     )
 }
 
+
 export default FindAndAddFriendComponent
