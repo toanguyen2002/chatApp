@@ -1,20 +1,41 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, Button, View, Image, Pressable } from 'react-native';
 
+
 const UiRegister = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-
-  const handleRegister = () => {
-    // Gửi yêu cầu đăng kí đến server
+ 
+  const handleRegister = async () => {
+    try {
+      const data = { name, email, password };
+      const response = await fetch("http://192.168.1.4:5678/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(data)
+      });
+  
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const responseData = await response.json();
+      console.log(responseData);
+      setName("");
+      setEmail("");
+      setPassword("");
+      
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
-      <Image style={styles.logo} source={require('../assets/zalo.png')} />
+        <Image style={styles.logo} source={require('../assets/zalo.png')} />
       </View>
       <View style={styles.formContainer}>
         <TextInput
@@ -22,14 +43,12 @@ const UiRegister = () => {
           placeholder="Tên"
           value={name}
           onChangeText={setName}
-          secureTextEntry
         />
         <TextInput
           style={styles.textInput}
           placeholder="Email"
           value={email}
           onChangeText={setEmail}
-          secureTextEntry
         />
         <TextInput
           style={styles.textInput}
@@ -38,19 +57,11 @@ const UiRegister = () => {
           onChangeText={setPassword}
           secureTextEntry
         />
-        <TextInput
-          style={styles.textInput}
-          placeholder="Xác nhận mật khẩu"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
         <View style={styles.register}>
-        <Pressable onPress={()=>{}}>
-          <Text style={styles.registerText}>Đăng Kí</Text>
-        </Pressable>
+          <Pressable onPress={handleRegister}>
+            <Text style={styles.registerText}>Đăng Kí</Text>
+          </Pressable>
         </View>
-         
       </View>
     </View>
   );
@@ -67,8 +78,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   logo: {
-    width:"50%",
-    height:"50%",
+    width: "50%",
+    height: "50%",
   },
   formContainer: {
     flex: 2,
@@ -82,8 +93,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
   },
-
-  register:{
+  register: {
     height: 40,
     borderRadius: 5,
     backgroundColor: '#0084ff',
@@ -94,7 +104,6 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
- 
 });
 
 export default UiRegister;

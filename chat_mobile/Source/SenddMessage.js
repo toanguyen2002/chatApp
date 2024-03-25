@@ -1,49 +1,167 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, FlatList, Image, TouchableOpacity, Alert, Pressable } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons';
+=======
+import React, { useState, useEffect, useRef } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  FlatList,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import axios from "axios";
+import { io } from "socket.io-client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+const socket = io("http://localhost:5678");
+>>>>>>> main
 
 const SendMessage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
-  const [text, setText] = useState('');
+  const [text, setText] = useState("");
+  const navigation = useNavigation();
+  const route = useRoute();
+  const flatListRef = useRef(null);
+  const [userData, setUserData] = useState(null);
+  
+  
+  const handleGoBack = () => {
+    navigation.goBack();
+  };
+
+  const scrollTobottom = () => {
+    if (flatListRef.current) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  };
+////12321312123213213213213213213
+  const rerenderMessage = async () => {
+    const userDataString = await AsyncStorage.getItem("userData");
+    const userData = JSON.parse(userDataString);
+    setUserData(userData);
+    try {
+      const response = await fetch(`http://192.168.1.4:5678/message/${route.params._id}`, {
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userData.token}`,
+        }
+      });
+      const responseData = await response.json();
+      scrollTobottom();
+      setMessages(responseData);
+      console.log(responseData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
 
   useEffect(() => {
-    // Lấy dữ liệu tin nhắn từ server
-    // Cập nhật state messages với dữ liệu lấy được
+    rerenderMessage();
+    scrollTobottom();
   }, []);
 
-  const handleSend = async () => {
-    try {
-      // Gửi tin nhắn đến server
-      const response = await fetch('YOUR_API_ENDPOINT', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: text,
-          // Các thông tin khác nếu cần thiết
-        }),
+  useEffect(() => {
+    socket.emit("setup", userData);
+    socket.on("connect", () => {
+      socket.on("disconnect", () => {
+        console.log("mess", socket);
+        console.log(`Socket disconnected: ${socket.id}`);
       });
-      if (!response.ok) {
-        throw new Error('Failed to send message');
-      }
-      // Cập nhật state messages với tin nhắn mới
-      setMessages([...messages, { id: messages.length.toString(), content: text }]);
-      setText(''); // Xóa nội dung tin nhắn trong TextInput sau khi gửi
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("mess-rcv", (data) => {
+      // console.log("mess", data);
+      setMessages([...messages], data);
+    });
+  }, []);
+
+  const sendMessImg = async () => {
+    const formData = new FormData();
+    formData.append("fileImage", fileRef.current.files[0]);
+    // console.log(fileRef.current.files[0]);
+    try {
+      const respone = await axios.post(
+        "http://192.168.1.4:5678/message/messImage",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      const dataSend = await axios.post(
+        "http://192.168.1.4:5678/message/",
+        {
+          chatId: route.params._id,
+          content: respone.data.url,
+          typeMess: "image",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      socket.emit("new-mes", dataSend.data);
+      socket.emit("render-box-chat", true);
+      setText("");
     } catch (error) {
-      Alert.alert('Error', error.message);
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const sendMess = async () => {
+    if (messages) {
+      try {
+        const dataSend = await axios.post(
+          "http://192.168.1.4:5678/message/",
+          {
+            chatId: route.params._id,
+            content: text,
+            typeMess: "text",
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userData.token}`,
+            },
+          }
+        );
+
+        setMessages((prevMessages) => [...prevMessages, dataSend.data]);
+        scrollTobottom();
+        setText("");
+        flatListRef.current.scrollToEnd({ animated: true });
+     
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.message}>
-      <Text style={styles.content}>{item.content}</Text>
+    <View style={styles.viewMess}>
+      {item.typeMess === "text" ? (
+        <Text>{item.content}</Text>
+      ) : (
+        <Image style={styles.image} source={{ uri: item.content }} />
+      )}
     </View>
   );
 
   return (
     <View style={styles.container}>
+<<<<<<< HEAD
       <View style={{ width: '100%', height: 50, backgroundColor: 'blue' }}>
         <Pressable
           onPress={() => { navigation.navigate('MessageTC') }}
@@ -54,8 +172,17 @@ const SendMessage = ({ navigation }) => {
         </Pressable>
         
 
+=======
+      <TouchableOpacity onPress={handleGoBack}>
+        {/* //Icon */}
+        <Text>Trở về</Text>
+      </TouchableOpacity>
+      <View>
+        <Text>{route.params.chatName}</Text>
+>>>>>>> main
       </View>
       <FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
@@ -68,8 +195,16 @@ const SendMessage = ({ navigation }) => {
           onChangeText={setText}
           placeholder="Nhập tin nhắn..."
         />
+<<<<<<< HEAD
         <TouchableOpacity onPress={handleSend}>
           <Ionicons name="send" size={24} color="black" />
+=======
+        <TouchableOpacity onPress={sendMess}>
+          <Image
+            source={require("../assets/zalo.png")}
+            style={styles.sendIcon}
+          />
+>>>>>>> main
         </TouchableOpacity>
       </View>
     </View>
@@ -86,17 +221,17 @@ const styles = StyleSheet.create({
   message: {
     padding: 10,
     borderBottomWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
   },
   content: {
     fontSize: 16,
   },
   footer: {
     height: 50,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: "#fff",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 10,
   },
   input: {
@@ -108,6 +243,15 @@ const styles = StyleSheet.create({
   sendIcon: {
     width: 20,
     height: 20,
+  },
+  viewMess: {
+    flex: 1,
+    alignItems: "flex-end",
+  },
+  image: {
+    width: 150,
+    height: 200,
+    marginBottom: 20,
   },
 });
 
