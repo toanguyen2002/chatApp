@@ -31,7 +31,7 @@ export default function User({ navigation }) {
                 width: 200,
                 fontSize: 18,
                 color: "white",
-                outlineStyle: "none",
+                // outlineStyle: "none",
               }}
             ></TextInput>
           </View>
@@ -66,7 +66,7 @@ export default function User({ navigation }) {
                   width: '100%',
                   fontSize: 20,
                   color: "gray",
-                  outlineStyle: "none",
+                  // outlineStyle: "none",
                 }}
               ></TextInput>
 

@@ -10,6 +10,7 @@ import {
   Alert,
   Platform,
   Button,
+  KeyboardAvoidingView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
@@ -20,7 +21,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 const socket = io("http://localhost:5678");
-
+const ip = "192.168.110.194";
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -49,7 +50,7 @@ const SendMessage = () => {
     setUserData(userData);
     try {
       const response = await fetch(
-        `http://172.20.10.3:5678/message/${route.params._id}`,
+        `http://${ip}:5678/message/${route.params._id}`,
         {
           method: "GET",
           headers: {
@@ -84,10 +85,12 @@ const SendMessage = () => {
 
   useEffect(() => {
     socket.on("mess-rcv", (data) => {
-      // console.log("mess", data);
-      setMessages([...messages], data);
+      rerenderMessage();
+      // Cập nhật tin nhắn mới vào danh sách tin nhắn
+      setMessages(prevMessages => [...prevMessages, data]);
     });
   }, []);
+  
 
   const sendMessImg = async () => {
     const formData = new FormData();
@@ -96,10 +99,10 @@ const SendMessage = () => {
       name: "photo.jpg",
       type: "image/jpeg",
     });
-  
+
     try {
       const response = await fetch(
-        "http://172.20.10.3:5678/message/messImage",
+        "http://"+ip+":5678/message/messImage",
         {
           method: "POST",
           body: formData,
@@ -108,16 +111,16 @@ const SendMessage = () => {
           },
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(
           `Error uploading image: HTTP status ${response.status}`
         );
       }
-  
+
       const responseData = await response.json();
-  
-      const messageResponse = await fetch("http://172.20.10.3:5678/message/", {
+
+      const messageResponse = await fetch("http://"+ip+":5678/message/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -125,17 +128,17 @@ const SendMessage = () => {
         },
         body: JSON.stringify({
           chatId: route.params._id,
-          content: responseData.url, 
+          content: responseData.url,
           typeMess: "image",
         }),
       });
-  
+
       if (!messageResponse.ok) {
         throw new Error(
           `Error sending message: HTTP status ${messageResponse.status}`
         );
       }
-  
+
       // Thêm tin nhắn mới vào danh sách tin nhắn và cập nhật trạng thái
       const newMessage = await messageResponse.json();
       setMessages([...messages, newMessage]);
@@ -144,8 +147,8 @@ const SendMessage = () => {
       console.error("Error:", error);
     }
   };
-  
-const pickImage = async () => {
+
+  const pickImage = async () => {
     let permissionResult;
     if (Platform.OS !== "web") {
       permissionResult =
@@ -168,14 +171,14 @@ const pickImage = async () => {
       setSelectedImage(result.assets[0].uri);
     }
   };
-  
 
-  
+
+
   const sendMess = async () => {
     if (messages) {
       try {
         const dataSend = await axios.post(
-          "http://172.20.10.3:5678/message/",
+          "http://"+ip+":5678/message/",
           {
             chatId: route.params._id,
             content: text,
@@ -200,7 +203,7 @@ const pickImage = async () => {
 
   const renderItem = ({ item }) => {
     const isCurrentUser = item.sender._id === userData._id;
-  
+
     return (
       <View style={[styles.viewMess, isCurrentUser ? styles.viewMessCurrentUser : styles.viewMessOtherUser]}>
         {item.typeMess === "text" ? (
@@ -211,60 +214,62 @@ const pickImage = async () => {
       </View>
     );
   };
-  
-  return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={handleGoBack}>
-        {/* //Icon */}
-        <Text>Trở về</Text>
-      </TouchableOpacity>
-      <View>
-        <Text>{route.params.chatName}</Text>
-      </View>
-      <FlatList
-        ref={flatListRef}
-        data={messages}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        style={styles.messagesList}
-        
-      />
-      <View style={styles.footer}>
-        <TextInput
-          style={styles.input}
-          value={text}
-          onChangeText={setText}
-          placeholder="Nhập tin nhắn..."
-        />
 
-        {/* <TouchableOpacity onPress={}>
+  return (
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
+      <View style={styles.container}>
+        <TouchableOpacity onPress={handleGoBack}>
+          {/* //Icon */}
+          <Text>Trở về</Text>
+        </TouchableOpacity>
+        <View>
+          <Text>{route.params.chatName}</Text>
+        </View>
+        <FlatList
+          ref={flatListRef}
+          data={messages}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          style={styles.messagesList}
+
+        />
+        <View style={styles.footer}>
+          <TextInput
+            style={styles.input}
+            value={text}
+            onChangeText={setText}
+            placeholder="Nhập tin nhắn..."
+          />
+
+          {/* <TouchableOpacity onPress={}>
           <FontAwesome name="send" size={24} color="black" />
 
         
         </TouchableOpacity> */}
-        <View
-          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-        >
-          {selectedImage && (
+          <View
+            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+          >
+            {selectedImage && (
+              <Image
+                source={{ uri: selectedImage }}
+                style={{ width: 10, height: 10, resizeMode: "contain" }}
+              />
+            )}
+            <Button title="Chọn ảnh" onPress={pickImage} />
+            {selectedImage && <Button title="Gửi ảnh" onPress={sendMessImg} />}
+          </View>
+
+
+
+          <TouchableOpacity onPress={sendMess}>
             <Image
-              source={{ uri: selectedImage }}
-              style={{ width: 10, height: 10,  resizeMode: "contain"}}
+              source={require("../assets/zalo.png")}
+              style={styles.sendIcon}
             />
-          )}
-          <Button title="Chọn ảnh" onPress={pickImage} />
-          {selectedImage && <Button title="Gửi ảnh" onPress={sendMessImg} />}
-        </View>            
-        
-        
-        
-        <TouchableOpacity onPress={sendMess}>
-          <Image
-            source={require("../assets/zalo.png")}
-            style={styles.sendIcon}
-          />
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 const styles = StyleSheet.create({

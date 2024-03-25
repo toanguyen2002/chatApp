@@ -10,7 +10,7 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+const ip = "192.168.110.194";
 const MessageTC = () => {
   const rou = useRoute();
   const [userData, setUserData] = useState(null);
@@ -25,7 +25,7 @@ const MessageTC = () => {
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
 
-        const response = await axios.get("http://172.20.10.3:5678/chat/", {
+        const response = await axios.get("http://"+ip+":5678/chat/", {
           headers: {
             Authorization: `Bearer ${userDataObject.token}`,
           },
@@ -40,25 +40,6 @@ const MessageTC = () => {
     fetchData();
   }, []);
 
-  // useEffect(() => {
-  //   const getChat = async () => {
-  //     try {
-  //       const chatData = await axios.get(
-  //         `http://192.168.1.6:5678/chat/findChatByName?chatName=${search}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${userData.token}`,
-  //           },
-  //         }
-  //       );
-  //       setUsers(chatData.data);
-  //       console.log(chatData.data)
-  //     } catch (error) {
-  //       console.log("lỗi không tìm thấy tên ", error);
-  //     }
-  //   };
-  //   getChat();
-  // }, [search, userData]);
 
   return (
     <View style={{ flex: 1 }}>
