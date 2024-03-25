@@ -31,7 +31,8 @@ const UiRegister = () => {
       console.log(error);
     }
   };
-
+//tôi muốn tesstttt 
+/// I am user
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>
