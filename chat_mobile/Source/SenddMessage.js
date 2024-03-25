@@ -8,11 +8,16 @@ import {
   Image,
   TouchableOpacity,
   Alert,
+  Platform,
+  Button,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesome } from "@expo/vector-icons";
+
+import * as ImagePicker from "expo-image-picker";
 
 const socket = io("http://localhost:5678");
 
@@ -23,8 +28,11 @@ const SendMessage = () => {
   const route = useRoute();
   const flatListRef = useRef(null);
   const [userData, setUserData] = useState(null);
-  
-  
+
+  //chọn ảnh
+  const [selectedImage, setSelectedImage] = useState(null);
+  const fileRef = useRef(null);
+
   const handleGoBack = () => {
     navigation.goBack();
   };
@@ -34,19 +42,22 @@ const SendMessage = () => {
       flatListRef.current.scrollToEnd({ animated: true });
     }
   };
-////12321312123213213213213213213
+  ////12321312123213213213213213213
   const rerenderMessage = async () => {
     const userDataString = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(userDataString);
     setUserData(userData);
     try {
-      const response = await fetch(`http://192.168.1.4:5678/message/${route.params._id}`, {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData.token}`,
+      const response = await fetch(
+        `http://172.20.10.3:5678/message/${route.params._id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData.token}`,
+          },
         }
-      });
+      );
       const responseData = await response.json();
       scrollTobottom();
       setMessages(responseData);
@@ -55,7 +66,6 @@ const SendMessage = () => {
       console.log(error);
     }
   };
-  
 
   useEffect(() => {
     rerenderMessage();
@@ -81,44 +91,91 @@ const SendMessage = () => {
 
   const sendMessImg = async () => {
     const formData = new FormData();
-    formData.append("fileImage", fileRef.current.files[0]);
-    // console.log(fileRef.current.files[0]);
+    formData.append("fileImage", {
+      uri: selectedImage,
+      name: "photo.jpg",
+      type: "image/jpeg",
+    });
+  
     try {
-      const respone = await axios.post(
-        "http://192.168.1.4:5678/message/messImage",
-        formData,
+      const response = await fetch(
+        "http://172.20.10.3:5678/message/messImage",
         {
+          method: "POST",
+          body: formData,
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }
       );
-      const dataSend = await axios.post(
-        "http://192.168.1.4:5678/message/",
-        {
-          chatId: route.params._id,
-          content: respone.data.url,
-          typeMess: "image",
+  
+      if (!response.ok) {
+        throw new Error(
+          `Error uploading image: HTTP status ${response.status}`
+        );
+      }
+  
+      const responseData = await response.json();
+  
+      const messageResponse = await fetch("http://172.20.10.3:5678/message/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userData.token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
-      socket.emit("new-mes", dataSend.data);
-      socket.emit("render-box-chat", true);
-      setText("");
+        body: JSON.stringify({
+          chatId: route.params._id,
+          content: responseData.url, 
+          typeMess: "image",
+        }),
+      });
+  
+      if (!messageResponse.ok) {
+        throw new Error(
+          `Error sending message: HTTP status ${messageResponse.status}`
+        );
+      }
+  
+      // Thêm tin nhắn mới vào danh sách tin nhắn và cập nhật trạng thái
+      const newMessage = await messageResponse.json();
+      setMessages([...messages, newMessage]);
+      setSelectedImage(null);
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error:", error);
     }
   };
+  
+const pickImage = async () => {
+    let permissionResult;
+    if (Platform.OS !== "web") {
+      permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permissionResult.granted === false) {
+        alert(
+          "Xin lỗi, chúng tôi cần quyền truy cập vào thư viện ảnh để chọn ảnh!"
+        );
+        return;
+      }
+    }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
 
+    if (result.canceled === false) {
+      setSelectedImage(result.assets[0].uri);
+    }
+  };
+  
+
+  
   const sendMess = async () => {
     if (messages) {
       try {
         const dataSend = await axios.post(
-          "http://192.168.1.4:5678/message/",
+          "http://172.20.10.3:5678/message/",
           {
             chatId: route.params._id,
             content: text,
@@ -135,23 +192,26 @@ const SendMessage = () => {
         scrollTobottom();
         setText("");
         flatListRef.current.scrollToEnd({ animated: true });
-     
       } catch (error) {
         console.log(error);
       }
     }
   };
 
-  const renderItem = ({ item }) => (
-    <View style={styles.viewMess}>
-      {item.typeMess === "text" ? (
-        <Text>{item.content}</Text>
-      ) : (
-        <Image style={styles.image} source={{ uri: item.content }} />
-      )}
-    </View>
-  );
-
+  const renderItem = ({ item }) => {
+    const isCurrentUser = item.sender._id === userData._id;
+  
+    return (
+      <View style={[styles.viewMess, isCurrentUser ? styles.viewMessCurrentUser : styles.viewMessOtherUser]}>
+        {item.typeMess === "text" ? (
+          <Text style={[styles.textMess, isCurrentUser ? styles.textMessCurrentUser : styles.textMessOtherUser]}>{item.content}</Text>
+        ) : (
+          <Image style={styles.image} source={{ uri: item.content }} />
+        )}
+      </View>
+    );
+  };
+  
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleGoBack}>
@@ -167,6 +227,7 @@ const SendMessage = () => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         style={styles.messagesList}
+        
       />
       <View style={styles.footer}>
         <TextInput
@@ -175,6 +236,27 @@ const SendMessage = () => {
           onChangeText={setText}
           placeholder="Nhập tin nhắn..."
         />
+
+        {/* <TouchableOpacity onPress={}>
+          <FontAwesome name="send" size={24} color="black" />
+
+        
+        </TouchableOpacity> */}
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          {selectedImage && (
+            <Image
+              source={{ uri: selectedImage }}
+              style={{ width: 10, height: 10,  resizeMode: "contain"}}
+            />
+          )}
+          <Button title="Chọn ảnh" onPress={pickImage} />
+          {selectedImage && <Button title="Gửi ảnh" onPress={sendMessImg} />}
+        </View>            
+        
+        
+        
         <TouchableOpacity onPress={sendMess}>
           <Image
             source={require("../assets/zalo.png")}
@@ -185,21 +267,12 @@ const SendMessage = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
   messagesList: {
     flex: 1,
-  },
-  message: {
-    padding: 10,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
-  },
-  content: {
-    fontSize: 16,
   },
   footer: {
     height: 50,
@@ -220,14 +293,33 @@ const styles = StyleSheet.create({
     height: 20,
   },
   viewMess: {
+    marginBottom: 20,
+  },
+  viewMessCurrentUser: {
     flex: 1,
     alignItems: "flex-end",
+    marginRight: 10,
+  },
+  viewMessOtherUser: {
+    flex: 1,
+    alignItems: "flex-start",
+    marginLeft: 10,
+  },
+  textMess: {
+    padding: 10,
+    borderRadius: 10,
+  },
+  textMessCurrentUser: {
+    backgroundColor: "#DCF8C5",
+  },
+  textMessOtherUser: {
+    backgroundColor: "#E5E5EA",
   },
   image: {
     width: 150,
     height: 200,
-    marginBottom: 20,
   },
 });
+
 
 export default SendMessage;

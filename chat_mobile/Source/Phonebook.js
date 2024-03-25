@@ -60,94 +60,9 @@ export default function Phonebook() {
                   <Text style={styles.subText}>Liên hệ có dùng Zalo</Text>
                 </View>
               </View>
-              <View style={styles.tabItem}>
-                <View style={{ marginLeft: 15 }}>
-                  <FontAwesome name="birthday-cake" size={24} color="black" />
-                </View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.tabText}>Lịch sinh nhật</Text>
-                  <Text style={styles.subText}>
-                    Theo dõi sinh nhật của bạn bè
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.separator}></View>
-
-              <View style={styles.tabButtonsContainer}>
-                <Pressable
-                  onPress={() => handlePress("all")}
-                  style={[
-                    styles.tabButton,
-                    activeForm1 === "all" && styles.activeTab,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.tabText,
-                      activeForm1 === "all" && styles.activeTabText,
-                    ]}
-                  >
-                    Tất cả
-                  </Text>
-                </Pressable>
-
-
-                <Pressable
-                  onPress={() => handlePress("recent")}
-                  style={[
-                    styles.tabButton,
-                    activeForm1 === "recent" && styles.activeTab,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.tabText,
-                      activeForm1 === "recent" && styles.activeTabText,
-                    ]}
-                  >
-                    Mới truy cập
-                  </Text>
-                </Pressable>
-              </View>
-              {showCharBar && (
-                <ScrollView horizontal style={styles.charBar}>
-                  {alphabet.map((char) => (
-                    <Pressable
-                      key={char}
-                      onPress={() => handleCharPress(char)}
-                      style={[
-                        styles.charButton,
-                        selectedChar === char && styles.selectedChar,
-                      ]}
-                    >
-                      <Text style={styles.charText}>{char}</Text>
-                    </Pressable>
-                  ))}
-                </ScrollView>
-              )}
+              
             </View>
           )}
-        {activeForm1 === "all" && (
-          <View style={styles.contentContainer}>
-            <Text style={styles.contentText}>Hiển thị nội dung</Text>
-          </View>
-        )}
-        {activeForm1 === "recent" && (
-          <ScrollView contentContainerStyle={styles.contentContainer}>
-            <Text style={styles.subtitle}>
-              Cho phép hiển thị trạng thái truy cập
-            </Text>
-            <Text style={styles.description}>
-              Bạn có thể thấy khi bạn bè truy cập. Bạn bè cũng xem được trạng
-              thái truy cập của bạn
-            </Text>
-            <Pressable style={styles.allowButton}>
-              <Text style={styles.allowButtonText}>Cho phép</Text>
-            </Pressable>
-          </ScrollView>
-        )}
-
         {formToShow === "group" && (
           <View style={{}}>
             <View style={styles.tabContainer2}>
@@ -157,6 +72,7 @@ export default function Phonebook() {
                   source={require("../assets/newgrp.png")}
                 />
                 <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
+                
               </View>
               <View style={styles.separator}></View>
 
@@ -234,57 +150,6 @@ export default function Phonebook() {
             </View>
           </View>
         )}
-        {formToShow === "qa" && (
-          <View style={{ backgroundColor: "#DCDCDC", width: 420, height: 800 }}>
-            <View style={{ backgroundColor: "white", width: 420, height: 500 }}>
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa1.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Tìm thêm Official Account
-                </Text>
-              </View>
-
-              <View>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Official Account đang quan tâm
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa2.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  ZaloPay
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa3.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Zalo Official Account
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa4.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Zing MP3
-                </Text>
-              </View>
-            </View>
-          </View>
-        )}
       </View>
 
     );
@@ -293,7 +158,6 @@ export default function Phonebook() {
     <ScrollView>
       {/* Phần background của ứng dụng */}
       {/* ----- */}
-
 
       <View>
         <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
@@ -343,7 +207,6 @@ export default function Phonebook() {
             style={[
               styles.tabText,
               activeForm === "friend" && styles.activeTabText1,
-
             ]}
           >
             Bạn bè
@@ -366,20 +229,7 @@ export default function Phonebook() {
           </Text>
         </Pressable>
 
-        {/* Tab "QA" */}
-        <Pressable
-          onPress={() => handlePress("qa")}
-          style={[activeForm === "qa" && styles.activeTab]}
-        >
-          <Text
-            style={[
-              styles.tabText,
-              activeForm === "qa" && styles.activeTabText1,
-            ]}
-          >
-            QA
-          </Text>
-        </Pressable>
+        
       </View>
 
       {/* Đường kẻ phân cách giữa các phần */}

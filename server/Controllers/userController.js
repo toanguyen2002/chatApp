@@ -3,6 +3,8 @@ var nodemailer = require('nodemailer');
 const User = require("../Entity/userEntity");
 const expreeAsynceHandle = require("express-async-handler");
 const generateToken = require("../config/generateToken");
+const mongodb = require('mongodb');
+const { default: mongoose } = require("mongoose");
 
 const loginController = expreeAsynceHandle(async (req, res) => {
     const { name, password } = req.body;
@@ -307,6 +309,10 @@ const getUserAccept = expreeAsynceHandle(async (req, res) => {
                 $unwind: "$friends" // Giải nén mảng "friends"
             },
             {
+                $match: { "friends.friend": new mongoose.Types.ObjectId(userId) }
+            },
+
+            {
                 $lookup:
                 {
                     from: "users",
@@ -315,7 +321,7 @@ const getUserAccept = expreeAsynceHandle(async (req, res) => {
                         {
                             $match: {
                                 $expr: { $eq: ["$_id", "$$senderId"] },
-                                "friends.accept": true
+                                // "friends.accept": true
                             }
                         },
                         {
@@ -327,15 +333,18 @@ const getUserAccept = expreeAsynceHandle(async (req, res) => {
             },
             {
                 $match: {
-                    "friends_docs.0": { $exists: true },
+                    "friends_docs": { $exists: true },
                     "friends.accept": true
 
                 }
             }
         ]);
-        // console.log(result);
+        // console.log(userId);
+        // console.log();
+
         res.send(result);
     } catch (error) {
+        console.log(error);
         res.send(error);
     }
 });
