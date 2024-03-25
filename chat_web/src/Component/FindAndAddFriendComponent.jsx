@@ -25,7 +25,7 @@ function FindAndAddFriendComponent({ closemodal }) {
             })
 
             setUsers(dataUser.data);
-            // console.log(dataUser.data);
+            console.log(dataUser.data);
         }
         getUser()
     }, [
