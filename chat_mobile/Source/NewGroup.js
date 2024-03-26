@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import { AntDesign } from "@expo/vector-icons";
-export default function Adfr({ navigation }) {
+export default function NewGroup({ navigation }) {
     return (
         <ScrollView>
             <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC" }}>

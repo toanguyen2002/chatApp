@@ -19,7 +19,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ip = "192.168.0.229";
-export default function Phonebook() {
+export default function Phonebook({ navigation }) {
   const [activeForm, setActiveForm] = useState("friend");
   const [activeForm1, setActiveForm1] = useState("all");
   const [selectedChar, setSelectedChar] = useState(null);
@@ -137,8 +137,10 @@ export default function Phonebook() {
           formToShow1 === "recent") && (
             <View style={styles.tabContainer}>
               <Pressable
-                onPress={() => handlePress("receivefr")}
-                style={[activeForm === "receivefr" && styles.activeTab]}>
+                onPress={() =>
+                  navigation.navigate("Friend")
+
+                }>
                 <View style={styles.tabItem}>
                   <View style={{ marginLeft: 15 }}>
                     <FontAwesome5 name="user-friends" size={24} color="black" />
@@ -165,8 +167,10 @@ export default function Phonebook() {
           <View style={{}}>
             <View style={styles.tabContainer2}>
               <Pressable
-                onPress={() => handlePress("addgroup")}
-                style={[activeForm === "addgroup" && styles.activeTab]}>
+                onPress={() =>
+                  navigation.navigate("NewGroup")
+
+                }>
                 <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
                   <Image
                     style={{ width: 70, height: 70, resizeMode: 'contain' }}
@@ -263,7 +267,7 @@ export default function Phonebook() {
           </View>
         )}
 
-        
+
       </View>
 
     );
@@ -290,9 +294,15 @@ export default function Phonebook() {
             {/* ----- */}
 
             {/* Icon thêm bạn bè */}
-            <View style={{ marginLeft: 100 }}>
-              <AntDesign name="adduser" size={30} color="white" />
-            </View>
+            <Pressable
+            onPress={() =>
+              navigation.navigate("AddFriend")
+
+            }>
+              <View style={{ marginLeft: 100 }}>
+                <AntDesign name="adduser" size={30} color="white" />
+              </View>
+            </Pressable>
           </View>
         </View>
 
