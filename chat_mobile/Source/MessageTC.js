@@ -25,7 +25,7 @@ const MessageTC = () => {
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
 
-        const response = await axios.get("http://192.168.1.4:5678/chat/", {
+        const response = await axios.get("http://192.168.0.229:5678/chat/", {
           headers: {
             Authorization: `Bearer ${userDataObject.token}`,
           },

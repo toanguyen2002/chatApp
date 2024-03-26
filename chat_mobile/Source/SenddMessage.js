@@ -50,7 +50,7 @@ const SendMessage = () => {
     setUserData(userData);
     try {
       const response = await fetch(
-        `http://192.168.1.4:5678/message/${route.params._id}`,
+        `http://192.168.0.229:5678/message/${route.params._id}`,
         {
           method: "GET",
           headers: {
@@ -100,7 +100,7 @@ const SendMessage = () => {
   
     try {
       const response = await fetch(
-        "http://192.168.1.4:5678/message/messImage",
+        "http://192.168.0.229:5678/message/messImage",
         {
           method: "POST",
           body: formData,
@@ -118,7 +118,7 @@ const SendMessage = () => {
   
       const responseData = await response.json();
   
-      const messageResponse = await fetch("http://192.168.1.4:5678/message/", {
+      const messageResponse = await fetch("http://192.168.0.229:5678/message/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -176,7 +176,7 @@ const pickImage = async () => {
     if (messages) {
       try {
         const dataSend = await axios.post(
-          "http://192.168.1.4:5678/message/",
+          "http://192.168.0.229:5678/message/",
           {
             chatId: route.params._id,
             content: text,
