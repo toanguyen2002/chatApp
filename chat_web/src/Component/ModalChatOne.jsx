@@ -16,6 +16,7 @@ function ModalChatOne({ clockModal }) {
 
     const accessChatOneToOne = async (item) => {
         // http://localhost:5678/chat/
+        // http://localhost:5678/chat/
 
         try {
             const respone = await axios.post(
