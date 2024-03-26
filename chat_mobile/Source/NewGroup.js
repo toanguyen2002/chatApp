@@ -51,6 +51,7 @@ export default function NewGroup({ navigation }) {
                     <View style={{ top: 20, left: 15 }}>
                         <Text style={{fontWeight: "500"}}>Liên lạc gần đây</Text>
                     </View>
+                    {/* Kết thúc */}
 
 
 

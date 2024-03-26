@@ -49,6 +49,8 @@ export default function Adfr({ navigation }) {
                         </Pressable>
                     </View>
 
+                    {/* Kết thúc */}
+
 
 
 

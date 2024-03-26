@@ -32,6 +32,7 @@ export default function Friend({ navigation }) {
 
 
                     </View>
+                    {/* Kết thúc */}
                     
 
 
