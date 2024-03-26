@@ -136,13 +136,19 @@ export default function Phonebook() {
           formToShow1 === "all" ||
           formToShow1 === "recent") && (
             <View style={styles.tabContainer}>
-              <View style={styles.tabItem}>
-                <View style={{ marginLeft: 15 }}>
-                  <FontAwesome5 name="user-friends" size={24} color="black" />
-                </View>
+              <Pressable
+                onPress={() => handlePress("receivefr")}
+                style={[activeForm === "receivefr" && styles.activeTab]}>
+                <View style={styles.tabItem}>
+                  <View style={{ marginLeft: 15 }}>
+                    <FontAwesome5 name="user-friends" size={24} color="black" />
+                  </View>
 
-                <Text style={styles.tabText}>Lời mời kết bạn</Text>
-              </View>
+
+                  <Text style={styles.tabText}>Lời mời kết bạn</Text>
+
+                </View>
+              </Pressable>
               <View style={styles.tabItem}>
                 <Text>Danh sách bạn bè</Text>
 
@@ -158,14 +164,18 @@ export default function Phonebook() {
         {formToShow === "group" && (
           <View style={{}}>
             <View style={styles.tabContainer2}>
-              <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
-                <Image
-                  style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                  source={require("../assets/newgrp.png")}
-                />
-                <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
+              <Pressable
+                onPress={() => handlePress("addgroup")}
+                style={[activeForm === "addgroup" && styles.activeTab]}>
+                <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
+                  <Image
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    source={require("../assets/newgrp.png")}
+                  />
+                  <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
 
-              </View>
+                </View>
+              </Pressable>
               <View style={styles.separator}></View>
 
               {/* <View>
@@ -224,7 +234,7 @@ export default function Phonebook() {
                       const handlePress = () => {
                         navigation.navigate("SenddMessage", item); // Navigate to SendMessage screen
                       };
-                    
+
                       return (
                         <TouchableOpacity onPress={handlePress} >
                           <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.chatName}</Text>
@@ -251,6 +261,218 @@ export default function Phonebook() {
               <View></View>
             </View>
           </View>
+        )}
+
+        {formToShow === "addgroup" && (
+          <ScrollView style={{ position: "relative", flex: 1, right: 9, bottom: 52, width: 500 }}>
+            <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC", right: 5 }}>
+              <View style={{ width: 420, height: 1000, backgroundColor: "white", }}>
+
+                <View style={{ flexDirection: "row", }}>
+                  <View style={{ top: 2, left: 5 }}>
+                    <Pressable
+                      onPress={() => handlePress("group")}
+                      style={[activeForm === "group" && styles.activeTab,]}>
+                      <AntDesign name="arrowleft" size={30} color="black" />
+                    </Pressable>
+                  </View>
+
+                  <View style={{ flexDirection: "column ", left: 15, top: 2 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 20, color: "#1E90FF" }}> Tạo Nhóm mới </Text>
+
+                  </View>
+
+
+                </View>
+                <View style={{ flexDirection: "row", left: 15, top: 15 }}>
+                  <View >
+                    <AntDesign name="addusergroup" size={50} color="#1E90FF" />
+                  </View>
+                  <View style={{ left: 15 }}>
+                    <TextInput
+                      style={{ height: 50, backgroundColor: "white", width: 200 }}
+                      placeholder="Đặt tên nhóm">
+
+                    </TextInput>
+                  </View>
+                  <Pressable style={{ justifyContent: "center", alignItems: "center", backgroundColor: "#1E90FF", left: 25, width: 60, borderRadius: 100 }}>
+                    <AntDesign name="arrowright" size={24} color="white" />
+                  </Pressable>
+                </View>
+                <View style={{ top: 30, left: 15 }}>
+                  <Text style={{ fontWeight: 500, fontSize: 18 }}>Liên lạc gần đây</Text>
+                </View>
+                <View style={{ flex: 1, flexDirection: "column", marginBottom: 20, top: 50, left: 15 }}>
+                  <Image
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    source={require("../assets/grp1.png")}
+                  />
+                  <Image
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    source={require("../assets/grp2.png")}
+                  />
+                  <Image
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    source={require("../assets/grp3.png")}
+                  />
+                  <Image
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    source={require("../assets/grp5.png")}
+                  />
+                </View>
+
+
+
+
+              </View>
+            </View>
+          </ScrollView>
+        )}
+        {formToShow === "receivefr" && (
+          <ScrollView style={{ position: "relative", flex: 1, right: 9, bottom: 52, width: 500 }}>
+            <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC", right: 5 }}>
+              <View style={{ width: 420, height: 1000, backgroundColor: "white", }}>
+
+
+                <View style={{ flexDirection: "row", }}>
+                  <View style={{ top: 2, left: 5 }}>
+                    <Pressable
+                      onPress={() => handlePress("friend")}
+                      style={[activeForm === "friend" && styles.activeTab,]}>
+                      <AntDesign name="arrowleft" size={30} color="black" />
+                    </Pressable>
+                  </View>
+
+                  <View style={{ flexDirection: "column ", left: 15, top: 2 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 20, color: "#1E90FF" }}> Lời mời kết bạn </Text>
+
+                  </View>
+
+
+                </View>
+                <View
+                  style={{
+                    width: 420,
+                    height: 50,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    borderRadius: 5,
+                    right: 27,
+                    top: 3
+                  }}
+                >
+                  {/* Tab "Bạn bè" */}
+
+                  <Pressable
+                    onPress={() => handlePress("receivefr")}
+                    style={[activeForm === "receivefr" && styles.activeTab,]}
+                  >
+                    <Text
+                      style={[
+                        styles.tabText,
+                        activeForm === "receivefr" && styles.activeTabText1,
+                      ]}
+                    >
+                      Đã nhận
+                    </Text>
+                  </Pressable>
+
+
+                  {/* Tab "Nhóm" */}
+                  <Pressable
+                    onPress={() => handlePress("sendfr")}
+                    style={[activeForm === "sendfr" && styles.activeTab]}
+                  >
+                    <Text
+                      style={[
+                        styles.tabText,
+                        activeForm === "sendfr" && styles.activeTabText1,
+                      ]}
+                    >
+                      Đã gửi
+                    </Text>
+                  </Pressable>
+                </View>
+
+                <Text>Nhận</Text>
+
+              </View>
+            </View>
+          </ScrollView>
+        )}
+        {formToShow === "sendfr" && (
+          <ScrollView style={{ position: "relative", flex: 1, right: 9, bottom: 52, width: 500 }}>
+            <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC", right: 5 }}>
+              <View style={{ width: 420, height: 1000, backgroundColor: "white", }}>
+
+
+                <View style={{ flexDirection: "row", }}>
+                  <View style={{ top: 2, left: 5 }}>
+                    <Pressable
+                      onPress={() => handlePress("friend")}
+                      style={[activeForm === "friend" && styles.activeTab,]}>
+                      <AntDesign name="arrowleft" size={30} color="black" />
+                    </Pressable>
+                  </View>
+
+                  <View style={{ flexDirection: "column ", left: 15, top: 2 }}>
+                    <Text style={{ fontWeight: 500, fontSize: 20, color: "#1E90FF" }}> Lời mời kết bạn </Text>
+
+                  </View>
+
+
+                </View>
+                <View
+                  style={{
+                    width: 420,
+                    height: 50,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-around",
+                    borderRadius: 5,
+                    right: 27,
+                    top: 3
+                  }}
+                >
+                  {/* Tab "Bạn bè" */}
+
+                  <Pressable
+                    onPress={() => handlePress("receivefr")}
+                    style={[activeForm === "receivefr" && styles.activeTab,]}
+                  >
+                    <Text
+                      style={[
+                        styles.tabText,
+                        activeForm === "receivefr" && styles.activeTabText1,
+                      ]}
+                    >
+                      Đã nhận
+                    </Text>
+                  </Pressable>
+
+
+                  {/* Tab "Nhóm" */}
+                  <Pressable
+                    onPress={() => handlePress("sendfr")}
+                    style={[activeForm === "sendfr" && styles.activeTab]}
+                  >
+                    <Text
+                      style={[
+                        styles.tabText,
+                        activeForm === "sendfr" && styles.activeTabText1,
+                      ]}
+                    >
+                      Đã gửi
+                    </Text>
+                  </Pressable>
+                </View>
+
+                <Text>gửi</Text>
+
+              </View>
+            </View>
+          </ScrollView>
         )}
       </View>
 
