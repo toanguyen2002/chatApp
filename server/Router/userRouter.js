@@ -12,7 +12,7 @@ Router.get('/fetchUsers', protect, fetchUser)
 Router.route('/addfriend').post(protect, addFriend)
 Router.route('/acceptFriend').post(protect, acceptFriend)
 Router.route('/removeAddFriend').post(protect, removeAddFriend)
-Router.route('/getUserNotFriend').post(protect, getUserNoAccept)
+Router.route('/getUserNotFriend').get(protect, getUserNoAccept)
 
 
 Router.get('/fetchInvitationFromClient', fetchInvitationFromClient)
