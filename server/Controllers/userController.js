@@ -175,12 +175,13 @@ const removeAddFriend = expreeAsynceHandle(async (req, res) => {
     }
 });
 const acceptFriend = expreeAsynceHandle(async (req, res) => {
-    const user = await User.findOne({ _id: req.body.userid }).select('-password');
-    const friend = await User.findOne({ _id: req.body.friendId }).select('-password');
+    const friendId = req.body.friendId
+    const user = await User.findOne({ _id: req.body.userid })
+    const friend = await User.findOne({ _id: friendId }).select('-password');
     try {
-        await User.findOneAndUpdate(
+        const status = await User.findOneAndUpdate(
             {
-                _id: user,
+                _id: req.body.userid,
                 'friends.friend': friend
             },
             { $set: { 'friends.$.accept': true } },
@@ -192,9 +193,7 @@ const acceptFriend = expreeAsynceHandle(async (req, res) => {
             },
             { $set: { 'friends.$.accept': true } },
         );
-        console.log(user);
-        console.log(friend);
-        res.send(user)
+        res.status(200).send(status)
     } catch (error) {
         res.send(error)
     }
