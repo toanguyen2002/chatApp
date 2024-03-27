@@ -9,7 +9,7 @@ function FindAndAddFriendComponent({ closemodal }) {
 
     const [users, setUsers] = useState([])
     const userData = JSON.parse(localStorage.getItem("userData"));
-    console.log(userData.data.token);
+    // console.log(userData.data.token);
     const [nameUser, setNameUser] = useState('')
     const { refresh, setRefresh } = useContext(myContext);
     useEffect(() => {
