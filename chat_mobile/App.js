@@ -8,6 +8,9 @@ import { AsyncStorage } from 'react-native';
 
 import { MessageTC, Personal, PhoneBook, SenddMessage, UiLogin, UiRegister, Diary, Discover } from "./Source";
 import Phonebook from "./Source/Phonebook";
+import AddFriend from "./Source/AddFriend";
+import Friend from "./Source/Friend";
+import NewGroup from "./Source/NewGroup";
 
 const Tab = createBottomTabNavigator();
 
@@ -129,7 +132,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
 
-        {/* <Stack.Screen name="UiLogin" component={UiLogin} /> */}
+         <Stack.Screen name="UiLogin" component={UiLogin} />  
         <Stack.Screen name="MessageTC" component={MyTabs} />
         <Stack.Screen name="UiRegister" component={UiRegister} />
         <Stack.Screen name="SenddMessage" component={SenddMessage} />
@@ -137,6 +140,9 @@ export default function App() {
         <Stack.Screen name="Personal" component={Personal} />
         <Stack.Screen name="Diary" component={Diary} />
         <Stack.Screen name="Discover" component={Discover} />
+        <Stack.Screen name="AddFriend" component={AddFriend} />
+        <Stack.Screen name="Friend" component={Friend} />
+        <Stack.Screen name="NewGroup" component={NewGroup} />
 
 
 
