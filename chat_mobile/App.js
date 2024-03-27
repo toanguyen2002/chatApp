@@ -132,7 +132,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
 
-         <Stack.Screen name="UiLogin" component={UiLogin} />  
+         {/* <Stack.Screen name="UiLogin" component={UiLogin} />   */}
         <Stack.Screen name="MessageTC" component={MyTabs} />
         <Stack.Screen name="UiRegister" component={UiRegister} />
         <Stack.Screen name="SenddMessage" component={SenddMessage} />

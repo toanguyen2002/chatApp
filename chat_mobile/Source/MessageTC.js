@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -25,7 +26,7 @@ const MessageTC = () => {
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
 
-        const response = await axios.get("http://192.168.1.6:5678/chat/", {
+        const response = await axios.get("http://192.168.51.107:5678/chat/", {
           headers: {
             Authorization: `Bearer ${userDataObject.token}`,
           },
@@ -63,12 +64,13 @@ const MessageTC = () => {
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Image
-          style={styles.imageContainer}
-          source={require("../assets/zalo.png")}
-          placeholder="tìm kiếm"
-        />
-        <Text>{userData && userData.name}</Text>
+        <View style={styles.search}>
+          <AntDesign name="search1" size={25} color="white" />
+        </View>
+        <Text style={styles.username}>{userData && userData.name}</Text>
+        <View style={styles.plus}>
+          <AntDesign name="plus" size={25} color="white" />
+        </View>
       </View>
 
       <View style={styles.container1}>
@@ -115,9 +117,10 @@ const MessageItem = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "red",
+    backgroundColor: "blue",
     width: "100%",
     flexDirection: "row",
+    alignItems: "flex-end"
   },
   imageContainer: {
     width: 40,
@@ -126,9 +129,21 @@ const styles = StyleSheet.create({
   },
   container1: {
     flex: 9,
-    backgroundColor: "blue",
+    backgroundColor: "white",
     padding: 10,
   },
+  plus: {
+    left: 260
+  },
+  search: {
+    left: 10
+  },
+  username: {
+    left: 30,
+    justifyContent: "center",
+    fontSize:18
+    
+  }
 });
 
 export default MessageTC;
