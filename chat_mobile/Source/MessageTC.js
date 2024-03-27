@@ -6,13 +6,17 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  Modal,
+  Pressable,
+  TouchableWithoutFeedback,
+  
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const MessageTC = () => {
+const MessageTC = ({ navigation }) => {
   const rou = useRoute();
   const [userData, setUserData] = useState(null);
   const [dataChatBox, setDataChatBox] = useState([]);
@@ -60,6 +64,15 @@ const MessageTC = () => {
   //   };
   //   getChat();
   // }, [search, userData]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -68,9 +81,9 @@ const MessageTC = () => {
           <AntDesign name="search1" size={25} color="white" />
         </View>
         <Text style={styles.username}>{userData && userData.name}</Text>
-        <View style={styles.plus}>
+        <Pressable style={styles.plus} onPress={toggleModal}>
           <AntDesign name="plus" size={25} color="white" />
-        </View>
+        </Pressable>
       </View>
 
       <View style={styles.container1}>
@@ -85,6 +98,67 @@ const MessageTC = () => {
           return <MessageItem {...item} key={index} />;
         })}
       </View>
+
+      <Modal visible={isModalVisible} transparent={true} animationType="none">
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Pressable style={{ flexDirection: "row" }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <AntDesign name="adduser" size={25} color="#A9A9A9" />
+                  </View>
+
+                  <Pressable
+                    onPress={() => {
+                      navigation.navigate("AddFriend");
+                      toggleModal();
+                    }}
+                  >
+                    <View style={{ marginLeft: 10, marginTop: 2 }}>
+                      <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                        Thêm bạn
+                      </Text>
+                    </View>
+                  </Pressable>
+                </Pressable>
+                    {/* ---------- */}
+                <Pressable
+                onPress={() => {
+                  navigation.navigate("NewGroup");
+                  toggleModal();
+                }}
+                 style={{ flexDirection: "row", marginTop: 25 }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <AntDesign name="addusergroup" size={25} color="#A9A9A9" />
+                  </View>
+                  <View style={{ marginLeft: 10, marginTop: 2 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                      Tạo nhóm
+                    </Text>
+                  </View>
+                </Pressable>
+                <Pressable style={{ flexDirection: "row", marginTop: 25 }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <AntDesign name="cloudo" size={25} color="#A9A9A9" />
+                  </View>
+                  <View style={{ marginLeft: 10, marginTop: 2 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                      Cloud của tôi
+                    </Text>
+                  </View>
+                </Pressable>
+                
+                
+
+                
+               
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      
     </View>
   );
 };
@@ -143,7 +217,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     fontSize:18
     
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    // alignItems: "flex-end",
+    // justifyContent: "flex-start",
+    marginTop: 60,
+    marginLeft: 160,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: 250,
+    height: 320,
+  },
 });
 
 export default MessageTC;
