@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, TextInput, FlatList, Image, TouchableOpacity, Alert, Pressable } from 'react-native';
+import { AntDesign } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
+=======
 import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
@@ -15,8 +21,9 @@ import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const socket = io("http://localhost:5678");
+>>>>>>> main
 
-const SendMessage = () => {
+const SendMessage = ({ navigation }) => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const navigation = useNavigation();
@@ -154,12 +161,25 @@ const SendMessage = () => {
 
   return (
     <View style={styles.container}>
+<<<<<<< HEAD
+      <View style={{ width: '100%', height: 50, backgroundColor: 'blue' }}>
+        <Pressable
+          onPress={() => { navigation.navigate('MessageTC') }}
+          style={{ justifyContent: 'center', top: 10, left: 10 }}
+
+        >
+          <AntDesign name="arrowleft" size={26} color="white" />
+        </Pressable>
+        
+
+=======
       <TouchableOpacity onPress={handleGoBack}>
         {/* //Icon */}
         <Text>Trở về</Text>
       </TouchableOpacity>
       <View>
         <Text>{route.params.chatName}</Text>
+>>>>>>> main
       </View>
       <FlatList
         ref={flatListRef}
@@ -175,11 +195,16 @@ const SendMessage = () => {
           onChangeText={setText}
           placeholder="Nhập tin nhắn..."
         />
+<<<<<<< HEAD
+        <TouchableOpacity onPress={handleSend}>
+          <Ionicons name="send" size={24} color="black" />
+=======
         <TouchableOpacity onPress={sendMess}>
           <Image
             source={require("../assets/zalo.png")}
             style={styles.sendIcon}
           />
+>>>>>>> main
         </TouchableOpacity>
       </View>
     </View>

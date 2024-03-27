@@ -6,7 +6,9 @@ import MessageTC from "./MessageTC";
 import PhoneBook from "./Phonebook";
 import Diary from "./Diary";
 import Discover from "./Discover";
-
+// import MessageTC from "./MessageTC";
+// import MessageTC from "./MessageTC";
+// import MessageTC from "./MessageTC";
 export{
     UiLogin,
     UiRegister,
@@ -16,5 +18,4 @@ export{
     PhoneBook,
     Diary,
     Discover,
-    //áhdad
 }
