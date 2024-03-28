@@ -18,7 +18,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Phonebook() {
+const ip = "192.168.0.236";
+export default function Phonebook({ navigation }) {
   const [activeForm, setActiveForm] = useState("friend");
   const [activeForm1, setActiveForm1] = useState("all");
   const [selectedChar, setSelectedChar] = useState(null);
@@ -97,13 +98,13 @@ export default function Phonebook() {
     };
     getUser();
   }, []);
-  const alphabet = Array.from({ length: 26 }, (_, i) =>
-    String.fromCharCode("A".charCodeAt(0) + i)
-  );
+  // const alphabet = Array.from({ length: 26 }, (_, i) =>
+  //   String.fromCharCode("A".charCodeAt(0) + i)
+  // );
 
-  const handleCharPress = (char) => {
-    setSelectedChar(char);
-  };
+  // const handleCharPress = (char) => {
+  //   setSelectedChar(char);
+  // };
 
   const handlePress = (form) => {
     setActiveForm(form);
@@ -146,96 +147,39 @@ export default function Phonebook() {
                   </View>
 
 
-                <Text style={styles.tabText}>Lời mời kết bạn</Text>
-              </View>
+                  <Text style={styles.tabText}>Lời mời kết bạn</Text>
+
+                </View>
+              </Pressable>
               <View style={styles.tabItem}>
-                <View style={{ marginLeft: 15 }}>
-                  <AntDesign name="contacts" size={24} color="black" />
-                </View>
+                <Text>Danh sách bạn bè</Text>
 
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.tabText}>Danh bạ máy</Text>
-                  <Text style={styles.subText}>Liên hệ có dùng Zalo</Text>
-                </View>
               </View>
-              <View style={styles.tabItem}>
-                <View style={{ marginLeft: 15 }}>
-                  <FontAwesome name="birthday-cake" size={24} color="black" />
-                </View>
-
-                <View style={{ flexDirection: "column" }}>
-                  <Text style={styles.tabText}>Lịch sinh nhật</Text>
-                  <Text style={styles.subText}>
-                    Theo dõi sinh nhật của bạn bè
-                  </Text>
-                </View>
+              <View style={{ flexDirection: "column" }}>
+                {users.map((item, index) => {
+                  return <MessageItem {...item} key={index} />;
+                })}
               </View>
-              <View style={styles.separator}></View>
 
-              <View style={styles.tabButtonsContainer}>
-                <Pressable
-                  onPress={() => handlePress("all")}
-                  style={[
-                    styles.tabButton,
-                    activeForm1 === "all" && styles.activeTab,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.tabText,
-                      activeForm1 === "all" && styles.activeTabText,
-                    ]}
-                  >
-                    Tất cả
-                  </Text>
-                </Pressable>
-
-
-                <Pressable
-                  onPress={() => handlePress("recent")}
-                  style={[
-                    styles.tabButton,
-                    activeForm1 === "recent" && styles.activeTab,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.tabText,
-                      activeForm1 === "recent" && styles.activeTabText,
-                    ]}
-                  >
-                    Mới truy cập
-                  </Text>
-                </Pressable>
-              </View>
-              {showCharBar && (
-                <ScrollView horizontal style={styles.charBar}>
-                  {alphabet.map((char) => (
-                    <Pressable
-                      key={char}
-                      onPress={() => handleCharPress(char)}
-                      style={[
-                        styles.charButton,
-                        selectedChar === char && styles.selectedChar,
-                      ]}
-                    >
-                      <Text style={styles.charText}>{char}</Text>
-                    </Pressable>
-                  ))}
-                </ScrollView>
-              )}
             </View>
           )}
         {formToShow === "group" && (
           <View style={{}}>
             <View style={styles.tabContainer2}>
-              <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
-                <Image
-                  style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                  source={require("../assets/newgrp.png")}
-                />
-                <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
-              </View>
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("NewGroup")
+
+                }>
+                <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
+                  <Image
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    source={require("../assets/newgrp.png")}
+                  />
+                  <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
+
+                </View>
+              </Pressable>
               <View style={styles.separator}></View>
 
               {/* <View>
@@ -287,22 +231,32 @@ export default function Phonebook() {
                   <Text style={{ fontWeight: '600', fontSize: 15 }}>Nhóm đang tham gia</Text>
                 </View>
                 <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-around", marginBottom: 20 }}>
-                  <Image
-                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                    source={require("../assets/grp1.png")}
-                  />
-                  <Image
-                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                    source={require("../assets/grp2.png")}
-                  />
-                  <Image
-                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                    source={require("../assets/grp3.png")}
-                  />
-                  <Image
-                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                    source={require("../assets/grp5.png")}
-                  />
+                  {/* render danh sách nhóm hiện có*/}
+                  <View style={styles.container1}>
+                    {dataChatBox.filter(item => item.isGroup === true).map((item, index) => {
+                      const navigation = useNavigation();
+                      const handlePress = () => {
+                        navigation.navigate("SenddMessage", item); // Navigate to SendMessage screen
+                      };
+
+                      return (
+                        <TouchableOpacity onPress={handlePress} >
+                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.chatName}</Text>
+                          {item.lastMessage ? (
+                            item.lastMessage.typeMess === "text" ? (
+                              <Text style={{ fontSize: 14 }}>{item.lastMessage.content}</Text>
+                            ) : (
+                              <Text style={{ fontSize: 14 }}>hình ảnh</Text>
+                            )
+                          ) : (
+                            <Text></Text>
+                          )}
+                          <Text style={{ fontSize: 12 }}>{item.timeSend}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </View>
+
                 </View>
               </View>
 
@@ -312,57 +266,8 @@ export default function Phonebook() {
             </View>
           </View>
         )}
-        {formToShow === "qa" && (
-          <View style={{ backgroundColor: "#DCDCDC", width: 420, height: 800 }}>
-            <View style={{ backgroundColor: "white", width: 420, height: 500 }}>
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa1.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Tìm thêm Official Account
-                </Text>
-              </View>
 
-              <View>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Official Account đang quan tâm
-                </Text>
-              </View>
 
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa2.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  ZaloPay
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa3.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Zalo Official Account
-                </Text>
-              </View>
-
-              <View style={{ flexDirection: "row" }}>
-                <Image
-                  source={require("../assets/oa4.png")}
-                  style={styles.image}
-                ></Image>
-                <Text style={{ marginTop: 30, fontSize: 20, marginLeft: 20 }}>
-                  Zing MP3
-                </Text>
-              </View>
-            </View>
-          </View>
-        )}
       </View>
 
     );
@@ -371,10 +276,11 @@ export default function Phonebook() {
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView>
         <View>
+          <View style={{ marginBottom:50}}></View>
           <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
             {/* Icon tìm kiếm */}
             <AntDesign name="search1" size={25} color="white" />
-            <View style={{ marginLeft: 20, marginTop: 2 }}>
+            <View style={{ marginLeft: 5, marginTop: 2 }}>
               {/* Text hiển thị "Tìm kiếm" */}
               <TextInput
                 placeholder="Tìm kiếm"
@@ -388,12 +294,18 @@ export default function Phonebook() {
             </View>
             {/* ----- */}
 
-          {/* Icon thêm bạn bè */}
-          <View style={{ marginLeft: 100 }}>
-            <AntDesign name="adduser" size={30} color="white" />
+            {/* Icon thêm bạn bè */}
+            <Pressable
+            onPress={() =>
+              navigation.navigate("AddFriend")
+
+            }>
+              <View style={{ marginLeft: 100 }}>
+                <AntDesign name="adduser" size={30} color="white" />
+              </View>
+            </Pressable>
           </View>
         </View>
-      </View>
 
         {/* Phần chứa các tab và nội dung */}
         <View

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, Button, View, Image, Pressable } from 'react-native';
-
+import ErrorModal from './modal/ErrorModalRegister';
 
 const UiRegister = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
  
   const handleRegister = async () => {
     try {
       const data = { name, email, password };
-      const response = await fetch("http://192.168.1.4:5678/user/register", {
+      const response = await fetch("http://192.168.0.236:5678/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -29,6 +30,7 @@ const UiRegister = () => {
       
     } catch (error) {
       console.log(error);
+      setErrorModalVisible(true);
     }
   };
 //tôi muốn tesstttt 
@@ -64,6 +66,7 @@ const UiRegister = () => {
           </Pressable>
         </View>
       </View>
+      <ErrorModal visible={errorModalVisible} onClose={() => setErrorModalVisible(false)} />
     </View>
   );
 };
