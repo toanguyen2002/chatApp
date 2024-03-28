@@ -10,11 +10,12 @@ import { myContext } from './MainComponent';
 import { io } from 'socket.io-client';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import Picker from 'emoji-picker-react';
 
 
 const socket = io("http://localhost:5678")
 export default function ChatAreaComponent() {
-    const [contentMess, setContentMess] = useState("")
+    const [contentMess, setContentMess] = useState('')
     const [mess, setMess] = useState([])
     const { refresh, setRefresh } = useContext(myContext)
     const params = useParams()
@@ -28,9 +29,12 @@ export default function ChatAreaComponent() {
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
     const scrollTobottom = () => {
-        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" })
+        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest", scrollY: -1 })
     }
+    const selectionEmoji = (event, emojiObject) => {
+        setContentMess(emojiObject)
 
+    }
     const [chat_id, chat_user] = params.id.split("&");
 
     //socket chạy tin nhắn tự động
@@ -218,6 +222,14 @@ export default function ChatAreaComponent() {
 
                 <div className="chat-area-footer">
                     <input onKeyDown={enterMess} ref={textRef} placeholder='Enter Message....' className='box-input' onChange={(e) => setContentMess(e.target.value)} value={contentMess} />
+                    {/* <div>
+                        {contentMess ? (
+                            <span>You chose: {contentMess.emoji}</span>
+                        ) : (
+                            <span>No emoji Chosen</span>
+                        )}
+                        <Picker onEmojiClick={selectionEmoji} />
+                    </div> */}
                     <div className="">
                         <IconButton>
                             <label htmlFor="">

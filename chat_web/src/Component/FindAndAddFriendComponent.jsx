@@ -25,7 +25,7 @@ function FindAndAddFriendComponent({ closemodal }) {
             })
 
             setUsers(dataUser.data);
-            // console.log(dataUser.data);
+            console.log(dataUser.data);
         }
         getUser()
     }, [
@@ -70,5 +70,6 @@ function FindAndAddFriendComponent({ closemodal }) {
         </div>
     )
 }
+
 
 export default FindAndAddFriendComponent

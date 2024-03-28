@@ -18,8 +18,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.0.236";
-export default function Phonebook({ navigation }) {
+const ip = "192.168.1.4";
+export default function Phonebook() {
   const [activeForm, setActiveForm] = useState("friend");
   const [activeForm1, setActiveForm1] = useState("all");
   const [selectedChar, setSelectedChar] = useState(null);

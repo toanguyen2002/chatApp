@@ -19,6 +19,10 @@ const messageEntity = mongooes.Schema({
     },
     typeMess: {
         type: String
+    }, dateSend: {
+        type: Date,
+        default: Date.now
+
     }
 }, {
     TimeStamp: true

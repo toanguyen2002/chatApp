@@ -11,7 +11,7 @@ const UiRegister = () => {
   const handleRegister = async () => {
     try {
       const data = { name, email, password };
-      const response = await fetch("http://192.168.0.236:5678/user/register", {
+      const response = await fetch("http://192.168.1.4:5678/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -33,8 +33,7 @@ const UiRegister = () => {
       setErrorModalVisible(true);
     }
   };
-//tôi muốn tesstttt 
-/// I am user
+
   return (
     <View style={styles.container}>
       <View style={styles.logoContainer}>

@@ -106,7 +106,7 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 15,
-                  marginLeft: 160,
+                  marginLeft: 140,
                   fontWeight: 600,
                   color: 'blue',
                 }}
@@ -126,7 +126,6 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
                   borderRadius: 90,
                   resizeMode: 'contain'
                 }}
@@ -135,7 +134,6 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
                   fontWeight: 400,
                 }}
               >Zalo games
@@ -148,7 +146,7 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
+                  marginRight: 5,
                   borderRadius: 90,
                   resizeMode: 'contain'
                 }}
@@ -157,8 +155,9 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
+                  marginRight: 5,
                   fontWeight: 400,
+                  
                 }}
               >
                 FE Credit
@@ -171,7 +170,7 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
+                  marginRight: 5,
                   borderRadius: 90,
                   resizeMode: 'contain'
                 }}
@@ -180,7 +179,7 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
+                  marginRight: 5,
                   fontWeight: 400,
                 }}
               >
@@ -194,8 +193,8 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
                   borderRadius: 90,
+                  marginRight: 15,
                   resizeMode: 'contain'
                 }}
               ></Image>
@@ -203,7 +202,7 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
+                  marginRight: 15,
                   fontWeight: 400,
                 }}
               >Dịch vụ
@@ -220,7 +219,6 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
                   borderRadius: 90,
                   resizeMode: 'contain'
                 }}
@@ -229,7 +227,6 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
                   fontWeight: 400,
                 }}
               >Zalo video
@@ -242,7 +239,7 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
+                  marginRight: 5,
                   borderRadius: 90,
                   resizeMode: 'contain'
                 }}
@@ -251,7 +248,7 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
+                  marginRight: 5,
                   fontWeight: 400,
                 }}
               >
@@ -265,7 +262,7 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
+                  marginRight: 5,
                   borderRadius: 90,
                   resizeMode: 'contain'
                 }}
@@ -274,7 +271,7 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
+                  marginRight: 5,
                   fontWeight: 400,
                 }}
               >
@@ -288,7 +285,7 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   marginTop: 10,
-                  marginLeft: 20,
+                  marginRight: 5,
                   borderRadius: 90,
                   resizeMode: 'contain'
                 }}
@@ -297,7 +294,7 @@ export default function User({ navigation }) {
                 style={{
                   marginTop: 10,
                   fontSize: 12,
-                  marginLeft: 20,
+                  marginRight: 5,
                   fontWeight: 400,
                 }}
               >Xem thêm
@@ -923,7 +920,7 @@ export default function User({ navigation }) {
               >
                 Zalo Connect
               </Text>
-              <View style={{backgroundColor:'#F0FFFF', borderRadius:'20px', justifyContent:'center', alignItems:'center', marginTop: 10, marginLeft: 10,}}>
+              <View style={{backgroundColor:'#F0FFFF', borderRadius: 20, justifyContent:'center', alignItems:'center', marginTop: 10, marginLeft: 10,}}>
                 <Text
                   style={{
                     fontSize: 15,
@@ -988,7 +985,7 @@ export default function User({ navigation }) {
               >
                 Gợi ý Official Account
               </Text>
-              <View style={{backgroundColor:'#F0FFFF', borderRadius:'20px', justifyContent:'center', alignItems:'center', marginTop: 10, marginLeft: 10,}}>
+              <View style={{backgroundColor:'#F0FFFF', borderRadius: 20, justifyContent:'center', alignItems:'center', marginTop: 10, marginLeft: 10,}}>
                 <Text
                   style={{
                     fontSize: 15,
