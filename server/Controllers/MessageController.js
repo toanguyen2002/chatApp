@@ -31,6 +31,7 @@ const s3client = new AWS.S3({
 
 
 const uploadImage = async (imageData) => {
+    // const arrayImage = []
     try {
         const bytes = await randomBytes(16);
         const imageName = bytes.toString('hex');
@@ -44,6 +45,8 @@ const uploadImage = async (imageData) => {
         const uploadResult = await s3client.putObject(params).promise();
         // console.log("Upload result:", uploadResult);
         const imageUrl = `https://upload-file-img.s3.amazonaws.com/${imageName}`;
+        // arrayImage.push(imageUrl)
+        console.log(imageUrl);
         return imageUrl;
     } catch (error) {
         console.error("Error uploading image:", error);
@@ -77,18 +80,19 @@ const allMessages = expressAsyncHandler(async (req, res) => {
 
 
 const sendMessage = expressAsyncHandler(async (req, res) => {
-    const { content, chatId, typeMess } = req.body;
+    const { content, chatId, typeMess, ImageUrl } = req.body;
+    console.log(req.body);
     var newMessage = {
         sender: req.user._id,
         content: content,
         chat: chatId,
-        typeMess: typeMess
+        typeMess: typeMess,
+        ImageUrl: ImageUrl
     };
 
 
     var message = await Message.create(newMessage);
 
-    // console.log(message);
     message = await message.populate("sender", "name");
     message = await message.populate("chat");
     message = await message.populate("reciever");
@@ -98,7 +102,6 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     });
 
     await Chat.findByIdAndUpdate(req.body.chatId, { lastMessage: message });
-    // console.log(Chat.find({ _id: req.body.chatId }));
     res.json(message);
 })
 
