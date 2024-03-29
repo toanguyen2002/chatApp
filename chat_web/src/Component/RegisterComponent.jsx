@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 function RegisterComponent() {
-    const [data, setData] = useState({ name: "", email: "", password: "" })
+    const [data, setData] = useState({ name: "", email: "", password: "", otp: "" })
     const [signInText, setSignInText] = useState("")
     const [loading, setLoading] = useState(false)
     const nav = useNavigate()
@@ -49,6 +49,7 @@ function RegisterComponent() {
                         <div className="login-form-body">
                             <input className='txtLogin' name='name' placeholder='username' type='text' onChange={dataHandle} />
                             <input className='txtLogin' name='password' placeholder='password' type='password' onChange={dataHandle} />
+                            <input className='txtLogin' name='email' placeholder='Email' type='email' onChange={dataHandle} />
                             <input className='txtLogin' name='email' placeholder='Email' type='email' onChange={dataHandle} />
                             <button onClick={registerHandle} className='btn-login'>Đăng Ký</button>
                             <div className="login-link">

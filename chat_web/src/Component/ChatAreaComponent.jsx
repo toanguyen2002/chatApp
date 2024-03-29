@@ -85,11 +85,41 @@ export default function ChatAreaComponent() {
     }, [chat_id, mess])
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
-    const sendMessImg = async () => {
+    const uploadmultiImage = async () => {
+        const arrayListImage = Array.from(fileRef.current.files)
+        const dataImge = []
+        await Promise.all(arrayListImage.map(async (item) => {
+            const dataRender = await sendMessImg(item)
+            dataImge.push(dataRender)
+        }))
+        const dataSend = await axios.post(
+            "http://localhost:5678/message/", {
+            chatId: chat_id,
+            ImageUrl: dataImge,
+            typeMess: "image"
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                }
+            }
+        )
+
+        socket.emit("new-mes", dataSend.data)
+
+        messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+        socket.emit("render-box-chat", true)
+
+        setContentMess("")
+        console.log(dataSend.data);
+
+
+    }
+    const sendMessImg = async (items) => {
         const formData = new FormData();
-        formData.append('fileImage', fileRef.current.files[0]);
-        // console.log(fileRef.current.files[0]);
+        formData.append('fileImage', items);
         try {
+
             const respone = await axios.post("http://localhost:5678/message/messImage",
                 formData,
                 {
@@ -100,28 +130,11 @@ export default function ChatAreaComponent() {
 
             );
 
-            const dataSend = await axios.post(
-                "http://localhost:5678/message/", {
-                chatId: chat_id,
-                content: respone.data.url,
-                typeMess: "image"
-            },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userData.data.token}`,
-                    }
-                }
-            )
-
-            socket.emit("new-mes", dataSend.data)
-
-            messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
-            socket.emit("render-box-chat", true)
-
-            setContentMess("")
+            return respone.data
         } catch (error) {
             console.error("Error uploading image:", error);
         }
+
     };
     const enterMess = async (e) => {
         if (e.key == "Enter" && mess) {
@@ -158,7 +171,7 @@ export default function ChatAreaComponent() {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
                     chatId: chat_id,
-                    content: contentMess,
+                    dataImge: contentMess,
                     typeMess: "text"
                 },
                     {
@@ -234,7 +247,7 @@ export default function ChatAreaComponent() {
                         <IconButton>
                             <label htmlFor="">
                                 <AttachFileIcon />
-                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => sendMessImg()} />
+                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => uploadmultiImage()} />
                             </label>
                         </IconButton>
                         <IconButton onClick={sendMess}>
