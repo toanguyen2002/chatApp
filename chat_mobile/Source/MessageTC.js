@@ -9,7 +9,7 @@ import {
   Modal,
   Pressable,
   TouchableWithoutFeedback,
-  
+
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -99,6 +99,8 @@ const MessageTC = ({ navigation }) => {
         })}
       </View>
 
+      {/* Modal */}
+
       <Modal visible={isModalVisible} transparent={true} animationType="none">
         <TouchableWithoutFeedback onPress={closeModal}>
           <View style={styles.modalContainer}>
@@ -122,13 +124,13 @@ const MessageTC = ({ navigation }) => {
                     </View>
                   </Pressable>
                 </Pressable>
-                    {/* ---------- */}
+                {/* ---------- */}
                 <Pressable
-                onPress={() => {
-                  navigation.navigate("NewGroup");
-                  toggleModal();
-                }}
-                 style={{ flexDirection: "row", marginTop: 25 }}>
+                  onPress={() => {
+                    navigation.navigate("NewGroup");
+                    toggleModal();
+                  }}
+                  style={{ flexDirection: "row", marginTop: 25 }}>
                   <View style={{ marginLeft: 10 }}>
                     <AntDesign name="addusergroup" size={25} color="#A9A9A9" />
                   </View>
@@ -148,17 +150,17 @@ const MessageTC = ({ navigation }) => {
                     </Text>
                   </View>
                 </Pressable>
-                
-                
 
-                
-               
+
+
+
+
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      
+      {/* Modal */}
     </View>
   );
 };
@@ -172,18 +174,26 @@ const MessageItem = (props) => {
 
   return (
     <TouchableOpacity onPress={handlePress}>
-      <Text style={{ fontSize: 20 }}>{props.chatName[0]}</Text>
-      <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.chatName}</Text>
-      {props.lastMessage ? (
-        props.lastMessage.typeMess === "text" ? (
-          <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text>
-        ) : (
-          <Text style={{ fontSize: 14 }}>hình ảnh</Text>
-        )
-      ) : (
-        <Text></Text>
-      )}
-      <Text style={{ fontSize: 12 }}>{props.timeSend}</Text>
+      <View style={{ flexDirection: "row", marginBottom: 10,  }}>
+        <View style={styles.ChatName}>
+          <Text style={styles.Name}>{props.chatName[0]}</Text>
+        </View>
+
+        <View style={styles.TextChat}>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.chatName}</Text>
+          {props.lastMessage ? (
+            props.lastMessage.typeMess === "text" ? (
+              <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text>
+            ) : (
+              <Text style={{ fontSize: 14 }}>hình ảnh</Text>
+            )
+          ) : (
+            <Text></Text>
+          )}
+          <Text style={{ fontSize: 12 }}>{props.timeSend}</Text>
+        </View>
+      </View>
+
     </TouchableOpacity>
   );
 };
@@ -215,8 +225,8 @@ const styles = StyleSheet.create({
   username: {
     left: 30,
     justifyContent: "center",
-    fontSize:18
-    
+    fontSize: 18
+
   },
   modalContainer: {
     flex: 1,
@@ -232,6 +242,28 @@ const styles = StyleSheet.create({
     width: 250,
     height: 320,
   },
+  ChatName: {
+    
+    height: 60,
+    width: 60,
+    borderRadius: 50,
+    justifyContent:"center",
+    alignItems: "center",
+    backgroundColor: "#1E90FF",
+    
+  },
+  Name: {
+    fontSize: 25,
+    color: "white",
+    fontWeight: "bold"
+  },
+  TextChat:{
+    left: 15,
+    justifyContent: "center",
+    alignItems: "center",
+    
+   
+  }
 });
 
 export default MessageTC;
