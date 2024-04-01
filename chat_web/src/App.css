@@ -708,19 +708,22 @@ input[type="file"] {
 }
 
 .img-box {
-  display: flex;
-  flex-wrap: wrap;
-  width: 400px;
-  height: 300px;
-  overflow: calc(33.33%);
-  justify-content: center;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  /* flex-wrap: wrap; */
+  /* width: max-content;
+  height: max-content;
+  overflow: calc(33.33%); */
+  /* justify-content: center; */
 
-  align-items: center;
+  /* align-items: center; */
 }
 
 .img-chat {
   margin: 5px;
   /* Khoảng cách giữa các ảnh */
+  max-width: 200px;
   background-size: cover;
   background-position: center;
 }
@@ -730,7 +733,8 @@ input[type="file"] {
   color: red;
   font-family: auto;
 }
-.txtOtp{
+
+.txtOtp {
   height: 40px;
   width: 150px;
   outline: 0;
@@ -739,7 +743,8 @@ input[type="file"] {
   font-size: 20px;
   border-bottom: #aaa;
 }
-.btnOtp{
+
+.btnOtp {
   position: relative;
   left: 30px;
   height: 40px;
@@ -749,7 +754,8 @@ input[type="file"] {
   color: white;
   border-radius: 5px;
 }
-.btn-register{
+
+.btn-register {
   height: 40px;
   width: 280px;
   border-radius: 5px;
