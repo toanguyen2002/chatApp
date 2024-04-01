@@ -35,7 +35,7 @@ function RegisterComponent() {
                     }
                 )
             } catch (error) {
-                console.log("Vui Lòng Nhập email");
+                setEmailAccount("Email đã tồn tại trong hệ thống vui lòng đăng nhập");
             }
         }
         // localStorage.setItem('otp', otpRender)
