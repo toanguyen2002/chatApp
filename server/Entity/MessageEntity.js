@@ -17,6 +17,9 @@ const messageEntity = mongooes.Schema({
         type: mongooes.Schema.Types.ObjectId,
         ref: "Chat"
     },
+    ImageUrl: {
+        type: Array
+    },
     typeMess: {
         type: String
     }, dateSend: {

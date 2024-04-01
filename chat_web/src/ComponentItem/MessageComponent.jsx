@@ -8,8 +8,19 @@ function MessageComponent({ props }) {
                 <p className='chat-name'>{props.sender.name}</p>
                 <div className='text-content'>
                     {
-                        props.typeMess == 'text' ? <p className='chat-title'>{props.content}</p> :
-                            <img className='img-chat' src={props.content} alt="" />
+                        props.typeMess == 'text' ? <p className='chat-title'>{props.content}</p>
+                            :
+
+                            // <div className="img-box"  >
+
+
+                            props.ImageUrl.map((item) => (
+
+                                <img className='img-chat' src={item.url} alt="" />
+
+                            ))
+
+                        // </div>
                     }
                 </div>
             </div>
