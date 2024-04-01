@@ -10,7 +10,7 @@ import { myContext } from './MainComponent';
 import { io } from 'socket.io-client';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import Picker from 'emoji-picker-react';
+// import Picker from 'emoji-picker-react';
 
 
 const socket = io("http://localhost:5678")
