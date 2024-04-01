@@ -48,13 +48,13 @@ io.on("connection", (socket) => {
         socket.emit("connected")
     })
     socket.on("new-mes", (data) => {
-        console.log(data);
-        data.chat.users.map((item) => {
-            if (data.sender._id !== item._id) return;
-            else
-                socket.emit("mess-rcv", data)
+        // console.log(data);
+        // data.chat.users.map((item) => {
+        //     if (data.sender._id !== item._id) return;
+        //     else
+        socket.broadcast.emit("mess-rcv", !data)
 
-        })
+        // })
     })
     socket.on("demo", (data) => {
         console.log(data.mes);

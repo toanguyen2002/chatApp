@@ -25,11 +25,17 @@ export default function ChatAreaComponent() {
     const fileRef = useRef()
     const [imageData, setImageData] = useState([])
     const textRef = useRef()
+    const [scrollExecuted, setScrollExecuted] = useState(false);
 
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
     const scrollTobottom = () => {
-        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest", scrollY: -1 })
+
+        // if (scrollExecuted == false) {
+        //     console.log(scrollExecuted);
+        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        // setScrollExecuted(true);
+        // }
     }
     const selectionEmoji = (event, emojiObject) => {
         setContentMess(emojiObject)
@@ -40,10 +46,8 @@ export default function ChatAreaComponent() {
     //socket chạy tin nhắn tự động
     useEffect(() => {
         socket.on("mess-rcv", (data) => {
-            // console.log("mess", data);
-            // setMess([...mess], data)
-            setMess([...mess], data)
-            // setMess([...mess], data)
+            console.log("mess", data);
+
         })
     }, [])
 
@@ -81,22 +85,30 @@ export default function ChatAreaComponent() {
     useEffect(() => {
 
         rerenderMessage()
+        console.log(1);
+        return () => {
+            setScrollExecuted(false);
+        };
 
-    }, [chat_id, mess])
+    }, [chat_id, socket])
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
     const uploadmultiImage = async () => {
         const arrayListImage = Array.from(fileRef.current.files)
+
+
         const dataImge = []
+
         await Promise.all(arrayListImage.map(async (item) => {
             const dataRender = await sendMessImg(item)
             dataImge.push(dataRender)
         }))
+        console.log(dataImge);
         const dataSend = await axios.post(
             "http://localhost:5678/message/", {
             chatId: chat_id,
             ImageUrl: dataImge,
-            typeMess: "image"
+            typeMess: "Multimedia"
         },
             {
                 headers: {
@@ -151,7 +163,7 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", dataSend.data)
+                socket.emit("new-mes", true)
                 // setContentMess("")
                 setContentMess("")
                 // textRef.current.value = ' ';
@@ -180,7 +192,7 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", dataSend.data)
+                socket.emit("new-mes", true)
                 socket.emit("render-box-chat", true)
 
                 // setContentMess("")
@@ -193,6 +205,11 @@ export default function ChatAreaComponent() {
 
 
     }
+    useEffect(() => {
+        socket.on("mess-rcv", (data) => {
+            rerenderMessage()
+        })
+    }, [socket])
 
     return (
         <><Backdrop open={loading}
