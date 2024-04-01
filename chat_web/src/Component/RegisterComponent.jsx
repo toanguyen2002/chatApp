@@ -88,13 +88,15 @@ function RegisterComponent() {
                             <input className='txtLogin' name='password' placeholder='password' type='password' onChange={dataHandle} />
                             {emailAccount ? <h6 className='error-otp'>{emailAccount}</h6> : <></>}
                             <input className='txtLogin' name='email' placeholder='Email' type='email' onChange={dataHandle} />
+                            {/* otp */}
                             <div>
                                 {otpError ? <h6 className='error-otp'>{otpError}</h6> : <></>}
                                 {/* <br /> */}
-                                <input className='txtLogin' name='otp' placeholder='otp' type='otp' onChange={dataHandle} />
-                                <input type="button" onClick={() => handleGetOTP()} value='Lấy Mã OTP' />
+                                <input className='txtOtp' name='otp' placeholder='otp' type='otp' onChange={dataHandle} />
+                                <input className='btnOtp' type="button" onClick={() => handleGetOTP()} value='Lấy Mã OTP' />
                             </div>
-                            <button onClick={registerHandle} className='btn-login'>Đăng Ký</button>
+                             {/* otp */}
+                            <button onClick={registerHandle} className='btn-register'>Đăng Ký</button>
                             <div className="login-link">
                                 <a href='/' className='form-link2'>Đã có tài khoản</a>
                             </div>

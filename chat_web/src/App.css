@@ -730,5 +730,36 @@ input[type="file"] {
   color: red;
   font-family: auto;
 }
+.txtOtp{
+  height: 40px;
+  width: 150px;
+  outline: 0;
+  border: none;
+  background-color: #f9f9f9;
+  font-size: 20px;
+  border-bottom: #aaa;
+}
+.btnOtp{
+  position: relative;
+  left: 30px;
+  height: 40px;
+  width: 100px;
+  background-color: #1E90FF;
+  border: none;
+  color: white;
+  border-radius: 5px;
+}
+.btn-register{
+  height: 40px;
+  width: 280px;
+  border-radius: 5px;
+  min-width: max-content;
+  font-size: 20px;
+  background-color: #1E90FF;
+  border-width: 0px;
+  color: white;
+  font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
 /* 11:26 13/3/2024 */
