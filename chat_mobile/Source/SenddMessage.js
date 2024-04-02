@@ -48,17 +48,18 @@ const SendMessage = () => {
     const userData = JSON.parse(userDataString);
     setUserData(userData);
     try {
-      const response = await fetch(`http://192.168.1.4:5678/message/${route.params._id}`, {
+      const response = await fetch(`http://192.168.1.4:5678/message/${route.params._id}`,{
         method: 'GET',
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${userData.token}`,
         }
-      );
+    });
       const responseData = await response.json();
       scrollTobottom();
       setMessages(responseData);
       console.log(responseData);
+    
     } catch (error) {
       console.log(error);
     }
@@ -67,7 +68,7 @@ const SendMessage = () => {
   useEffect(() => {
     rerenderMessage();
     scrollTobottom();
-  }, []);
+  }, [route.params._id, messages]);
 
   useEffect(() => {
     socket.emit("setup", userData);
@@ -82,7 +83,7 @@ const SendMessage = () => {
   useEffect(() => {
     socket.on("mess-rcv", (data) => {
       // console.log("mess", data);
-      setMessages([...messages], data);
+      setMessages([...messages, data]);
     });
   }, []);
 
@@ -104,15 +105,14 @@ const SendMessage = () => {
           },
         }
       );
+      
       const dataSend = await axios.post(
         "http://192.168.1.4:5678/message/",
         {
           chatId: route.params._id,
           content: responseData.url, 
           typeMess: "image",
-        }),
-      });
-  
+        })
       if (!messageResponse.ok) {
         throw new Error(
           `Error sending message: HTTP status ${messageResponse.status}`
