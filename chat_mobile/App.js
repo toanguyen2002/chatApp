@@ -11,6 +11,7 @@ import Phonebook from "./Source/Phonebook";
 import AddFriend from "./Source/AddFriend";
 import Friend from "./Source/Friend";
 import NewGroup from "./Source/NewGroup";
+import Resetpassword from "./Source/Resetpassword";
 
 const Tab = createBottomTabNavigator();
 
@@ -143,6 +144,7 @@ export default function App() {
         <Stack.Screen name="AddFriend" component={AddFriend} />
         <Stack.Screen name="Friend" component={Friend} />
         <Stack.Screen name="NewGroup" component={NewGroup} />
+        <Stack.Screen name="Resetpassword" component={Resetpassword} />
 
 
 

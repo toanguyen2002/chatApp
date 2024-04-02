@@ -7,8 +7,9 @@ import {
   StyleSheet,
   Pressable,
 } from "react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ErrorModal from './modal/ErrorModalLogin';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import ErrorModal from "./modal/ErrorModalLogin";
+import axios from "axios";
 
 const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin", password: "123" });
@@ -24,12 +25,11 @@ const UiLogin = ({ navigation }) => {
         body: JSON.stringify(data),
       });
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
       const responseData = await response.json();
       await AsyncStorage.setItem("userData", JSON.stringify(responseData));
       navigation.navigate("MessageTC", { token: responseData.token });
-      
     } catch (error) {
       console.log(error);
       setErrorModalVisible(true);
@@ -71,10 +71,19 @@ const UiLogin = ({ navigation }) => {
             navigation.navigate("UiRegister");
           }}
         >
-          <Text style={styles.registerText}>Đăng Kí</Text>
+          <Text style={styles.registerText}>Đăng Kí. </Text>
+        </Pressable>
+        <Pressable onPress={() => {
+            navigation.navigate("Resetpassword");
+          }}>
+          <Text style={styles.registerText}>Quên mật khẩu</Text>
         </Pressable>
       </View>
-      <ErrorModal visible={errorModalVisible} onClose={() => setErrorModalVisible(false)} />
+      
+      <ErrorModal
+        visible={errorModalVisible}
+        onClose={() => setErrorModalVisible(false)}
+      />
     </View>
   );
 };
