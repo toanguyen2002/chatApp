@@ -58,11 +58,12 @@ const SendMessage = () => {
             Authorization: `Bearer ${userData.token}`,
           },
         }
-      );
+    });
       const responseData = await response.json();
       scrollTobottom();
       setMessages(responseData);
       console.log(responseData);
+    
     } catch (error) {
       console.log(error);
     }
@@ -71,7 +72,7 @@ const SendMessage = () => {
   useEffect(() => {
     rerenderMessage();
     scrollTobottom();
-  }, []);
+  }, [route.params._id, messages]);
 
   useEffect(() => {
     socket.emit("setup", userData);
@@ -104,8 +105,6 @@ const SendMessage = () => {
       const response = await fetch(
         "http://"+ip+":5678/message/messImage",
         {
-          method: "POST",
-          body: formData,
           headers: {
             "Content-Type": "multipart/form-data",
           },

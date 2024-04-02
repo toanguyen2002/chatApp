@@ -19,44 +19,36 @@ import { Entypo } from "@expo/vector-icons";
 export default function User({ navigation }) {
   return (
     <ScrollView>
-      <ImageBackground
-        source={require("../assets/zalo.png")}
-        style={{ width: 420, height: 100 }}
-      >
-        <View>
-          <View style={{ flexDirection: "row", marginTop: 60 }}>
-            <Image
-              source={require("../assets/zalo.png")}
-              style={{ width: 30, height: 30, marginLeft: 20 }}
-            ></Image>
-            <View style={{ marginLeft: 20, marginTop: 2 }}>
-              <TextInput
-                placeholder="Tìm kiếm"
-                style={{
-                  width: 200,
-                  fontSize: 18,
-                  color: "white",
-                  outlineStyle: "none",
-                }}
-              ></TextInput>
-            </View>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("Setting");
+      <View>
+        <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
+          <AntDesign name="search1" size={25} color="white" />
+          <View style={{ marginLeft: 20, marginTop: 2 }}>
+            <TextInput
+              placeholder="Tìm kiếm"
+              style={{
+                width: 200,
+                fontSize: 18,
+                color: "white",
+                outlineStyle: "none",
               }}
-              style={{ marginLeft: 100 }}
-            >
-              <SimpleLineIcons name="settings" size={24} color="white" />
-            </Pressable>
+            ></TextInput>
           </View>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Setting");
+            }}
+            style={{ marginLeft: 90 }}
+          >
+            <SimpleLineIcons name="settings" size={24} color="white" />
+          </Pressable>
         </View>
-      </ImageBackground>
+      </View>
 
       <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC" }}>
         <View style={{ width: 420, height: 470, backgroundColor: "white" }}>
           <View style={{ flexDirection: "row" }}>
             <Image
-              source={require("../assets/zalo.png")}
+              source={require("../assets/avt1.png")}
               style={{
                 width: 50,
                 height: 50,

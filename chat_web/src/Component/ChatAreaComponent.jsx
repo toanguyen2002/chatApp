@@ -10,7 +10,7 @@ import { myContext } from './MainComponent';
 import { io } from 'socket.io-client';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
-// import Picker from 'emoji-picker-react';
+import Picker from 'emoji-picker-react';
 
 
 const socket = io("http://localhost:5678")
@@ -22,21 +22,14 @@ export default function ChatAreaComponent() {
     const messageEndRef = useRef(null)
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [loading, setLoading] = useState(false)
-    const [renderMess, setRenderMess] = useState(false)
     const fileRef = useRef()
     const [imageData, setImageData] = useState([])
     const textRef = useRef()
-    const [scrollExecuted, setScrollExecuted] = useState(false);
 
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
     const scrollTobottom = () => {
-
-        // if (scrollExecuted == false) {
-        //     console.log(scrollExecuted);
-        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
-        // setScrollExecuted(true);
-        // }
+        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest", scrollY: -1 })
     }
     const selectionEmoji = (event, emojiObject) => {
         setContentMess(emojiObject)
@@ -48,7 +41,9 @@ export default function ChatAreaComponent() {
     useEffect(() => {
         socket.on("mess-rcv", (data) => {
             // console.log("mess", data);
-
+            // setMess([...mess], data)
+            setMess([...mess], data)
+            // setMess([...mess], data)
         })
     }, [])
 
@@ -78,7 +73,7 @@ export default function ChatAreaComponent() {
             // setMess([])
             setMess(dataMessage.data)
             scrollTobottom()
-            // setRenderMess(false)
+            // setLoading(false)
         } catch (error) {
             console.log(error);
         }
@@ -86,29 +81,22 @@ export default function ChatAreaComponent() {
     useEffect(() => {
 
         rerenderMessage()
-        return () => {
-            setScrollExecuted(false);
-        };
 
-    }, [chat_id, socket, renderMess])
+    }, [chat_id, mess])
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
     const uploadmultiImage = async () => {
         const arrayListImage = Array.from(fileRef.current.files)
-
-
         const dataImge = []
-
         await Promise.all(arrayListImage.map(async (item) => {
             const dataRender = await sendMessImg(item)
             dataImge.push(dataRender)
         }))
-        // console.log(dataImge);
         const dataSend = await axios.post(
             "http://localhost:5678/message/", {
             chatId: chat_id,
             ImageUrl: dataImge,
-            typeMess: "Multimedia"
+            typeMess: "image"
         },
             {
                 headers: {
@@ -123,7 +111,6 @@ export default function ChatAreaComponent() {
         socket.emit("render-box-chat", true)
 
         setContentMess("")
-        setRenderMess(!renderMess)
         console.log(dataSend.data);
 
 
@@ -164,13 +151,12 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", true)
+                socket.emit("new-mes", dataSend.data)
                 // setContentMess("")
                 setContentMess("")
                 // textRef.current.value = ' ';
                 socket.emit("render-box-chat", true)
 
-                setRenderMess(!renderMess)
                 // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
                 console.log(error);
@@ -185,7 +171,7 @@ export default function ChatAreaComponent() {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
                     chatId: chat_id,
-                    content: contentMess,
+                    dataImge: contentMess,
                     typeMess: "text"
                 },
                     {
@@ -194,11 +180,10 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", true)
+                socket.emit("new-mes", dataSend.data)
                 socket.emit("render-box-chat", true)
 
                 // setContentMess("")
-                setRenderMess(!renderMess)
                 setContentMess("")
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
@@ -208,11 +193,6 @@ export default function ChatAreaComponent() {
 
 
     }
-    useEffect(() => {
-        socket.on("mess-rcv", (data) => {
-            rerenderMessage()
-        })
-    }, [socket])
 
     return (
         <><Backdrop open={loading}

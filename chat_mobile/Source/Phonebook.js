@@ -98,13 +98,13 @@ export default function Phonebook({ navigation }) {
     };
     getUser();
   }, []);
-  const alphabet = Array.from({ length: 26 }, (_, i) =>
-    String.fromCharCode("A".charCodeAt(0) + i)
-  );
+  // const alphabet = Array.from({ length: 26 }, (_, i) =>
+  //   String.fromCharCode("A".charCodeAt(0) + i)
+  // );
 
-  const handleCharPress = (char) => {
-    setSelectedChar(char);
-  };
+  // const handleCharPress = (char) => {
+  //   setSelectedChar(char);
+  // };
 
   const handlePress = (form) => {
     setActiveForm(form);
