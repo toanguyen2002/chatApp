@@ -56,7 +56,7 @@ function Sidebar() {
         }
     }
     useEffect(() => {
-        console.log(socket);
+        // console.log(socket);
         renderChatBox()
     }, [
         refresh, userData.data.token, socket
@@ -127,13 +127,13 @@ function Sidebar() {
                         <PersonAddIcon className='iconColor' />
                     </IconButton>
                     <IconButton onClick={handClick}>
-                        <GroupAddIcon className='iconColor'/>
+                        <GroupAddIcon className='iconColor' />
                     </IconButton>
                     <IconButton>
                         <AddCircleIcon onClick={() => setShowListFriend(true)} className='iconColor' />
                     </IconButton>
                     <IconButton onClick={() => clickToLogout()}>
-                        <LogoutIcon className='iconColor'/>
+                        <LogoutIcon className='iconColor' />
                     </IconButton>
                 </div>
             </div>
