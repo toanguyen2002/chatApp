@@ -76,6 +76,7 @@ const fetchUserById = expreeAsynceHandle(async (req, res) => {
     // console.log(u);
     res.send(u)
 })
+
 const resetPassword = expreeAsynceHandle(async (req, res) => {
     const name = req.body.name;
     // Tìm người dùng theo tên

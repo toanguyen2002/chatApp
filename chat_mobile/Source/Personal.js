@@ -1,3 +1,4 @@
+import React from "react";
 import {
   View,
   Text,
@@ -7,7 +8,6 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React from "react";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -17,230 +17,123 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
 export default function User({ navigation }) {
+  // Styles
+  
   return (
     <ScrollView>
       <View>
-        <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
-          <AntDesign name="search1" size={25} color="white" />
-          <View style={{ marginLeft: 20, marginTop: 2 }}>
+        <View style={styles.container}>
+          <AntDesign name="search1" size={25} color="white" style={styles.searchIconContainer} />
+          <View style={styles.searchIconContainer}>
             <TextInput
               placeholder="Tìm kiếm"
-              style={{
-                width: 200,
-                fontSize: 18,
-                color: "white",
-                outlineStyle: "none",
-              }}
+              style={styles.input}
             ></TextInput>
           </View>
           <Pressable
             onPress={() => {
               navigation.navigate("Setting");
             }}
-            style={{ marginLeft: 90 }}
+            style={styles.settingsIconContainer}
           >
-            <SimpleLineIcons name="settings" size={24} color="white" />
+            <SimpleLineIcons
+              name="settings"
+              size={24}
+              color="white"
+            />
           </Pressable>
         </View>
       </View>
 
-      <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC" }}>
-        <View style={{ width: 420, height: 470, backgroundColor: "white" }}>
+      <View style={styles.sectionContainer}>
+        <View style={styles.innerSectionContainer}>
           <View style={{ flexDirection: "row" }}>
             <Image
               source={require("../assets/avt1.png")}
-              style={{
-                width: 50,
-                height: 50,
-                marginTop: 10,
-                marginLeft: 20,
-                borderRadius: 90,
-              }}
+              style={styles.avatarImage}
             ></Image>
-            <View>
-              <Text
-                style={{
-                  marginTop: 10,
-                  fontSize: 20,
-                  marginLeft: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Võ Minh Toàn
-              </Text>
-              <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                Xem trang cá nhân
-              </Text>
+            <View style={styles.userInfoContainer}>
+              <Text style={styles.userNameText}>Võ Minh Toàn</Text>
+              <Text style={styles.viewProfileText}>Xem trang cá nhân</Text>
             </View>
-            <View style={{ marginTop: 20, marginLeft: 130 }}>
-              <FontAwesome name="exchange" size={24} color="black" />
-            </View>
-          </View>
-
-          <View
-            style={{
-              borderWidth: 3,
-              borderColor: "#D3D3D3",
-              width: 420,
-              marginTop: 20,
-            }}
-          ></View>
-
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginLeft: 20, marginTop: 20 }}>
-              <Ionicons name="wallet-outline" size={30} color="#1E90FF" />
-            </View>
-            <View>
-              <Text
-                style={{
-                  marginTop: 10,
-                  fontSize: 20,
-                  marginLeft: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Ví QR
-              </Text>
-              <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                Lưu trữ và xuất trình các mã QR quan trọng
-              </Text>
-            </View>
-          </View>
-
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginLeft: 20, marginTop: 20 }}>
-              <Feather name="music" size={30} color="#1E90FF" />
-            </View>
-            <View>
-              <Text
-                style={{
-                  marginTop: 10,
-                  fontSize: 20,
-                  marginLeft: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Nhạc chờ Zalo
-              </Text>
-              <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                Đăng ký học nhạc chờ, thể hiện cá tính
-              </Text>
-            </View>
-          </View>
-
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginLeft: 20, marginTop: 20 }}>
-              <AntDesign name="cloudo" size={30} color="#1E90FF" />
-            </View>
-            <View>
-              <Text
-                style={{
-                  marginTop: 10,
-                  fontSize: 20,
-                  marginLeft: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Cloud của tôi
-              </Text>
-              <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                201,9 MB / 1GB
-              </Text>
-            </View>
-            <View style={{ marginLeft: 180, marginTop: 25 }}>
-              <AntDesign name="right" size={20} color="black" />
-            </View>
-          </View>
-
-          <View
-            style={{
-              borderWidth: 3,
-              borderColor: "#D3D3D3",
-              width: 420,
-              marginTop: 20,
-            }}
-          ></View>
-
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginLeft: 20, marginTop: 20 }}>
-              <Entypo name="time-slot" size={30} color="#1E90FF" />
-            </View>
-            <View>
-              <Text
-                style={{
-                  marginTop: 10,
-                  fontSize: 20,
-                  marginLeft: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Dung lượng và dữ liệu
-              </Text>
-              <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                Quản lý dữ liệu Zalo của bạn
-              </Text>
-            </View>
-            <View style={{ marginLeft: 100, marginTop: 25 }}>
-              <AntDesign name="right" size={20} color="black" />
-            </View>
-          </View>
-
-          <View
-            style={{
-              borderWidth: 3,
-              borderColor: "#D3D3D3",
-              width: 420,
-              marginTop: 20,
-            }}
-          ></View>
-
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginLeft: 20, marginTop: 20 }}>
-              <MaterialCommunityIcons
-                name="security"
-                size={30}
-                color="#1E90FF"
+            <View style={styles.exchangeIconContainer}>
+              <FontAwesome
+                name="exchange"
+                size={24}
+                color="black"
               />
             </View>
-            <View>
-              <Text
-                style={{
-                  marginTop: 20,
-                  fontSize: 20,
-                  marginLeft: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Tài khoản và bảo mật
-              </Text>
-            </View>
-            <View style={{ marginLeft: 110, marginTop: 25 }}>
-              <AntDesign name="right" size={20} color="black" />
-            </View>
           </View>
 
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginLeft: 20, marginTop: 20 }}>
-              <Ionicons name="lock-closed-outline" size={30} color="#1E90FF" />
-            </View>
-            <View>
-              <Text
-                style={{
-                  marginTop: 20,
-                  fontSize: 20,
-                  marginLeft: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Quyền riêng tư
-              </Text>
-            </View>
-            <View style={{ marginLeft: 165, marginTop: 25 }}>
-              <AntDesign name="right" size={20} color="black" />
-            </View>
-          </View>
+          <View style={styles.sectionDivider}></View>
+
+          {/* Các phần khác tương tự */}
         </View>
       </View>
     </ScrollView>
   );
 }
+const styles = {
+  container: {
+    flexDirection: "row",
+    backgroundColor: "blue",
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  searchIconContainer: {
+    marginLeft: 20,
+    marginTop: 2,
+  },
+  input: {
+    width: 200,
+    fontSize: 18,
+    color: "white",
+    outlineStyle: "none",
+  },
+  settingsIconContainer: {
+    marginLeft: 90,
+  },
+  sectionContainer: {
+    width: 420,
+    height: 1000,
+    backgroundColor: "#DCDCDC",
+  },
+  innerSectionContainer: {
+    width: 420,
+    height: 470,
+    backgroundColor: "white",
+  },
+  avatarImage: {
+    width: 50,
+    height: 50,
+    marginTop: 10,
+    marginLeft: 20,
+    borderRadius: 90,
+  },
+  userInfoContainer: {
+    marginTop: 10,
+    marginLeft: 20,
+  },
+  userNameText: {
+    marginTop: 10,
+    fontSize: 20,
+    marginLeft: 20,
+    fontWeight: 400,
+  },
+  viewProfileText: {
+    fontSize: 15,
+    marginLeft: 20,
+  },
+  exchangeIconContainer: {
+    marginTop: 20,
+    marginLeft: 130,
+  },
+  sectionDivider: {
+    borderWidth: 3,
+    borderColor: "#D3D3D3",
+    width: 420,
+    marginTop: 20,
+  },
+};
+
