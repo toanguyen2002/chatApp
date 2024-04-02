@@ -76,6 +76,7 @@ const fetchUserById = expreeAsynceHandle(async (req, res) => {
     // console.log(u);
     res.send(u)
 })
+
 const resetPassword = expreeAsynceHandle(async (req, res) => {
     const name = req.body.name;
     // Tìm người dùng theo tên
@@ -112,6 +113,7 @@ const resetPassword = expreeAsynceHandle(async (req, res) => {
 const getOTPandSendToEmail = expreeAsynceHandle(async (req, res) => {
     const { email, otp } = req.body
     const uemail = await User.findOne({ email })
+    console.log(uemail);
     if (uemail) {
         throw new Error('user already exists!!')
     } else {

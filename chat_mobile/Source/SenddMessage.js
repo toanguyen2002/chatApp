@@ -48,20 +48,18 @@ const SendMessage = () => {
     const userData = JSON.parse(userDataString);
     setUserData(userData);
     try {
-      const response = await fetch(
-        `http://192.168.1.6:5678/message/${route.params._id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${userData.token}`,
-          },
+      const response = await fetch(`http://192.168.1.5:5678/message/${route.params._id}`,{
+        method: 'GET',
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${userData.token}`,
         }
-      );
+    });
       const responseData = await response.json();
       scrollTobottom();
       setMessages(responseData);
       console.log(responseData);
+    
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +83,7 @@ const SendMessage = () => {
   useEffect(() => {
     socket.on("mess-rcv", (data) => {
       // console.log("mess", data);
-      setMessages([...messages], data);
+      setMessages([...messages, data]);
     });
   }, []);
 
@@ -98,38 +96,23 @@ const SendMessage = () => {
     });
   
     try {
-      const response = await fetch(
-        "http://192.168.1.6:5678/message/messImage",
+      const respone = await axios.post(
+        "http://192.168.1.5:5678/message/messImage",
+        formData,
         {
-          method: "POST",
-          body: formData,
           headers: {
             "Content-Type": "multipart/form-data",
           },
         }
       );
-  
-      if (!response.ok) {
-        throw new Error(
-          `Error uploading image: HTTP status ${response.status}`
-        );
-      }
-  
-      const responseData = await response.json();
-  
-      const messageResponse = await fetch("http://192.168.1.6:5678/message/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData.token}`,
-        },
-        body: JSON.stringify({
+      
+      const dataSend = await axios.post(
+        "http://192.168.1.5:5678/message/",
+        {
           chatId: route.params._id,
           content: responseData.url, 
           typeMess: "image",
-        }),
-      });
-  
+        })
       if (!messageResponse.ok) {
         throw new Error(
           `Error sending message: HTTP status ${messageResponse.status}`
@@ -175,7 +158,7 @@ const pickImage = async () => {
     if (messages) {
       try {
         const dataSend = await axios.post(
-          "http://192.168.1.6:5678/message/",
+          "http://192.168.1.5:5678/message/",
           {
             chatId: route.params._id,
             content: text,

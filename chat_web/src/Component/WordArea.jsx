@@ -1,3 +1,4 @@
+
 import React from 'react'
 
 function WordArea() {
@@ -11,5 +12,6 @@ function WordArea() {
         </div>
     )
 }
+
 
 export default WordArea

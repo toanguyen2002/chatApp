@@ -18,8 +18,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.1.6";
-export default function Phonebook({ navigation }) {
+const ip = "192.168.1.5";
+export default function Phonebook() {
   const [activeForm, setActiveForm] = useState("friend");
   const [activeForm1, setActiveForm1] = useState("all");
   const [selectedChar, setSelectedChar] = useState(null);
@@ -98,13 +98,13 @@ export default function Phonebook({ navigation }) {
     };
     getUser();
   }, []);
-  const alphabet = Array.from({ length: 26 }, (_, i) =>
-    String.fromCharCode("A".charCodeAt(0) + i)
-  );
+  // const alphabet = Array.from({ length: 26 }, (_, i) =>
+  //   String.fromCharCode("A".charCodeAt(0) + i)
+  // );
 
-  const handleCharPress = (char) => {
-    setSelectedChar(char);
-  };
+  // const handleCharPress = (char) => {
+  //   setSelectedChar(char);
+  // };
 
   const handlePress = (form) => {
     setActiveForm(form);
