@@ -768,5 +768,32 @@ input[type="file"] {
   font-size: 15px;
   font-family: Arial, Helvetica, sans-serif;
 }
+.icon-file{
+  height: 40px;
+  width: 40px;
+}
+.file-chat-icon {
+  margin: 5px;
+  /* Khoảng cách giữa các ảnh */
+  height: 40px;
+  width: 40px;
+  
 
-/* 11:26 13/3/2024 */
+}
+.file-chat-icon2 {
+  margin: 5px;
+  /* Khoảng cách giữa các ảnh */
+  height: 50px;
+  width: 50px;
+  
+}
+.link-file{
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  bottom: 18px;
+  text-decoration: none;
+
+}
+
+/* 2/4/2024 */
