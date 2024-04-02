@@ -17,6 +17,7 @@ function RegisterComponent() {
         console.log(data);
     }
     const handleGetOTP = async () => {
+
         var otpRender = ''
         for (let index = 0; index < 5; index++) {
             otpRender += Math.floor((Math.random() * (20 - 16)) + 5).toString();
