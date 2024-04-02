@@ -11,14 +11,12 @@ import {
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
 
 export default function User({ navigation }) {
-  // Styles
-  
+  const handlePress = () => {
+    navigation.navigate("UiLogin"); // Navigate to SendMessage screen
+  };
+
   return (
     <ScrollView>
       <View>
@@ -44,7 +42,6 @@ export default function User({ navigation }) {
           </Pressable>
         </View>
       </View>
-
       <View style={styles.sectionContainer}>
         <View style={styles.innerSectionContainer}>
           <View style={{ flexDirection: "row" }}>
@@ -64,10 +61,12 @@ export default function User({ navigation }) {
               />
             </View>
           </View>
-
           <View style={styles.sectionDivider}></View>
-
-          {/* Các phần khác tương tự */}
+        </View>
+        <View>
+        <Pressable style={styles.button} onPress={handlePress}>
+            <Text style={styles.buttonText}>Đăng Xuất</Text>
+          </Pressable>
         </View>
       </View>
     </ScrollView>
@@ -135,5 +134,15 @@ const styles = {
     width: 420,
     marginTop: 20,
   },
+  button: {
+    height: 40,
+    borderRadius: 5,
+    backgroundColor: "#0084ff",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
 };
-
