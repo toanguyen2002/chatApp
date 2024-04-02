@@ -113,6 +113,7 @@ const resetPassword = expreeAsynceHandle(async (req, res) => {
 const getOTPandSendToEmail = expreeAsynceHandle(async (req, res) => {
     const { email, otp } = req.body
     const uemail = await User.findOne({ email })
+    console.log(uemail);
     if (uemail) {
         throw new Error('user already exists!!')
     } else {
