@@ -32,6 +32,11 @@ function MyMessageConponent({ props }) {
                                     <a href={item.url}>{item.url.split('/')[3]}</a> <br />
                                 </div>
                             }
+                            {item.url.endsWith('pdf') &&
+                                <div className="">
+                                    <a href={item.url}>{item.url.split('/')[3]}</a> <br />
+                                </div>
+                            }
                             {item.url.endsWith('png') &&
                                 // <h1 className="">png</h1>
                                 <img className='img-chat' style={{ maxWidth: `400px` }} src={item.url} alt="" />
