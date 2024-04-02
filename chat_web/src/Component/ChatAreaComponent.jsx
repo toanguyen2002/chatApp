@@ -22,6 +22,7 @@ export default function ChatAreaComponent() {
     const messageEndRef = useRef(null)
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [loading, setLoading] = useState(false)
+    const [renderMess, setRenderMess] = useState(false)
     const fileRef = useRef()
     const [imageData, setImageData] = useState([])
     const textRef = useRef()
@@ -46,7 +47,7 @@ export default function ChatAreaComponent() {
     //socket chạy tin nhắn tự động
     useEffect(() => {
         socket.on("mess-rcv", (data) => {
-            console.log("mess", data);
+            // console.log("mess", data);
 
         })
     }, [])
@@ -77,7 +78,7 @@ export default function ChatAreaComponent() {
             // setMess([])
             setMess(dataMessage.data)
             scrollTobottom()
-            // setLoading(false)
+            // setRenderMess(false)
         } catch (error) {
             console.log(error);
         }
@@ -85,12 +86,11 @@ export default function ChatAreaComponent() {
     useEffect(() => {
 
         rerenderMessage()
-        console.log(1);
         return () => {
             setScrollExecuted(false);
         };
 
-    }, [chat_id, socket])
+    }, [chat_id, socket, renderMess])
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
     const uploadmultiImage = async () => {
@@ -103,7 +103,7 @@ export default function ChatAreaComponent() {
             const dataRender = await sendMessImg(item)
             dataImge.push(dataRender)
         }))
-        console.log(dataImge);
+        // console.log(dataImge);
         const dataSend = await axios.post(
             "http://localhost:5678/message/", {
             chatId: chat_id,
@@ -123,6 +123,7 @@ export default function ChatAreaComponent() {
         socket.emit("render-box-chat", true)
 
         setContentMess("")
+        setRenderMess(!renderMess)
         console.log(dataSend.data);
 
 
@@ -169,6 +170,7 @@ export default function ChatAreaComponent() {
                 // textRef.current.value = ' ';
                 socket.emit("render-box-chat", true)
 
+                setRenderMess(!renderMess)
                 // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
                 console.log(error);
@@ -196,6 +198,7 @@ export default function ChatAreaComponent() {
                 socket.emit("render-box-chat", true)
 
                 // setContentMess("")
+                setRenderMess(!renderMess)
                 setContentMess("")
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
