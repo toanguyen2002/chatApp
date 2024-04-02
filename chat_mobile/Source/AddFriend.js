@@ -40,7 +40,6 @@ export default function Adfr({ navigation }) {
                             <AntDesign name="arrowright" size={24} color="white" />
                         </Pressable>
                     </View>
-                    {/* Kết thúc */}
                 </View>
             </View>
         </ScrollView>
