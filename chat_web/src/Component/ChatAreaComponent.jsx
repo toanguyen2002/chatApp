@@ -10,7 +10,7 @@ import { myContext } from './MainComponent';
 import { io } from 'socket.io-client';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import Picker from 'emoji-picker-react';
+// import Picker from 'emoji-picker-react';
 
 
 const socket = io("http://localhost:5678")
@@ -22,14 +22,21 @@ export default function ChatAreaComponent() {
     const messageEndRef = useRef(null)
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [loading, setLoading] = useState(false)
+    const [renderMess, setRenderMess] = useState(false)
     const fileRef = useRef()
     const [imageData, setImageData] = useState([])
     const textRef = useRef()
+    const [scrollExecuted, setScrollExecuted] = useState(false);
 
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
     const scrollTobottom = () => {
-        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest", scrollY: -1 })
+
+        // if (scrollExecuted == false) {
+        //     console.log(scrollExecuted);
+        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+        // setScrollExecuted(true);
+        // }
     }
     const selectionEmoji = (event, emojiObject) => {
         setContentMess(emojiObject)
@@ -41,9 +48,7 @@ export default function ChatAreaComponent() {
     useEffect(() => {
         socket.on("mess-rcv", (data) => {
             // console.log("mess", data);
-            // setMess([...mess], data)
-            setMess([...mess], data)
-            // setMess([...mess], data)
+
         })
     }, [])
 
@@ -73,7 +78,7 @@ export default function ChatAreaComponent() {
             // setMess([])
             setMess(dataMessage.data)
             scrollTobottom()
-            // setLoading(false)
+            // setRenderMess(false)
         } catch (error) {
             console.log(error);
         }
@@ -81,15 +86,53 @@ export default function ChatAreaComponent() {
     useEffect(() => {
 
         rerenderMessage()
+        return () => {
+            setScrollExecuted(false);
+        };
 
-    }, [chat_id, mess])
+    }, [chat_id, socket, renderMess])
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
-    const sendMessImg = async () => {
+    const uploadmultiImage = async () => {
+        const arrayListImage = Array.from(fileRef.current.files)
+
+
+        const dataImge = []
+
+        await Promise.all(arrayListImage.map(async (item) => {
+            const dataRender = await sendMessImg(item)
+            dataImge.push(dataRender)
+        }))
+        // console.log(dataImge);
+        const dataSend = await axios.post(
+            "http://localhost:5678/message/", {
+            chatId: chat_id,
+            ImageUrl: dataImge,
+            typeMess: "Multimedia"
+        },
+            {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                }
+            }
+        )
+
+        socket.emit("new-mes", dataSend.data)
+
+        messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+        socket.emit("render-box-chat", true)
+
+        setContentMess("")
+        setRenderMess(!renderMess)
+        console.log(dataSend.data);
+
+
+    }
+    const sendMessImg = async (items) => {
         const formData = new FormData();
-        formData.append('fileImage', fileRef.current.files[0]);
-        // console.log(fileRef.current.files[0]);
+        formData.append('fileImage', items);
         try {
+
             const respone = await axios.post("http://localhost:5678/message/messImage",
                 formData,
                 {
@@ -100,28 +143,11 @@ export default function ChatAreaComponent() {
 
             );
 
-            const dataSend = await axios.post(
-                "http://localhost:5678/message/", {
-                chatId: chat_id,
-                content: respone.data.url,
-                typeMess: "image"
-            },
-                {
-                    headers: {
-                        Authorization: `Bearer ${userData.data.token}`,
-                    }
-                }
-            )
-
-            socket.emit("new-mes", dataSend.data)
-
-            messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
-            socket.emit("render-box-chat", true)
-
-            setContentMess("")
+            return respone.data
         } catch (error) {
             console.error("Error uploading image:", error);
         }
+
     };
     const enterMess = async (e) => {
         if (e.key == "Enter" && mess) {
@@ -138,12 +164,13 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", dataSend.data)
+                socket.emit("new-mes", true)
                 // setContentMess("")
                 setContentMess("")
                 // textRef.current.value = ' ';
                 socket.emit("render-box-chat", true)
 
+                setRenderMess(!renderMess)
                 // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
                 console.log(error);
@@ -167,10 +194,11 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", dataSend.data)
+                socket.emit("new-mes", true)
                 socket.emit("render-box-chat", true)
 
                 // setContentMess("")
+                setRenderMess(!renderMess)
                 setContentMess("")
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
@@ -180,6 +208,11 @@ export default function ChatAreaComponent() {
 
 
     }
+    useEffect(() => {
+        socket.on("mess-rcv", (data) => {
+            rerenderMessage()
+        })
+    }, [socket])
 
     return (
         <><Backdrop open={loading}
@@ -234,7 +267,7 @@ export default function ChatAreaComponent() {
                         <IconButton>
                             <label htmlFor="">
                                 <AttachFileIcon />
-                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => sendMessImg()} />
+                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => uploadmultiImage()} />
                             </label>
                         </IconButton>
                         <IconButton onClick={sendMess}>

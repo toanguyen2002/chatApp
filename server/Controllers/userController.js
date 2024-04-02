@@ -109,6 +109,35 @@ const resetPassword = expreeAsynceHandle(async (req, res) => {
         throw new Error(error)
     }
 });
+const getOTPandSendToEmail = expreeAsynceHandle(async (req, res) => {
+    const { email, otp } = req.body
+    const uemail = await User.findOne({ email })
+    if (uemail) {
+        throw new Error('user already exists!!')
+    } else {
+        try {
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'toanguyen120921@gmail.com',
+                    pass: 'pkyw ypxj uqrf qmno'
+                }
+            });
+            var mailOptions = {
+                from: 'toanguyen120921@gmail.com',
+                to: email,
+                subject: 'Cung Cấp OTP trong việc tạo tài khoản',
+                text: 'OTP để tạo tài khoản của bạn là: ' + otp
+            };
+            transporter.sendMail(mailOptions)
+
+            res.status(200)
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
+});
 
 const addFriend = expreeAsynceHandle(async (req, res) => {
     // const userId = req.body.userid
@@ -361,5 +390,6 @@ module.exports = {
     resetPassword,
     addFriend,
     acceptFriend,
-    getUserwaitAccept
+    getUserwaitAccept,
+    getOTPandSendToEmail
 }

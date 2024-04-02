@@ -379,6 +379,7 @@
   color: rgba(0, 0, 0, 0.54);
 
 }
+
 .chat-name2 {
   grid-area: 1/2/2/4;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -646,9 +647,6 @@ input[type="file"] {
   cursor: pointer;
 }
 
-.img-chat {
-  width: 200px;
-}
 
 .zname {
   color: #F8F8F8;
@@ -668,37 +666,106 @@ input[type="file"] {
   color: black;
   font-family: Arial, Helvetica, sans-serif;
 }
-.iconColor{
+
+.iconColor {
   color: #1E90FF;
 }
-.online{
+
+.online {
   color: #32CD32;
   font-family: Arial, Helvetica, sans-serif;
 }
-.icon{
+
+.icon {
   position: relative;
   right: 4px;
   top: 7px;
 
 }
-.Txtbox{
+
+.Txtbox {
   flex-direction: row;
   outline: 0;
   border: none;
   border-bottom: 1px solid #aaa;
-  
+
 }
-.capfr{
+
+.capfr {
   position: relative;
   left: 160px;
   font-family: Arial, Helvetica, sans-serif;
   color: white;
-  
+
 }
-.frname{
+
+.frname {
   color: white;
 }
-.clearicon{
+
+.clearicon {
   color: white;
 }
+
+.img-box {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  /* flex-wrap: wrap; */
+  /* width: max-content;
+  height: max-content;
+  overflow: calc(33.33%); */
+  /* justify-content: center; */
+
+  /* align-items: center; */
+}
+
+.img-chat {
+  margin: 5px;
+  /* Khoảng cách giữa các ảnh */
+  max-width: 200px;
+  background-size: cover;
+  background-position: center;
+}
+
+.error-otp {
+  font-size: 13px;
+  color: red;
+  font-family: auto;
+}
+
+.txtOtp {
+  height: 40px;
+  width: 150px;
+  outline: 0;
+  border: none;
+  background-color: #f9f9f9;
+  font-size: 20px;
+  border-bottom: #aaa;
+}
+
+.btnOtp {
+  position: relative;
+  left: 30px;
+  height: 40px;
+  width: 100px;
+  background-color: #1E90FF;
+  border: none;
+  color: white;
+  border-radius: 5px;
+}
+
+.btn-register {
+  height: 40px;
+  width: 280px;
+  border-radius: 5px;
+  min-width: max-content;
+  font-size: 20px;
+  background-color: #1E90FF;
+  border-width: 0px;
+  color: white;
+  font-size: 15px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 /* 11:26 13/3/2024 */
