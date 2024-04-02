@@ -18,8 +18,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.110.194";
-export default function Phonebook() {
+const ip = "192.168.110.193";
+export default function Phonebook({ navigation }) {
   const [activeForm, setActiveForm] = useState("friend");
   const [activeForm1, setActiveForm1] = useState("all");
   const [selectedChar, setSelectedChar] = useState(null);
@@ -136,13 +136,21 @@ export default function Phonebook() {
           formToShow1 === "all" ||
           formToShow1 === "recent") && (
             <View style={styles.tabContainer}>
-              <View style={styles.tabItem}>
-                <View style={{ marginLeft: 15 }}>
-                  <FontAwesome5 name="user-friends" size={24} color="black" />
-                </View>
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("Friend")
 
-                <Text style={styles.tabText}>Lời mời kết bạn</Text>
-              </View>
+                }>
+                <View style={styles.tabItem}>
+                  <View style={{ marginLeft: 15 }}>
+                    <FontAwesome5 name="user-friends" size={24} color="black" />
+                  </View>
+
+
+                  <Text style={styles.tabText}>Lời mời kết bạn</Text>
+
+                </View>
+              </Pressable>
               <View style={styles.tabItem}>
                 <Text>Danh sách bạn bè</Text>
 
@@ -158,14 +166,20 @@ export default function Phonebook() {
         {formToShow === "group" && (
           <View style={{}}>
             <View style={styles.tabContainer2}>
-              <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
-                <Image
-                  style={{ width: 70, height: 70, resizeMode: 'contain' }}
-                  source={require("../assets/newgrp.png")}
-                />
-                <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
+              <Pressable
+                onPress={() =>
+                  navigation.navigate("NewGroup")
 
-              </View>
+                }>
+                <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
+                  <Image
+                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    source={require("../assets/newgrp.png")}
+                  />
+                  <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
+
+                </View>
+              </Pressable>
               <View style={styles.separator}></View>
 
               {/* <View>
@@ -224,7 +238,7 @@ export default function Phonebook() {
                       const handlePress = () => {
                         navigation.navigate("SenddMessage", item); // Navigate to SendMessage screen
                       };
-                    
+
                       return (
                         <TouchableOpacity onPress={handlePress} >
                           <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.chatName}</Text>
@@ -252,6 +266,8 @@ export default function Phonebook() {
             </View>
           </View>
         )}
+
+
       </View>
 
     );
@@ -260,10 +276,11 @@ export default function Phonebook() {
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView>
         <View>
+          <View style={{ marginBottom:50}}></View>
           <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
             {/* Icon tìm kiếm */}
             <AntDesign name="search1" size={25} color="white" />
-            <View style={{ marginLeft: 20, marginTop: 2 }}>
+            <View style={{ marginLeft: 5, marginTop: 2 }}>
               {/* Text hiển thị "Tìm kiếm" */}
               <TextInput
                 placeholder="Tìm kiếm"
@@ -278,9 +295,15 @@ export default function Phonebook() {
             {/* ----- */}
 
             {/* Icon thêm bạn bè */}
-            <View style={{ marginLeft: 100 }}>
-              <AntDesign name="adduser" size={30} color="white" />
-            </View>
+            <Pressable
+            onPress={() =>
+              navigation.navigate("AddFriend")
+
+            }>
+              <View style={{ marginLeft: 100 }}>
+                <AntDesign name="adduser" size={30} color="white" />
+              </View>
+            </Pressable>
           </View>
         </View>
 

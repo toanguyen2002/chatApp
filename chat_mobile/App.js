@@ -4,10 +4,13 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons, FontAwesome, AntDesign } from "@expo/vector-icons";
-
+import { AsyncStorage } from 'react-native';
 
 import { MessageTC, Personal, PhoneBook, SenddMessage, UiLogin, UiRegister, Diary, Discover } from "./Source";
 import Phonebook from "./Source/Phonebook";
+import AddFriend from "./Source/AddFriend";
+import Friend from "./Source/Friend";
+import NewGroup from "./Source/NewGroup";
 
 const Tab = createBottomTabNavigator();
 
@@ -58,10 +61,10 @@ function MyTabs() {
             );
           } else if (route.name === "Khám phá") {
             iconComponent = (
-              <AntDesign 
-              name="windows" 
-              size={25} 
-              color={focused ? "#0000FF" : "black"} />
+              <AntDesign
+                name="windows"
+                size={25}
+                color={focused ? "#0000FF" : "black"} />
             );
             labelComponent = (
               <Text
@@ -137,6 +140,9 @@ export default function App() {
         <Stack.Screen name="Personal" component={Personal} />
         <Stack.Screen name="Diary" component={Diary} />
         <Stack.Screen name="Discover" component={Discover} />
+        <Stack.Screen name="AddFriend" component={AddFriend} />
+        <Stack.Screen name="Friend" component={Friend} />
+        <Stack.Screen name="NewGroup" component={NewGroup} />
 
 
 

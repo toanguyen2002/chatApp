@@ -21,7 +21,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.110.194";
+const ip = "192.168.110.193";
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -162,8 +162,7 @@ const SendMessage = () => {
     }
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
+      multiple: true,
       quality: 1,
     });
 

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, Button, View, Image, Pressable } from 'react-native';
 
-const ip = "192.168.110.194";
+const ip = "192.168.110.193";
 const UiRegister = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');

@@ -8,9 +8,9 @@ import {
   Pressable,
 } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-const ip = "192.168.110.194";
+const ip = "192.168.110.193";
 const UiLogin = ({ navigation }) => {
-  const [data, setData] = useState({ name: "admin", password: "123" });
+  const [data, setData] = useState({ name: "admin1", password: "123" });
   const handleLogin = async () => {
     try {
       const response = await fetch("http://"+ip+":5678/user/login", {
