@@ -12,9 +12,10 @@ import ErrorModal from './modal/ErrorModalLogin';
 
 const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin", password: "123" });
+  const [errorModalVisible, setErrorModalVisible] = useState(false);
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.1.4:5678/user/login", {
+      const response = await fetch("http://192.168.1.5:5678/user/login", {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -31,6 +32,7 @@ const UiLogin = ({ navigation }) => {
       
     } catch (error) {
       console.log(error);
+      setErrorModalVisible(true);
     }
   };
   return (
