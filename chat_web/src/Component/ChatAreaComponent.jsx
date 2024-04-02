@@ -185,7 +185,7 @@ export default function ChatAreaComponent() {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
                     chatId: chat_id,
-                    dataImge: contentMess,
+                    content: contentMess,
                     typeMess: "text"
                 },
                     {
