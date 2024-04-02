@@ -17,23 +17,27 @@ function MessageComponent({ props }) {
                         <div className="">
                             {item.url.endsWith('docx') &&
                                 <div className="">
-                                    <a href={item.url}>{item.url.split('/')[3]}</a>
+                                    <img className='file-chat-icon2' style={{ maxWidth: '400px' }} src={"https://res.cloudinary.com/dhyt592i7/image/upload/v1712071261/e8zf6xlepys4jevrmf7q.png"} alt="" />
+                                    <a className='link-file' href={item.url}>{item.url.split('/')[3]}</a>
                                     <br />
                                 </div>
                             }
                             {item.url.endsWith('xlsx') &&
                                 <div className="">
-                                    <a href={item.url}>{item.url.split('/')[3]}</a> <br />
+                                    <img className='file-chat-icon2' style={{ maxWidth: '400px' }} src={"https://res.cloudinary.com/dhyt592i7/image/upload/v1712071046/covmtdumtqntlsvx9jyi.png"} alt="" />
+                                    <a className='link-file' href={item.url}>{item.url.split('/')[3]}</a> <br />
                                 </div>
                             }
                             {item.url.endsWith('pptx') &&
                                 <div className="">
-                                    <a href={item.url}>{item.url.split('/')[3]}</a> <br />
+                                    <img className='file-chat-icon' style={{ maxWidth: '400px' }} src={"https://res.cloudinary.com/dhyt592i7/image/upload/v1712070852/gocyslxocjixjrfzaszh.png"} alt="" />
+                                    <a className='link-file' href={item.url}>{item.url.split('/')[3]}</a> <br />
                                 </div>
                             }
                             {item.url.endsWith('pdf') &&
                                 <div className="">
-                                    <a href={item.url}>{item.url.split('/')[3]}</a> <br />
+                                    <img className='file-chat-icon' style={{ maxWidth: '400px' }} src={"https://res.cloudinary.com/dhyt592i7/image/upload/v1712070523/s5o96ckawemcfztbomuw.png"} alt="" />
+                                    <a  href={item.url}>{item.url.split('/')[3]}</a> <br />
                                 </div>
                             }
                             {item.url.endsWith('png') &&
