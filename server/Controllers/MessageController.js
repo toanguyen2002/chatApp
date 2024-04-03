@@ -109,11 +109,6 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
 
 const blacnkMess = expressAsyncHandler(async (req, res) => {
     const { messId } = req.body;
-    // console.log(req.body);
-    // var onlMess = Message.findById(messId)
-    // onlMess.content = ''
-    // Message.save(onlMess)
-    // var message = await Message.create(newMessage);
     const result = await Message.findByIdAndUpdate(messId, { content: '' });
     res.json(result);
 })
