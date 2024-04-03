@@ -150,7 +150,7 @@ export default function ChatAreaComponent() {
 
     };
     const enterMess = async (e) => {
-        if (e.key == "Enter" && mess) {
+        if (e.key == "Enter" && contentMess) {
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
@@ -180,7 +180,8 @@ export default function ChatAreaComponent() {
 
     }
     const sendMess = async () => {
-        if (mess) {
+        if (contentMess) {
+            // console.log(true);
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {

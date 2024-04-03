@@ -496,6 +496,19 @@
   font-family: 'Times New Roman', Times, serif;
   align-self: flex-end;
   flex-direction: column;
+  position: relative;
+}
+
+.hidden-form {
+  position: absolute;
+  left: 0;
+  bottom: -15px;
+  display: none;
+}
+
+.my-message-row:hover .hidden-form {
+  display: block;
+  cursor: pointer;
 }
 
 .chat-row-time {
@@ -760,26 +773,30 @@ input[type="file"] {
   font-size: 15px;
   font-family: Arial, Helvetica, sans-serif;
 }
-.icon-file{
+
+.icon-file {
   height: 40px;
   width: 40px;
 }
+
 .file-chat-icon {
   margin: 5px;
   /* Khoảng cách giữa các ảnh */
   height: 40px;
   width: 40px;
-  
+
 
 }
+
 .file-chat-icon2 {
   margin: 5px;
   /* Khoảng cách giữa các ảnh */
   height: 50px;
   width: 50px;
-  
+
 }
-.link-file{
+
+.link-file {
   justify-content: center;
   align-items: center;
   position: relative;
