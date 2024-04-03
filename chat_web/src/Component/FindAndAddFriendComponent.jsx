@@ -53,7 +53,7 @@ function FindAndAddFriendComponent({ closemodal }) {
 
             <div className="get-users-modal">
                 <div className="modal-title">
-                    <h3>Những Người Bạn Có Thể Biết</h3>
+                    <h3 className='fr-cap'>Những Người Bạn Có Thể Biết</h3>
                     <IconButton onClick={() => closemodal(false)}>
                         <ClearIcon />
                     </IconButton>
