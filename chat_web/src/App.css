@@ -203,9 +203,11 @@
   align-items: center;
 }
 
+
 .login-form-container {
+  padding: 20px;
   width: 400px;
-  height: 400px;
+  height: max-content;
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
@@ -707,13 +709,7 @@ input[type="file"] {
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
-  /* flex-wrap: wrap; */
-  /* width: max-content;
-  height: max-content;
-  overflow: calc(33.33%); */
-  /* justify-content: center; */
 
-  /* align-items: center; */
 }
 
 .img-chat {
