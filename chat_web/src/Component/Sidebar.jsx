@@ -13,6 +13,7 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import ModalChatOne from './ModalChatOne';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import { io } from 'socket.io-client';
 
 
@@ -20,6 +21,7 @@ import { io } from 'socket.io-client';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import FindAndAddFriendComponent from './FindAndAddFriendComponent';
+import FriendAccept from './FriendAccept';
 
 
 const socket = io("http://localhost:5678")
@@ -39,6 +41,7 @@ function Sidebar() {
     const [showModal, setShowModal] = useState(false)
     const [showOne, setShowOne] = useState(false)
     const [showListFriend, setShowListFriend] = useState(false)
+    const [showListAccept, setShowListAccept] = useState(false)
 
 
 
@@ -130,6 +133,9 @@ function Sidebar() {
                         <GroupAddIcon className='iconColor' />
                     </IconButton>
                     <IconButton>
+                        <PeopleAltIcon onClick={() => setShowListAccept(true)} className='iconColor' />
+                    </IconButton>
+                    <IconButton>
                         <AddCircleIcon onClick={() => setShowListFriend(true)} className='iconColor' />
                     </IconButton>
                     <IconButton onClick={() => clickToLogout()}>
@@ -169,6 +175,8 @@ function Sidebar() {
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
             {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
             {showListFriend ? <FindAndAddFriendComponent closemodal={setShowListFriend} /> : <div></div>}
+            {showListAccept ? <FriendAccept closemodal={setShowListAccept} /> : <div></div>}
+
             <Modal open={open} onClose={handleClose}>
                 <div className="modal-style">
                     <div className="modal-header">Thông Tin Cá Nhân</div>
