@@ -130,6 +130,9 @@ function Sidebar() {
                     <IconButton onClick={handClick}>
                         <GroupAddIcon className='iconColor' />
                     </IconButton>
+                    <IconButton onClick={handClick}>
+                        <GroupAddIcon className='iconColor' />
+                    </IconButton>
                     <IconButton>
                         <AddCircleIcon onClick={() => setShowListFriend(true)} className='iconColor' />
                     </IconButton>
