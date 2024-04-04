@@ -80,10 +80,6 @@ export default function ChatAreaComponent() {
     }
     useEffect(() => {
         rerenderMessage()
-        return () => {
-            setScrollExecuted(false);
-        };
-
     }, [chat_id, socket])
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
@@ -114,7 +110,7 @@ export default function ChatAreaComponent() {
         socket.emit("render-box-chat", true)
         setContentMess("")
         setRenderMess(!renderMess)
-
+        setMess([...mess, dataSend.data])
         console.log(dataSend.data);
         messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
 
@@ -158,6 +154,7 @@ export default function ChatAreaComponent() {
                 socket.emit("new message", dataSend.data)
 
                 socket.emit("render-box-chat", true)
+                setMess([...mess, dataSend.data])
                 setContentMess("")
                 setRenderMess(!renderMess)
             } catch (error) {
