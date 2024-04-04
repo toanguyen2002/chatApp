@@ -21,6 +21,7 @@ function RegisterComponent() {
         for (let index = 0; index < 5; index++) {
             otpRender += Math.floor((Math.random() * (20 - 16)) + 5).toString();
         }
+        localStorage.setItem('otp', otpRender)
         if (data.email == "" || !data.email.endsWith('@gmail.com')) {
             setEmailAccount("Email Rỗng hoặc không hợp Phải là Gmail");
         } else {
@@ -34,17 +35,23 @@ function RegisterComponent() {
                         headers: { "Content-type": "application/json" }
                     }
                 )
+                localStorage.removeItem('otp')
+                setEmailAccount("")
             } catch (error) {
                 setEmailAccount("Email đã tồn tại trong hệ thống vui lòng đăng nhập");
             }
         }
-        // localStorage.setItem('otp', otpRender)
+
+
 
 
     }
 
 
     const registerHandle = async () => {
+
+        console.log(localStorage.getItem('otp'));
+        console.log(data.otp);
         if (localStorage.getItem('otp') !== data.otp) {
             setOtpError('OTP Không Tồn Tại Hoặc Sai Vui Lòng Kiểm Tra Lại')
         } else {
