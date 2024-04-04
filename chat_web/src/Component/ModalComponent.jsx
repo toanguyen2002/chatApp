@@ -67,10 +67,6 @@ function ModalComponent({ clockModal }) {
                     Authorization: `Bearer ${userData.data.token}`,
                 },
             })
-            // console.log(dataUser.data);
-            // console.log(userData.name);
-            // console.log(userData._id);
-
             setUsers(dataUser.data);
         }
         getUser()

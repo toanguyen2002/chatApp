@@ -47,20 +47,36 @@ io.on("connection", (socket) => {
         socket.join(userData._id)
         socket.emit("connected")
     })
-    socket.on("new-mes", (data) => {
-        // console.log(data);
-        // data.chat.users.map((item) => {
-        //     if (data.sender._id !== item._id) return;
-        //     else
-        socket.broadcast.emit("mess-rcv", !data)
+    //tham gia room chat
+    socket.on("join chat", (room) => {
+        socket.join(room);
+        console.log("User Joined Room: " + room);
+    });
+    //send mess mới
+    socket.on("new message", (newMessageRecieved) => {
+        var chat = newMessageRecieved.chat;
+        console.log(chat);
+        if (!chat.users) return;
+        chat.users.forEach((user) => {
+            if (user._id == newMessageRecieved.sender._id) return;
 
-        // })
-    })
-    socket.on("demo", (data) => {
-        console.log(data.mes);
-        socket.broadcast.emit("demo-rcv", data)
+            socket.broadcast.emit("message recieved", newMessageRecieved);
+        });
+    });
+    //socket.on("new-mes", (data) => {
+    //  console.log(data);
+    // data.chat.users.map((item) => {
+    //     if (data.sender._id !== item._id) return;
+    //     else
+    //         socket.broadcast.emit("mess-rcv", !data)
 
-    })
+    // })
+    //})
+    // socket.on("demo", (data) => {
+    //     console.log(data.mes);
+    //     socket.broadcast.emit("demo-rcv", data)
+
+    // })
 
     socket.on("new-group", (data) => {
         console.log(data);
@@ -70,7 +86,6 @@ io.on("connection", (socket) => {
     socket.on("render-box-chat", (data) => {
         socket.broadcast.emit("render-box-chat-rcv", !data)
     })
-
     socket.off("setup", (userData) => {
         console.log(socket.id + ": dis");
         socket.leave(userData._id)
