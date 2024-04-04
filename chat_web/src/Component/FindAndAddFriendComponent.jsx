@@ -62,7 +62,7 @@ function FindAndAddFriendComponent({ closemodal }) {
                     {/* {console.log(users.)} */}
                     {users.map((item, index) => (
                         <div className="">
-                            <UserComponent props={item} clickToAdd={clickToaddFriend} />
+                            <UserComponent props={item} callBackFnc={() => clickToaddFriend(item._id)} truely={true} />
                         </div>
                     ))}
                 </div>
