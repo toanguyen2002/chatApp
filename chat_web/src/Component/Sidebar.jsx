@@ -154,7 +154,7 @@ function Sidebar() {
                 {users.map((item, index) => {
                     if (item.isGroup == false) {
                         // console.log(userData);
-                        console.log(item);
+                        // console.log(item);
                         if (userData.data._id == item.users[0]._id) {
                             item.chatName = item.users[1].name
                             // console.log(item.users[1].name);
