@@ -41,7 +41,7 @@ app.use("/message", messRouter)
 
 
 io.on("connection", (socket) => {
-    console.log(socket.id + ": connected");
+    console.log(socket.id + ": connected");;
 
     socket.on("setup", (userData) => {
         socket.join(userData._id)
@@ -60,7 +60,7 @@ io.on("connection", (socket) => {
         chat.users.forEach((user) => {
             if (user._id == newMessageRecieved.sender._id) return;
 
-            socket.broadcast.emit("message recieved", newMessageRecieved);
+            socket.emit("message recieved", newMessageRecieved);
         });
     });
     //socket.on("new-mes", (data) => {
@@ -72,11 +72,11 @@ io.on("connection", (socket) => {
 
     // })
     //})
-    // socket.on("demo", (data) => {
-    //     console.log(data.mes);
-    //     socket.broadcast.emit("demo-rcv", data)
+    socket.on("demo", (data) => {
+        console.log(data.mes);
+        socket.broadcast.emit("demo-rcv", data)
 
-    // })
+    })
 
     socket.on("new-group", (data) => {
         console.log(data);

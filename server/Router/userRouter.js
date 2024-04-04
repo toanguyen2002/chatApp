@@ -16,7 +16,7 @@ Router.route('/removeAddFriend').post(protect, removeAddFriend)
 Router.route('/getUserNotFriend').post(protect, getUserNoAccept)
 
 
-Router.get('/fetchInvitationFromClient', fetchInvitationFromClient)
+Router.post('/fetchInvitationFromClient', fetchInvitationFromClient)
 Router.post('/fetchUserById', fetchUserById)
 Router.route('/getUserAccept').post(protect, getUserAccept)
 Router.route('/getUserwaitAccept').post(protect, getUserwaitAccept)
