@@ -133,9 +133,6 @@ function Sidebar() {
                     <IconButton onClick={handClick}>
                         <GroupAddIcon className='iconColor' />
                     </IconButton>
-                    <IconButton onClick={handClick}>
-                        <GroupAddIcon className='iconColor' />
-                    </IconButton>
                     <IconButton>
                         <PeopleAltIcon onClick={() => setShowListAccept(true)} className='iconColor' />
                     </IconButton>
