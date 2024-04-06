@@ -2,14 +2,12 @@ import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
-  FlatList,
-  Image,
   StyleSheet,
   TouchableOpacity,
   Modal,
   Pressable,
   TouchableWithoutFeedback,
-
+  KeyboardAvoidingView
 } from "react-native";
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -75,8 +73,10 @@ const MessageTC = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.container}>
+    
+      <View style={{ flex: 1 }}>
+        <KeyboardAvoidingView style={{ flex: 1 }} >
+          <View style={styles.container}>
         <View style={styles.search}>
           <AntDesign name="search1" size={25} color="white" />
         </View>
@@ -99,6 +99,9 @@ const MessageTC = ({ navigation }) => {
           return <MessageItem {...item} key={index} />;
         })}
       </View>
+
+        </KeyboardAvoidingView>
+      
 
       {/* Modal */}
 
@@ -151,16 +154,12 @@ const MessageTC = ({ navigation }) => {
                     </Text>
                   </View>
                 </Pressable>
-
-
-
-
-
               </View>
             </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      
       {/* Modal */}
     </View>
   );
