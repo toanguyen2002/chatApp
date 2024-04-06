@@ -69,6 +69,14 @@ function MyMessageConponent({ props }) {
                                     // <h1 className="">jpeg</h1>
                                     <img className='img-chat' style={{ width: `200px` }} src={item.url} alt="" />
                                 }
+                                {item.url.endsWith('mp4') &&
+                                    // <h1 className="">jpeg</h1>
+                                    <div className="">
+                                        <video controls width={320} height={300}>
+                                            <source src={item.url} />
+                                        </video>
+                                    </div>
+                                }
                             </div>
                         ))}
                     </div>

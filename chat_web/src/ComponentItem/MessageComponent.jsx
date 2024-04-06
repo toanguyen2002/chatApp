@@ -37,7 +37,7 @@ function MessageComponent({ props }) {
                             {item.url.endsWith('pdf') &&
                                 <div className="">
                                     <img className='file-chat-icon' style={{ maxWidth: '400px' }} src={"https://res.cloudinary.com/dhyt592i7/image/upload/v1712070523/s5o96ckawemcfztbomuw.png"} alt="" />
-                                    <a  href={item.url}>{item.url.split('/')[3]}</a> <br />
+                                    <a href={item.url}>{item.url.split('/')[3]}</a> <br />
                                 </div>
                             }
                             {item.url.endsWith('png') &&
@@ -51,6 +51,14 @@ function MessageComponent({ props }) {
                             {item.url.endsWith('jpeg') &&
                                 // <h1 className="">jpeg</h1>
                                 <img className='img-chat' style={{ width: `200px` }} src={item.url} alt="" />
+                            }
+                            {item.url.endsWith('mp4') &&
+                                // <h1 className="">jpeg</h1>
+                                <div className="">
+                                    <video controls width={320} height={300}>
+                                        <source src={item.url} />
+                                    </video>
+                                </div>
                             }
                         </div>
                     ))}

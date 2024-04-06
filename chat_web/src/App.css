@@ -804,14 +804,16 @@ input[type="file"] {
   text-decoration: none;
 
 }
-.fr-cap{
+
+.fr-cap {
   justify-content: center;
   align-items: center;
   position: relative;
   left: 160px;
   font-family: Arial, Helvetica, sans-serif;
 }
-.fr-cap2{
+
+.fr-cap2 {
   justify-content: center;
   align-items: center;
   position: relative;
@@ -819,5 +821,10 @@ input[type="file"] {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.emoji-form {
+  position: absolute;
+  top: 43%;
+  right: 0;
+}
 
 /* 2/4/2024 */
