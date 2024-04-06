@@ -119,5 +119,5 @@ const deleteMess = expressAsyncHandler(async (req, res) => {
 })
 
 module.exports = {
-    sendMessage, allMessages, sendMessImage
+    sendMessage, allMessages, sendMessImage, blacnkMess, deleteMess
 }
