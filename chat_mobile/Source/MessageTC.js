@@ -30,7 +30,7 @@ const MessageTC = ({ navigation }) => {
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
 
-        const response = await axios.get("http://192.168.1.5:5678/chat/", {
+        const response = await axios.get("http://192.168.0.241:5678/chat/", {
           headers: {
             Authorization: `Bearer ${userDataObject.token}`,
           },
@@ -92,6 +92,7 @@ const MessageTC = ({ navigation }) => {
             if (userData && userData._id === item.users[0]._id) {
               item.chatName = item.users[1].name;
             } else {
+              
               item.chatName = item.users[0].name;
             }
           }
