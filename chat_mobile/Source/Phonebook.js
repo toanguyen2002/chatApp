@@ -30,6 +30,7 @@ export default function Phonebook() {
 
   //chứa data của lời mời kết bạn
   const [usersNotFriend, setUsersNotFriend] = useState([]);
+  const ip = "192.168.0.241"
   //lấy danh sách lời mời kêt bạn
   useEffect(() => {
     const getUserNotFriend = async () => {
