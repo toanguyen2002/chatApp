@@ -526,15 +526,15 @@
 }
 
 .modal-style {
-  top: 50%;
+  top: 30%;
   left: 50%;
   position: absolute;
-  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
+  /* background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
   height: 100vh;
   background-position: center;
-  background-size: cover;
+  background-size: cover; */
   transform: translate(-50%, -50%);
-  width: 400px;
+  width: 150px;
   height: 150px;
   border: 2px solid #000;
   box-shadow: 24px;
@@ -544,6 +544,28 @@
   justify-content: center;
   align-items: center;
 }
+.modal-bottom{
+  background-color: white;
+  width: 300px;
+  height: 300px;
+  position: relative;
+  border: 2px solid #000;
+  box-shadow: 24px;
+  padding: 7px;
+  border-width: 0px;
+  justify-content: center;
+  align-items: center;
+  
+}
+.modal-upper{
+  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+  width: 300px;
+  height: 100px;
+
+}
 
 .modal-header {
   font-size: 16px;
@@ -552,7 +574,7 @@
   font-weight: bold;
   padding: 5px;
   font-family: Arial, Helvetica, sans-serif;
-  color: white;
+  color: black;
 
 
 }
@@ -563,7 +585,7 @@
   justify-content: space-between;
   font-family: Arial, Helvetica, sans-serif;
   margin-top: 20px;
-  color: white;
+  color: black;
 
 }
 
@@ -573,7 +595,7 @@
   flex-direction: row;
   justify-content: space-between;
   font-family: Arial, Helvetica, sans-serif;
-  color: white;
+  color: black;
 
 }
 
@@ -587,7 +609,7 @@
 
 .modal-footer>a {
 
-  color: white;
+  color: black;
 }
 
 .reset-Container {
@@ -680,6 +702,12 @@ input[type="file"] {
 
 .iconColor {
   color: #1E90FF;
+}
+.iconColor2 {
+  color: white;
+  position: relative;
+  left: 250px;
+
 }
 
 .online {
@@ -817,6 +845,11 @@ input[type="file"] {
   position: relative;
   left: 230px;
   font-family: Arial, Helvetica, sans-serif;
+}
+.input-area{
+  width: 130px;
+  height: 25px;
+  font-size: 15px;
 }
 
 
