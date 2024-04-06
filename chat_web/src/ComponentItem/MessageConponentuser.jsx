@@ -1,10 +1,41 @@
-import React, { useRef } from 'react'
+import axios from 'axios'
+import React, { useContext, useRef } from 'react'
+import { myContext } from '../Component/MainComponent'
 
 function MyMessageConponent({ props }) {
     const refBox = useRef(null)
-    // console.log(typ);
-    const handleGetidMessAndReplaceToNon = async (e) => {
-        console.log(props._id);
+    const { refresh, setRefresh } = useContext(myContext)
+    const userData = JSON.parse(localStorage.getItem("userData"));
+
+    const handleGetidMessAndReplaceToNone = async () => {
+        try {
+            await axios.post(`http://localhost:5678/message/blankMess`, {
+                messId: props._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            setRefresh(!refresh)
+        } catch (error) {
+            console.log(error);
+        }
+        // console.log(idUser);
+    }
+    const handleGetidMessAndDelete = async (e) => {
+        //http://localhost:5678/message/deleteMess
+        try {
+            await axios.post(`http://localhost:5678/message/deleteMess`, {
+                messId: props._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            setRefresh(!refresh)
+        } catch (error) {
+            console.log(error);
+        }
     }
     const renderContent = () => {
         if (props.content === '') {
@@ -69,6 +100,14 @@ function MyMessageConponent({ props }) {
                                     // <h1 className="">jpeg</h1>
                                     <img className='img-chat' style={{ width: `200px` }} src={item.url} alt="" />
                                 }
+                                {item.url.endsWith('mp4') &&
+                                    // <h1 className="">jpeg</h1>
+                                    <div className="">
+                                        <video controls width={320} height={300}>
+                                            <source src={item.url} />
+                                        </video>
+                                    </div>
+                                }
                             </div>
                         ))}
                     </div>
@@ -83,8 +122,8 @@ function MyMessageConponent({ props }) {
 
             <div className="my-message-row">
                 <div className='hidden-form'>
-                    <button onClick={handleGetidMessAndReplaceToNon}>Thu Hồi</button>
-                    <button>Xóa</button>
+                    <button onClick={handleGetidMessAndReplaceToNone}>Thu Hồi</button>
+                    <button onClick={handleGetidMessAndDelete}>Xóa</button>
                 </div>
                 {
 
