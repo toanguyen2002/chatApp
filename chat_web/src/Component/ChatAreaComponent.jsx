@@ -10,7 +10,8 @@ import { myContext } from './MainComponent';
 import { io } from 'socket.io-client';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
-// import Picker from 'emoji-picker-react';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
+import Picker from 'emoji-picker-react';
 
 
 var socket = io("http://localhost:5678")
@@ -23,13 +24,19 @@ export default function ChatAreaComponent() {
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [loading, setLoading] = useState(false)
     const [renderMess, setRenderMess] = useState(false)
+    const [showFormEmoji, setShowFormEmoji] = useState(false)
     const fileRef = useRef()
     const [imageData, setImageData] = useState([])
     const textRef = useRef()
     const [scrollExecuted, setScrollExecuted] = useState(false);
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
-
+    var emojiArray = []
+    const selectEmojiIcon = (emojiObject) => {
+        const emoji = emojiObject.emoji
+        emojiArray.push(emoji)
+        setContentMess(...emoji)
+    }
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
     useEffect(() => {
@@ -55,15 +62,16 @@ export default function ChatAreaComponent() {
                     Authorization: `Bearer ${userData.data.token}`,
                 }
             })
-            // setMess([])
-            setMess(dataMessage.data)
+            setTimeout(() => {
+                // setMess([])
+                setMess(dataMessage.data)
+            }, 1000)
         }
         catch (error) {
             console.log(error);
         }
     }
     useEffect(() => {
-
         renderChat()
         messageEndRef.current.scrollIntoView({ behavior: "auto", block: "end", inline: "nearest" })
     }, [objectChat, mess, refresh, socket])
@@ -72,7 +80,8 @@ export default function ChatAreaComponent() {
     //     socket.on("message recieved", (data) => {
     //         // console.log(objectChat === data.chat._id);
     //         if (objectChat === data.chat._id) {
-    //             renderChat()
+    //             // renderChat()
+    //             setMess([...mess, data])
     //             // console.log(1);
     //         } else {
     //             console.log(data);
@@ -235,17 +244,20 @@ export default function ChatAreaComponent() {
 
                 {/* <div className="" ref={messageEndRef}></div> */}
 
+                <div className='emoji-form'>
+                    {/* {contentMess ? (
+                        <span>You chose: {contentMess.emoji}</span>
+                    ) : (
+                        <span>No emoji Chosen</span>
+                    )} */}
+                    <Picker open={showFormEmoji} onEmojiClick={selectEmojiIcon} />
+                </div>
                 <div className="chat-area-footer">
                     <input onFocus={() => { messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" }); }} onKeyDown={enterMess} ref={textRef} placeholder='Enter Message....' className='box-input' onChange={(e) => setContentMess(e.target.value)} value={contentMess} />
-                    {/* <div>
-                        {contentMess ? (
-                            <span>You chose: {contentMess.emoji}</span>
-                        ) : (
-                            <span>No emoji Chosen</span>
-                        )}
-                        <Picker onEmojiClick={selectionEmoji} />
-                    </div> */}
                     <div className="">
+                        <IconButton onClick={() => setShowFormEmoji(!showFormEmoji)}>
+                            <EmojiEmotionsIcon />
+                        </IconButton>
                         <IconButton>
                             <label htmlFor="">
                                 <AttachFileIcon />
