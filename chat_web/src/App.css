@@ -546,7 +546,7 @@
 }
 .modal-bottom{
   background-color: white;
-  width: 300px;
+  width: 400px;
   height: 300px;
   position: relative;
   border: 2px solid #000;
@@ -562,7 +562,7 @@
   height: 100vh;
   background-position: center;
   background-size: cover;
-  width: 300px;
+  width: 400px;
   height: 100px;
 
 }
@@ -706,7 +706,7 @@ input[type="file"] {
 .iconColor2 {
   color: white;
   position: relative;
-  left: 250px;
+  left: 350px;
 
 }
 
