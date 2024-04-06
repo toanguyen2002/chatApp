@@ -8,7 +8,7 @@ function MyMessageConponent({ props }) {
     }
     const renderContent = () => {
         if (props.content === '') {
-            console.log(props._id);
+            // console.log(props._id);
             return (
                 <div className="hover-show-option">
                     <div className='text-content'>

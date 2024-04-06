@@ -12,11 +12,11 @@ import ErrorModal from "./modal/ErrorModalLogin";
 import axios from "axios";
 
 const UiLogin = ({ navigation }) => {
-  const [data, setData] = useState({ name: "admin", password: "123" });
+  const [data, setData] = useState({ name: "admin3", password: "123" });
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.1.5:5678/user/login", {
+      const response = await fetch("http://192.168.0.241:5678/user/login", {
         method: "POST",
         headers: {
           Accept: "application/json",

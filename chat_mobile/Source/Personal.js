@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,22 +11,42 @@ import {
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function User({ navigation }) {
+  
+  const [userData, setUserData] = useState(null);
+
   const handlePress = () => {
-    navigation.navigate("UiLogin"); // Navigate to SendMessage screen
+    navigation.navigate("UiLogin");
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userDataString = await AsyncStorage.getItem("userData");
+        const userDataObject = JSON.parse(userDataString);
+        setUserData(userDataObject);
+        // console.log(response.data)
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <ScrollView>
       <View>
         <View style={styles.container}>
-          <AntDesign name="search1" size={25} color="white" style={styles.searchIconContainer} />
+          <AntDesign
+            name="search1"
+            size={25}
+            color="white"
+            style={styles.searchIconContainer}
+          />
           <View style={styles.searchIconContainer}>
-            <TextInput
-              placeholder="Tìm kiếm"
-              style={styles.input}
-            ></TextInput>
+            <TextInput placeholder="Tìm kiếm" style={styles.input}></TextInput>
           </View>
           <Pressable
             onPress={() => {
@@ -34,11 +54,7 @@ export default function User({ navigation }) {
             }}
             style={styles.settingsIconContainer}
           >
-            <SimpleLineIcons
-              name="settings"
-              size={24}
-              color="white"
-            />
+            <SimpleLineIcons name="settings" size={24} color="white" />
           </Pressable>
         </View>
       </View>
@@ -50,21 +66,17 @@ export default function User({ navigation }) {
               style={styles.avatarImage}
             ></Image>
             <View style={styles.userInfoContainer}>
-              <Text style={styles.userNameText}>Võ Minh Toàn</Text>
-              <Text style={styles.viewProfileText}>Xem trang cá nhân</Text>
+              <Text style={styles.userNameText}>{userData && userData.name}</Text>
+              <Text style={styles.viewProfileText}>{userData && userData.email}</Text>
             </View>
             <View style={styles.exchangeIconContainer}>
-              <FontAwesome
-                name="exchange"
-                size={24}
-                color="black"
-              />
+              <FontAwesome name="exchange" size={24} color="black" />
             </View>
           </View>
           <View style={styles.sectionDivider}></View>
         </View>
         <View>
-        <Pressable style={styles.button} onPress={handlePress}>
+          <Pressable style={styles.button} onPress={handlePress}>
             <Text style={styles.buttonText}>Đăng Xuất</Text>
           </Pressable>
         </View>

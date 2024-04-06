@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, Button, View, Image, Pressable, Modal, Alert } from 'react-native';
 import axios from "axios";
-const ip = "192.168.1.5";
-const UiRegister = () => {
+const ip = "192.168.0.241";
+const UiRegister = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -40,7 +40,6 @@ const UiRegister = () => {
     var otpRender = '';
     for (let index = 0; index < 5; index++) {
       otpRender += Math.floor((Math.random() * (20 - 16)) + 5).toString();
-      console.log(otpRender);
       setOtp(otpRender);
     }
     if (email == "" || !email.endsWith('@gmail.com')) {
@@ -88,6 +87,8 @@ const UiRegister = () => {
         setPassword("");
         setModalVisible(false);
         setOtp('');
+        Alert.alert("Thành công", "Đã đăng ký thành công");
+        navigation.navigate("UiLogin")
       } catch (error) {
         Alert.alert("Thông báo", "lỗi hệ thống");
       }
