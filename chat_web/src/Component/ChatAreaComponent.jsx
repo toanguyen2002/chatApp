@@ -12,6 +12,7 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Picker from 'emoji-picker-react';
+import Peer from 'simple-peer'
 
 
 var socket = io("http://localhost:5678")
@@ -31,11 +32,23 @@ export default function ChatAreaComponent() {
     const [scrollExecuted, setScrollExecuted] = useState(false);
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
-    var emojiArray = []
+    //call video
+    const [stream, setStream] = useState();
+    const [reciverCall, setReciverCall] = useState();
+    const [name, setName] = useState();
+    const [callAccepted, setCallAccepted] = useState(false)
+    const [callEnd, setCallEnd] = useState(false)
+    const [callerSignal, setCallerSignal] = useState();
+    const [caller, setCaller] = useState();
+    const myVideo = useRef()
+    const userVideo = useRef()
+    const connectionRef = useRef()
+
+
+
     const selectEmojiIcon = (emojiObject) => {
         const emoji = emojiObject.emoji
-        emojiArray.push(emoji)
-        setContentMess(...emoji)
+        setContentMess(contentMess + emoji)
     }
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
@@ -204,6 +217,68 @@ export default function ChatAreaComponent() {
 
     }
 
+    useEffect(() => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then((stream) => {
+                setStream(stream)
+                myVideo.current.srcObject = stream
+            })
+        socket.on("callUser", (data) => {
+            setReciverCall(true)
+            setCaller(data.from)
+            setName(data.name)
+            setCallerSignal(data.signal)
+
+        })
+    }, [])
+    const callUser = (id) => {
+        const peer = new Peer()
+
+
+        // peer.on("signal", (data) => {
+        //     socket.emit("callUser", {
+        //         userToCall: id,
+        //         singleData: data,
+        //         from: userData.data.name,
+        //         name: userData.data.name
+        //     })
+        // })
+
+
+        // peer.on("stream", (stream) => {
+        //     userVideo.current.srcObject = stream
+        // })
+
+        // socket.on("callAccept", (signal) => {
+        //     setCallAccepted(true)
+        //     peer.signal(signal)
+        // })
+
+        // connectionRef.current = peer
+    }
+
+    const answerCall = () => {
+        setCallAccepted(true)
+        const peer = new Peer({
+            initiator: false,
+            trickle: false,
+            stream: stream
+        })
+
+        peer.on("signal", (data) => {
+            socket.emit("answerCall", { signal: data, to: caller })
+        })
+        peer.on("stream", (stream) => {
+            userVideo.current.srcObject = stream
+        })
+        peer.signal(callerSignal)
+        connectionRef.current = peer
+
+    }
+    const leaveCall = () => {
+        setCallEnd(true)
+        connectionRef.current.destroy()
+    }
 
     return (
         <><Backdrop open={loading}
@@ -220,7 +295,7 @@ export default function ChatAreaComponent() {
                         <div className="online">online</div>
                         {/* <p className='chat-time'>{data.timeSend}</p> */}
                     </div>
-                    <IconButton onClick={() => console.log(chat_id)}>
+                    <IconButton onClick={() => callUser(chat_id)}>
                         <VideocamIcon />
                     </IconButton>
                     <IconButton onClick={() => console.log(chat_id)}>
