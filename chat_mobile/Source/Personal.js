@@ -100,7 +100,6 @@ const styles = {
     width: 200,
     fontSize: 18,
     color: "white",
-    outlineStyle: "none",
   },
   settingsIconContainer: {
     marginLeft: 90,
