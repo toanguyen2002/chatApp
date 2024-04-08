@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.110.193";
+const ip = "192.168.1.6";
 export default function Phonebook() {
   const navigation = useNavigation();
 
@@ -133,8 +133,9 @@ export default function Phonebook() {
               </View>
             </Pressable>
             <View style={styles.tabItem}>
-              <Text>Danh sách bạn bè</Text>
+              <Text style={{fontSize:17}}>Danh sách bạn bè</Text>
             </View>
+            
             <View style={{ flexDirection: "column" }}>
               {users.map((item, index) => (
                 <MessageItem {...item} key={item.id || index.toString()} />
@@ -298,7 +299,7 @@ export default function Phonebook() {
           <View
             style={{
               flexDirection: "row",
-              backgroundColor: "blue",
+              backgroundColor: "#3498DB",
               height: 50,
               alignItems: "center",
               justifyContent: "center",

@@ -21,7 +21,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.110.193";
+const ip = "192.168.1.6";
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -35,7 +35,6 @@ const SendMessage = () => {
   const fileRef = useRef(null);
 
   const handleGoBack = () => {
-
     navigation.goBack();
   };
   useEffect(() => {
@@ -49,38 +48,41 @@ const SendMessage = () => {
       }
     };
     fetchData();
-    socket.emit("setup", userData)
+    socket.emit("setup", userData);
     socket.on("connect", () => {
-        // socket.on("disconnect", () => {
-        //     console.log("mess", socket);
-        //     console.log(`Socket disconnected: ${socket.id}`);
-        // });
-    })
-    socket.emit("render-box-chat", true)
-}, [])
+      // socket.on("disconnect", () => {
+      //     console.log("mess", socket);
+      //     console.log(`Socket disconnected: ${socket.id}`);
+      // });
+    });
+    socket.emit("render-box-chat", true);
+  }, []);
   const scrollTobottom = () => {
     if (flatListRef.current) {
       flatListRef.current.scrollToEnd({ animated: true });
     }
   };
+
   const rerenderMessage = async () => {
     const userDataString = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(userDataString);
     setUserData(userData);
     //
     try {
-      const response = await fetch(`http://${ip}:5678/message/${route.params._id}`, {
-        method: 'GET',
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${userData.token}`,
+      const response = await fetch(
+        `http://${ip}:5678/message/${route.params._id}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${userData.token}`,
+          },
         }
-      });
+      );
       const responseData = await response.json();
 
       scrollTobottom();
       setMessages(responseData);
-
     } catch (error) {
       console.log(error);
     }
@@ -90,52 +92,6 @@ const SendMessage = () => {
     rerenderMessage();
     scrollTobottom();
   }, [messages]);
-
- 
-
-  const sendMessImg = async () => {
-    const formData = new FormData();
-    formData.append("fileImage", {
-      uri: selectedImage,
-      name: "photo.jpg",
-      type: "image/jpeg",
-    });
-
-    try {
-      const respone = await axios.post(
-        "http://" + ip + ":5678/message/messImage",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const dataSend = await axios.post(
-        "http://" + ip + ":5678/message/",
-        {
-          chatId: route.params._id,
-          content: responseData.url,
-          typeMess: "image",
-        })
-      if (!messageResponse.ok) {
-        throw new Error(
-          `Error sending message: HTTP status ${messageResponse.status}`
-        );
-      }
-
-      // Thêm tin nhắn mới vào danh sách tin nhắn và cập nhật trạng thái
-      
-      const newMessage = await messageResponse.json();
-      setMessages([...messages, newMessage]);
-      setSelectedImage(null);
-      socket.emit("new message", dataSend.data)
-      socket.emit("render-box-chat", true)
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
 
   const pickImage = async () => {
     let permissionResult;
@@ -149,42 +105,100 @@ const SendMessage = () => {
         return;
       }
     }
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
 
-    if (result.canceled === false) {
-      setSelectedImage(result.assets[0].uri);
+    try {
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsMultipleSelection: true, // Cho phép chọn nhiều ảnh
+      });
+      if (!result.cancelled) {
+        // Nếu người dùng đã chọn ảnh
+        const selectedImages = result.uri; // Mảng các uri của ảnh đã chọn
+        sendMessImg(selectedImages); // Gửi mảng ảnh đã chọn
+      }
+    } catch (error) {
+      console.error("Error picking images:", error);
     }
   };
 
+  const sendMessImg = async (selectedImages) => {
+    try {
+      // Lặp qua mỗi ảnh đã chọn để gửi
+      for (const uri of selectedImages) {
+        if (uri) {
+          // Kiểm tra xem URI có tồn tại không
+          const formData = new FormData();
+          formData.append("fileImage", {
+            uri,
+            type: "image/jpeg",
+            name: "photo.jpg",
+          }); // Thêm ảnh vào formData
 
+          // Gửi formData chứa ảnh
+          const response = await axios.post(
+            "http://" + ip + ":5678/message/messImage",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          // Gửi thông tin tin nhắn (link ảnh) tới server
+          const dataSend = await axios.post("http://" + ip + ":5678/message/", {
+            chatId: route.params._id,
+            content: response.data.url,
+            typeMess: "image",
+          });
+
+          if (!dataSend.ok) {
+            throw new Error(
+              `Error sending message: HTTP status ${dataSend.status}`
+            );
+          }
+
+          // Cập nhật danh sách tin nhắn
+          const newMessage = await dataSend.json();
+          setMessages([...messages, newMessage]);
+          socket.emit("new message", dataSend.data);
+          socket.emit("render-box-chat", true);
+        }
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+
+    // Sau khi gửi xong, reset selectedImage về null
+    setSelectedImage(null);
+  };
 
   const sendMess = async () => {
     if (messages) {
       try {
-        const dataSend = await axios.post(
-          "http://" + ip + ":5678/message/",
-          {
-            chatId: route.params._id,
-            content: text,
-            typeMess: "text",
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${userData.token}`,
+        if (selectedImage) {
+          // Nếu đã chọn ảnh, gửi ảnh đi
+          sendMessImg(selectedImage);
+        } else {
+          const dataSend = await axios.post(
+            "http://" + ip + ":5678/message/",
+            {
+              chatId: route.params._id,
+              content: text,
+              typeMess: "text",
             },
-          }
-        );
-        socket.emit("new message", dataSend.data)
-        socket.emit("render-box-chat", true)
-        setMessages((prevMessages) => [...prevMessages, dataSend.data]);
-        scrollTobottom();
-        setText("");
-        flatListRef.current.scrollToEnd({ animated: true });
+            {
+              headers: {
+                Authorization: `Bearer ${userData.token}`,
+              },
+            }
+          );
+          socket.emit("new message", dataSend.data);
+          socket.emit("render-box-chat", true);
+          setMessages((prevMessages) => [...prevMessages, dataSend.data]);
+          scrollTobottom();
+          setText("");
+          flatListRef.current.scrollToEnd({ animated: true });
+        }
       } catch (error) {
         console.log(error);
       }
@@ -195,11 +209,33 @@ const SendMessage = () => {
     const isCurrentUser = item.sender._id === userData._id;
 
     return (
-      <View style={[styles.viewMess, isCurrentUser ? styles.viewMessCurrentUser : styles.viewMessOtherUser]}>
+      <View
+        style={[
+          styles.viewMess,
+          isCurrentUser ? styles.viewMessCurrentUser : styles.viewMessOtherUser,
+        ]}
+      >
         {item.typeMess === "text" ? (
-          <Text style={[styles.textMess, isCurrentUser ? styles.textMessCurrentUser : styles.textMessOtherUser]}>{item.content}</Text>
+          <Text
+            style={[
+              styles.textMess,
+              isCurrentUser
+                ? styles.textMessCurrentUser
+                : styles.textMessOtherUser,
+            ]}
+          >
+            {item.content}
+          </Text>
         ) : (
-          <Image style={styles.image} source={{ uri: item.content }} />
+          <View>
+            {item.content?.map((image, index) => (
+              <Image
+                key={index} // Sử dụng index của mảng làm key
+                style={styles.image}
+                source={{ uri: image.url }}
+              />
+            ))}
+          </View>
         )}
       </View>
     );
@@ -221,7 +257,6 @@ const SendMessage = () => {
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           style={styles.messagesList}
-
         />
         <View style={styles.footer}>
           <TextInput
@@ -246,10 +281,8 @@ const SendMessage = () => {
               />
             )}
             <Button title="Chọn ảnh" onPress={pickImage} />
-            {selectedImage && <Button title="Gửi ảnh" onPress={sendMessImg} />}
+            {selectedImage && <Button title="Gửi ảnh" onPress={() => sendMessImg(selectedImage)} />}
           </View>
-
-
 
           <TouchableOpacity onPress={sendMess}>
             <Image
@@ -262,6 +295,7 @@ const SendMessage = () => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -315,6 +349,5 @@ const styles = StyleSheet.create({
     height: 200,
   },
 });
-
 
 export default SendMessage;

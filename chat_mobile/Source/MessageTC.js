@@ -7,15 +7,17 @@ import {
   Modal,
   Pressable,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  TextInput,
 } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
-import { io } from 'socket.io-client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-const ip = "192.168.110.193";
-const socket = io("http://localhost:5678")
+import { io } from "socket.io-client";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+const ip = "192.168.1.6";
+
+const socket = io("http://localhost:5678");
 const MessageTC = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [dataChatBox, setDataChatBox] = useState([]);
@@ -38,15 +40,15 @@ const MessageTC = ({ navigation }) => {
       }
     };
     fetchData();
-    socket.emit("setup", userData)
+    socket.emit("setup", userData);
     socket.on("connect", () => {
-        // socket.on("disconnect", () => {
-        //     console.log("mess", socket);
-        //     console.log(`Socket disconnected: ${socket.id}`);
-        // });
-    })
-    socket.emit("render-box-chat", true)
-}, [])
+      // socket.on("disconnect", () => {
+      //     console.log("mess", socket);
+      //     console.log(`Socket disconnected: ${socket.id}`);
+      // });
+    });
+    socket.emit("render-box-chat", true);
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -59,7 +61,7 @@ const MessageTC = ({ navigation }) => {
           },
         });
         setDataChatBox(sortByDateSend(response.data));
-        socket.emit("render-box-chat", true)
+        socket.emit("render-box-chat", true);
         // console.log(response.data)
       } catch (error) {
         console.log("Error fetching data:", error);
@@ -69,49 +71,61 @@ const MessageTC = ({ navigation }) => {
   }, [dataChatBox]);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
-
   };
-
   const closeModal = () => {
     setIsModalVisible(false);
   };
-  return (
 
+  //ở đây
+  return (
     <View style={{ flex: 1 }}>
-      <KeyboardAvoidingView style={{ flex: 1 }} >
-        <View style={styles.container}>
-          <View style={styles.search}>
-            <AntDesign name="search1" size={25} color="white" />
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        {/* Phần header */}
+        <View style={styles.header}>
+          <View style={styles.usernameContainer}>
+            <AntDesign
+              name="search1"
+              size={25}
+              color="white"
+              style={styles.searchIcon}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Nhập tên của bạn..."
+              placeholderTextColor="white"
+            />
           </View>
-          <Text style={styles.username}>{userData && userData.name}</Text>
           <Pressable style={styles.plus} onPress={toggleModal}>
             <AntDesign name="plus" size={25} color="white" />
           </Pressable>
         </View>
 
-        <View style={styles.container1}>
+        {/* Phần danh sách tin nhắn */}
+        <View style={styles.chatListContainer}>
           {dataChatBox.map((item, index) => {
             if (item.isGroup === false) {
               if (userData && userData._id === item.users[0]._id) {
                 item.chatName = item.users[1].name;
               } else {
-
                 item.chatName = item.users[0].name;
               }
             }
-            return <MessageItem {...item} key={index} />;
+            return (
+              <View key={index}>
+                <MessageItem {...item} />
+                {/* Đường ngăn cách dưới mỗi tin nhắn */}
+                <View style={styles.separator} />
+              </View>
+            );
           })}
         </View>
-
       </KeyboardAvoidingView>
 
-
       {/* Modal */}
-
       <Modal visible={isModalVisible} transparent={true} animationType="none">
+        {/* Nội dung của Modal */}
         <TouchableWithoutFeedback onPress={closeModal}>
           <View style={styles.modalContainer}>
             <TouchableWithoutFeedback>
@@ -140,7 +154,8 @@ const MessageTC = ({ navigation }) => {
                     navigation.navigate("NewGroup");
                     toggleModal();
                   }}
-                  style={{ flexDirection: "row", marginTop: 25 }}>
+                  style={{ flexDirection: "row", marginTop: 25 }}
+                >
                   <View style={{ marginLeft: 10 }}>
                     <AntDesign name="addusergroup" size={25} color="#A9A9A9" />
                   </View>
@@ -165,8 +180,6 @@ const MessageTC = ({ navigation }) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-
-      {/* Modal */}
     </View>
   );
 };
@@ -179,104 +192,134 @@ const MessageItem = (props) => {
 
   return (
     <TouchableOpacity onPress={handlePress}>
-      <View style={{ flexDirection: "row", marginBottom: 10, justifyContent: "space-between" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          marginBottom: 10,
+          alignItems: "center",
+        }}
+      >
+        {/* chỗ cần style  */}
         <View style={styles.ChatName}>
           <Text style={styles.Name}>{props.chatName[0]}</Text>
         </View>
-        <View style={{ flex: 1,  }}>
+        {/* Chỗ cần style */}
+        <View style={{ flex: 1 }}>
           <View style={styles.TextChat}>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.chatName}</Text>
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {props.chatName}
+              </Text>
+            </View>
+
             {props.lastMessage ? (
               props.lastMessage.typeMess === "text" ? (
-                <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text>
+                <Text style={{ fontSize: 14 }}>
+                  {props.lastMessage.content}
+                </Text>
               ) : (
-                <Text style={{ fontSize: 14 }}>hình ảnh</Text>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <AntDesign name="picture" size={14} color="black" />
+                  <Text style={{ fontSize: 14, marginLeft: 5 }}>Hình ảnh</Text>
+                </View>
               )
             ) : (
               <Text></Text>
             )}
           </View>
           {props.lastMessage && props.lastMessage.dateSend ? (
-            <Text style={[styles.TimeStamp, { textAlign: 'right' }]}>
-              {new Date(props.lastMessage.dateSend).toLocaleTimeString()}
+            <Text style={[styles.TimeStamp, { textAlign: "right" }]}>
+              {new Date(props.lastMessage.dateSend).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </Text>
           ) : null}
         </View>
       </View>
     </TouchableOpacity>
   );
-  
-  
-  
-  
 };
 
 const styles = StyleSheet.create({
-  container: {
+  header: {
     flex: 1,
-    backgroundColor: "blue",
-    width: "100%",
+    backgroundColor: "#3498DB",
     flexDirection: "row",
-    alignItems: "flex-end"
+    alignItems: "flex-end",
+    paddingBottom: 10,
   },
-  imageContainer: {
-    width: 40,
-    height: 40,
-    top: 12,
+  usernameContainer: {
+    flex: 1,
+    justifyContent: "center",
+    paddingLeft: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#3498DB",
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginTop: 20,
   },
-  container1: {
+  username: {
+    marginTop: 13,
+  },
+  usernameView: {
+    width: 50,
+    height: 50,
+    borderRadius: 60,
+  },
+
+  plus: {
+    paddingRight: 20,
+  },
+  input: {
+    flex: 1,
+    color: "white",
+    marginLeft: 10,
+  },
+  searchIcon: {
+    marginRight: 10,
+  },
+  chatListContainer: {
     flex: 9,
     backgroundColor: "white",
     padding: 10,
   },
-  plus: {
-    left: 260
-  },
-  search: {
-    left: 10
-  },
-  username: {
-    left: 30,
-    justifyContent: "center",
-    fontSize: 18
-
-  },
-  modalContainer: {
-    flex: 1,
-    // alignItems: "flex-end",
-    // justifyContent: "flex-start",
-    marginTop: 60,
-    marginLeft: 160,
-  },
-  modalContent: {
-    backgroundColor: "white",
-    padding: 20,
-    borderRadius: 10,
-    width: 250,
-    height: 320,
+  separator: {
+    borderBottomColor: "#EAEAEA",
+    borderBottomWidth: 1,
+    marginVertical: 5,
   },
   ChatName: {
-
     height: 60,
     width: 60,
     borderRadius: 50,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1E90FF",
-
   },
   Name: {
     fontSize: 25,
     color: "white",
-    fontWeight: "bold"
+    fontWeight: "bold",
+  },
+  modalContainer: {
+    flex: 1,
+    alignItems: "flex-end",
+    justifyContent: "flex-start",
+    marginTop: 60,
+    marginLeft: 160,
+  },
+  modalContent: {
+    backgroundColor: "#EEE9E9",
+    padding: 20,
+    borderRadius: 10,
+    width: 200,
+    height: 200,
   },
   TextChat: {
     left: 15,
-    justifyContent: "center",
-    alignItems: "center",
-
-
-  }
+  },
 });
 
 export default MessageTC;
