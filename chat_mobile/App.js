@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity ,StyleSheet} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
-import { MessageTC, Personal, PhoneBook, SenddMessage, UiLogin, UiRegister, Diary, Discover } from "./Source";
+import {
+  MessageTC,
+  Personal,
+  PhoneBook,
+  SenddMessage,
+  UiLogin,
+  UiRegister,
+  Diary,
+  Discover,
+} from "./Source";
 import Phonebook from "./Source/Phonebook";
 import AddFriend from "./Source/AddFriend";
 import Friend from "./Source/Friend";
@@ -48,7 +57,14 @@ function BottomNavigation() {
     return unsubscribe;
   }, [navigation]);
 
-  if (currentScreen === "UiLogin" || currentScreen === "UiRegister" || currentScreen === "Resetpassword" || currentScreen === "Resetpassword" || currentScreen === "AddFriend" || currentScreen === "SenddMessage"  ) {
+  if (
+    currentScreen === "UiLogin" ||
+    currentScreen === "UiRegister" ||
+    currentScreen === "Resetpassword" ||
+    currentScreen === "Resetpassword" ||
+    currentScreen === "AddFriend" ||
+    currentScreen === "SenddMessage"
+  ) {
     return null; // Ẩn BottomNavigation khi ở màn hình UiLogin
   }
 
@@ -67,36 +83,47 @@ function BottomNavigation() {
         label="Tin nhắn"
         screenName="MessageTC"
         navigation={navigation}
+        currentScreen={currentScreen}
       />
       <BottomTabButton
         iconName="contacts"
         label="Danh bạ"
         screenName="PhoneBook"
         navigation={navigation}
+        currentScreen={currentScreen}
       />
       <BottomTabButton
         iconName="windows"
         label="Khám phá"
         screenName="Discover"
         navigation={navigation}
+        currentScreen={currentScreen}
       />
       <BottomTabButton
         iconName="time-outline"
         label="Nhật ký"
         screenName="Diary"
         navigation={navigation}
+        currentScreen={currentScreen}
       />
       <BottomTabButton
         iconName="user-o"
         label="Cá nhân"
         screenName="Personal"
         navigation={navigation}
+        currentScreen={currentScreen}
       />
     </View>
   );
 }
 
-function BottomTabButton({ iconName, label, screenName, navigation }) {
+function BottomTabButton({
+  iconName,
+  label,
+  screenName,
+  navigation,
+  currentScreen,
+}) {
   const handlePress = () => {
     navigation.navigate(screenName);
   };
@@ -117,9 +144,36 @@ function BottomTabButton({ iconName, label, screenName, navigation }) {
   }
 
   return (
-    <TouchableOpacity style={{ alignItems: 'center' }} onPress={handlePress}>
-      <IconComponent name={iconName} size={24} color="black" />
-      <Text style={{ color: 'black', marginTop: 5 }}>{label}</Text>
+    <TouchableOpacity
+      style={currentScreen === screenName ? styles.activeTab : styles.tab}
+      onPress={handlePress}
+    >
+      <IconComponent
+        name={iconName}
+        size={24}
+        color={currentScreen === screenName ? "blue" : "black"}
+      />
+      <Text
+        style={{
+          color: currentScreen === screenName ? "blue" : "black",
+          marginTop: 5,
+        }}
+      >
+        {label}
+      </Text>
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  tab: {
+    alignItems: "center",
+  },
+  activeTab: {
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+});

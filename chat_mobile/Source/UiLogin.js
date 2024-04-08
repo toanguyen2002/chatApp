@@ -11,7 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorModal from "./modal/ErrorModalLogin";
 import axios from "axios";
 import { useEffect } from "react";
-const ip = "192.168.110.193";
+const ip = "192.168.1.6";
 const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin3", password: "123" });
   const [errorModalVisible, setErrorModalVisible] = useState(false);
