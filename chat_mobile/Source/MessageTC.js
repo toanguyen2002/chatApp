@@ -192,14 +192,26 @@ const MessageItem = (props) => {
 
   return (
     <TouchableOpacity onPress={handlePress}>
-      <View style={{ flexDirection: "row", marginBottom: 10, justifyContent: "space-between" }}>
+      <View
+        style={{
+          flexDirection: "row",
+          marginBottom: 10,
+          alignItems: "center", // Thêm thuộc tính alignItems
+        }}
+      >
+        {/* chỗ cần style  */}
         <View style={styles.ChatName}>
           <Text style={styles.Name}>{props.chatName[0]}</Text>
         </View>
         {/* Chỗ cần style */}
         <View style={{ flex: 1 }}>
           <View style={styles.TextChat}>
-            <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.chatName}</Text>
+            <View style={{}}>
+              <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                {props.chatName}
+              </Text>
+            </View>
+
             {props.lastMessage ? (
               props.lastMessage.typeMess === "text" ? (
                 <Text style={{ fontSize: 14 }}>
@@ -273,17 +285,23 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 10,
   },
-  plus: {
-    left: 260
+  separator: {
+    borderBottomColor: "#EAEAEA",
+    borderBottomWidth: 1,
+    marginVertical: 10,
   },
-  search: {
-    left: 10
-  },
-  username: {
-    left: 30,
+  ChatName: {
+    height: 60,
+    width: 60,
+    borderRadius: 50,
     justifyContent: "center",
-    fontSize: 18
-
+    alignItems: "center",
+    backgroundColor: "#1E90FF",
+  },
+  Name: {
+    fontSize: 25,
+    color: "white",
+    fontWeight: "bold",
   },
   modalContainer: {
     flex: 1,
@@ -293,26 +311,11 @@ const styles = StyleSheet.create({
     marginLeft: 160,
   },
   modalContent: {
-    backgroundColor: "white",
+    backgroundColor: "#1C86EE",
     padding: 20,
     borderRadius: 10,
-    width: 250,
-    height: 320,
-  },
-  ChatName: {
-
-    height: 60,
-    width: 60,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#1E90FF",
-
-  },
-  Name: {
-    fontSize: 25,
-    color: "white",
-    fontWeight: "bold"
+    width: 230,
+    height: 200,
   },
   TextChat: {
     left: 15,
