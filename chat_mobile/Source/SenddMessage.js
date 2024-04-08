@@ -105,7 +105,7 @@ const SendMessage = () => {
         return;
       }
     }
-  
+
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsMultipleSelection: true, // Cho phép chọn nhiều ảnh
@@ -113,68 +113,71 @@ const SendMessage = () => {
       if (!result.cancelled) {
         // Nếu người dùng đã chọn ảnh
         const selectedImages = result.uri; // Mảng các uri của ảnh đã chọn
-        setSelectedImage(selectedImages); // Lưu trữ mảng ảnh đã chọn
+        sendMessImg(selectedImages); // Gửi mảng ảnh đã chọn
       }
     } catch (error) {
       console.error("Error picking images:", error);
     }
   };
-  
-  const sendMessImg = async () => {
-    // Lặp qua mỗi ảnh đã chọn để gửi
-    for (const uri of selectedImage) {
-      try {
-        const formData = new FormData();
-        formData.append("fileImage", uri); // Thêm ảnh vào formData
-  
-        // Gửi formData chứa ảnh
-        const response = await axios.post(
-          "http://" + ip + ":5678/message/messImage",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-  
-        // Gửi thông tin tin nhắn (link ảnh) tới server
-        const dataSend = await axios.post(
-          "http://" + ip + ":5678/message/",
-          {
+
+  const sendMessImg = async (selectedImages) => {
+    try {
+      // Lặp qua mỗi ảnh đã chọn để gửi
+      for (const uri of selectedImages) {
+        if (uri) {
+          // Kiểm tra xem URI có tồn tại không
+          const formData = new FormData();
+          formData.append("fileImage", {
+            uri,
+            type: "image/jpeg",
+            name: "photo.jpg",
+          }); // Thêm ảnh vào formData
+
+          // Gửi formData chứa ảnh
+          const response = await axios.post(
+            "http://" + ip + ":5678/message/messImage",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          // Gửi thông tin tin nhắn (link ảnh) tới server
+          const dataSend = await axios.post("http://" + ip + ":5678/message/", {
             chatId: route.params._id,
             content: response.data.url,
             typeMess: "image",
+          });
+
+          if (!dataSend.ok) {
+            throw new Error(
+              `Error sending message: HTTP status ${dataSend.status}`
+            );
           }
-        );
-  
-        if (!dataSend.ok) {
-          throw new Error(
-            `Error sending message: HTTP status ${dataSend.status}`
-          );
+
+          // Cập nhật danh sách tin nhắn
+          const newMessage = await dataSend.json();
+          setMessages([...messages, newMessage]);
+          socket.emit("new message", dataSend.data);
+          socket.emit("render-box-chat", true);
         }
-  
-        // Cập nhật danh sách tin nhắn
-        const newMessage = await dataSend.json();
-        setMessages([...messages, newMessage]);
-        socket.emit("new message", dataSend.data);
-        socket.emit("render-box-chat", true);
-      } catch (error) {
-        console.error("Error:", error);
       }
+    } catch (error) {
+      console.error("Error:", error);
     }
-  
+
     // Sau khi gửi xong, reset selectedImage về null
     setSelectedImage(null);
   };
-  
 
   const sendMess = async () => {
     if (messages) {
       try {
         if (selectedImage) {
           // Nếu đã chọn ảnh, gửi ảnh đi
-          sendMessImg();
+          sendMessImg(selectedImage);
         } else {
           const dataSend = await axios.post(
             "http://" + ip + ":5678/message/",
@@ -201,6 +204,7 @@ const SendMessage = () => {
       }
     }
   };
+
   const renderItem = ({ item }) => {
     const isCurrentUser = item.sender._id === userData._id;
   
@@ -236,9 +240,6 @@ const SendMessage = () => {
       </View>
     );
   };
-  
-  
-  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -280,7 +281,7 @@ const SendMessage = () => {
               />
             )}
             <Button title="Chọn ảnh" onPress={pickImage} />
-            {selectedImage && <Button title="Gửi ảnh" onPress={sendMessImg} />}
+            {selectedImage && <Button title="Gửi ảnh" onPress={() => sendMessImg(selectedImage)} />}
           </View>
 
           <TouchableOpacity onPress={sendMess}>
@@ -294,6 +295,7 @@ const SendMessage = () => {
     </SafeAreaView>
   );
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -343,7 +345,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E5E5EA",
   },
   image: {
-    width: 200,
+    width: 150,
     height: 200,
   },
 });

@@ -133,8 +133,9 @@ export default function Phonebook() {
               </View>
             </Pressable>
             <View style={styles.tabItem}>
-              <Text>Danh sách bạn bè</Text>
+              <Text style={{fontSize:17}}>Danh sách bạn bè</Text>
             </View>
+            
             <View style={{ flexDirection: "column" }}>
               {users.map((item, index) => (
                 <MessageItem {...item} key={item.id || index.toString()} />
@@ -298,7 +299,7 @@ export default function Phonebook() {
           <View
             style={{
               flexDirection: "row",
-              backgroundColor: "blue",
+              backgroundColor: "#3498DB",
               height: 50,
               alignItems: "center",
               justifyContent: "center",

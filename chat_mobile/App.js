@@ -125,7 +125,9 @@ function BottomTabButton({
   currentScreen,
 }) {
   const handlePress = () => {
-    navigation.navigate(screenName);
+    setTimeout(() => {
+      navigation.navigate(screenName);
+    }, 200);
   };
 
   let IconComponent;
@@ -143,24 +145,14 @@ function BottomTabButton({
     IconComponent = Ionicons;
   }
 
+  // Định nghĩa màu của icon và label tương ứng với trạng thái được chọn
+  const iconColor = currentScreen === screenName ? "#3498DB" : "black";
+  const labelColor = currentScreen === screenName ? "#3498DB" : "black";
+
   return (
-    <TouchableOpacity
-      style={currentScreen === screenName ? styles.activeTab : styles.tab}
-      onPress={handlePress}
-    >
-      <IconComponent
-        name={iconName}
-        size={24}
-        color={currentScreen === screenName ? "blue" : "black"}
-      />
-      <Text
-        style={{
-          color: currentScreen === screenName ? "blue" : "black",
-          marginTop: 5,
-        }}
-      >
-        {label}
-      </Text>
+    <TouchableOpacity style={{ alignItems: 'center' }} onPress={handlePress}>
+      <IconComponent name={iconName} size={24} color="black" />
+      <Text style={{ color: 'black', marginTop: 5 }}>{label}</Text>
     </TouchableOpacity>
   );
 }
