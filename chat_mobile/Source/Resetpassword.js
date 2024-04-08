@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, Alert } from "react-native";
-const ip = "192.168.110.193";
+const ip = "192.168.1.6";
 const Resetpassword = ({navigation}) => {
   const [name, setName] = useState("");
   const resetPassword = async () => {
