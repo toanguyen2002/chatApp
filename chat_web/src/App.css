@@ -20,13 +20,14 @@
 }
 
 .get-users-modal {
+  z-index: 1000;
   position: absolute;
   width: 350px;
   width: 350px;
   width: 600px;
   height: 500px;
-  left: 50%;
-  top: 25%;
+  left: 40%;
+  top: 10%;
   overflow: scroll;
   border-radius: 0px;
   border: 1px solid black;
@@ -546,8 +547,8 @@
 }
 .modal-bottom{
   background-color: white;
-  width: 400px;
-  height: 300px;
+  width: 450px;
+  height: 350px;
   position: relative;
   border: 2px solid #000;
   box-shadow: 24px;
@@ -562,7 +563,7 @@
   height: 100vh;
   background-position: center;
   background-size: cover;
-  width: 400px;
+  width: 450px;
   height: 100px;
 
 }
@@ -590,7 +591,7 @@
 }
 
 .modal-body-email {
-  margin-top: 5px;
+  margin-top: 15px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -707,7 +708,7 @@ input[type="file"] {
 .iconColor2 {
   color: white;
   position: relative;
-  left: 350px;
+  left: 400px;
 
 }
 
