@@ -201,10 +201,9 @@ const SendMessage = () => {
       }
     }
   };
-
   const renderItem = ({ item }) => {
     const isCurrentUser = item.sender._id === userData._id;
-
+  
     return (
       <View
         style={[
@@ -224,11 +223,21 @@ const SendMessage = () => {
             {item.content}
           </Text>
         ) : (
-          <Image style={styles.image} source={{ uri: item.content }} />
+          <View>
+            {item.ImageUrl && Array.isArray(item.ImageUrl) && item.ImageUrl.map((image, index) => (
+              <Image
+                key={index}
+                style={styles.image}
+                source={{ uri: image.url }}
+              />
+            ))}
+          </View>
         )}
       </View>
     );
   };
+  
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -333,7 +342,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#E5E5EA",
   },
   image: {
-    width: 150,
+    width: 200,
     height: 200,
   },
 });
