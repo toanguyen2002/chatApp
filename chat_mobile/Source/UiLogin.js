@@ -17,6 +17,7 @@ const UiLogin = ({ navigation }) => {
   const handleLogin = async () => {
     try {
       const response = await fetch("http://192.168.1.6:5678/user/login", {
+
         method: "POST",
         headers: {
           Accept: "application/json",

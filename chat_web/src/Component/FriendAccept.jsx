@@ -5,38 +5,37 @@ import axios from 'axios';
 import UserComponent from '../ComponentItem/UserComponent';
 import { myContext } from './MainComponent';
 
-function FindAndAddFriendComponent({ closemodal }) {
-
+function FriendAccept({ closemodal }) {
     const [users, setUsers] = useState([])
     const userData = JSON.parse(localStorage.getItem("userData"));
-    // console.log(userData.data.token);
-    const [nameUser, setNameUser] = useState('')
     const { refresh, setRefresh } = useContext(myContext);
+
     useEffect(() => {
         const getUser = async () => {
 
-            const dataUser = await axios.post(`http://localhost:5678/user/getUserNotFriend`, {
-                userId: userData.data._id,
-                name: userData.data.name
+            const dataUser = await axios.post(`http://localhost:5678/user/getUserwaitAccept`, {
+                name: userData.data.name,
+                userId: userData.data._id
             }, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
                 },
             })
-
+            // console.log(userData.data.name);
+            // console.log(dataUser.data);
             setUsers(dataUser.data);
-            console.log(dataUser.data);
+            // console.log(dataUser.data);
         }
         getUser()
     }, [
         refresh
     ]);
-    const clickToaddFriend = async (userIdWantToAdd) => {
-        // console.log(userIdWantToAdd);
+    const handlaccept = async (idUser) => {
+        console.log(idUser);
         try {
-            await axios.post(`http://localhost:5678/user/addfriend`, {
+            await axios.post(`http://localhost:5678/user/acceptFriend`, {
                 userid: userData.data._id,
-                friendId: userIdWantToAdd
+                friendId: idUser
             }, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
@@ -46,24 +45,21 @@ function FindAndAddFriendComponent({ closemodal }) {
         } catch (error) {
             console.log(error);
         }
-
+        console.log(idUser);
     }
     return (
         <div>
-
+            {console.log(users)}
             <div className="get-users-modal">
                 <div className="modal-title">
-                    <h3 className='fr-cap'>Những Người Bạn Có Thể Biết</h3>
+                    <h3 className='fr-cap2'>Lời Mời Kết Bạn</h3>
                     <IconButton onClick={() => closemodal(false)}>
                         <ClearIcon />
                     </IconButton>
                 </div>
                 <div className="list-body">
-                    {/* {console.log(users.)} */}
                     {users.map((item, index) => (
-                        <div className="">
-                            <UserComponent props={item} callBackFnc={() => clickToaddFriend(item._id)} truely={true} />
-                        </div>
+                        <UserComponent props={item} callBackFnc={handlaccept} key={index} />
                     ))}
                 </div>
             </div>
@@ -72,4 +68,4 @@ function FindAndAddFriendComponent({ closemodal }) {
 }
 
 
-export default FindAndAddFriendComponent
+export default FriendAccept

@@ -13,6 +13,8 @@ import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import ModalChatOne from './ModalChatOne';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import MenuIcon from '@mui/icons-material/Menu';
 import { io } from 'socket.io-client';
 
 
@@ -20,6 +22,7 @@ import { io } from 'socket.io-client';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import FindAndAddFriendComponent from './FindAndAddFriendComponent';
+import FriendAccept from './FriendAccept';
 
 
 const socket = io("http://localhost:5678")
@@ -39,6 +42,7 @@ function Sidebar() {
     const [showModal, setShowModal] = useState(false)
     const [showOne, setShowOne] = useState(false)
     const [showListFriend, setShowListFriend] = useState(false)
+    const [showListAccept, setShowListAccept] = useState(false)
 
 
 
@@ -91,6 +95,7 @@ function Sidebar() {
     }
     const clickToLogout = () => {
         socket.emit("demo", { mes: "demo" })
+        nav('/')
     }
     useEffect(() => {
         socket.on("group-rcv", (data) => {
@@ -117,8 +122,6 @@ function Sidebar() {
                 <div>
                     <IconButton onClick={() => setOpen(true)}>
                         <Avatar alt={userData.data.name} src="https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/411522943_373985608348589_889785018101940738_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEamTt0rJAFTB6RfoXS4ngnxYyL2_YybPbFjIvb9jJs9pt9zhvp6TRX4bZZNJL476Ruij8pCjz8clb5RsQTbvLj&_nc_ohc=a4wxphwpC7cAX-Y_7Id&_nc_ht=scontent.fsgn5-3.fna&cb_e2o_trans=t&oh=00_AfDA9wMo0eBbIVcTT3TWosffHErD26nEGK5TDEw6AXV28g&oe=65ADAABD" sx={{ width: 48, height: 48, backgroundColor: '#1E90FF' }} />
-
-                        {/* <Avatar alt={userData.data.name} src="https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/411522943_373985608348589_889785018101940738_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEamTt0rJAFTB6RfoXS4ngnxYyL2_YybPbFjIvb9jJs9pt9zhvp6TRX4bZZNJL476Ruij8pCjz8clb5RsQTbvLj&_nc_ohc=a4wxphwpC7cAX-Y_7Id&_nc_ht=scontent.fsgn5-3.fna&cb_e2o_trans=t&oh=00_AfDA9wMo0eBbIVcTT3TWosffHErD26nEGK5TDEw6AXV28g&oe=65ADAABD" sx={{ width: 48, height: 48, backgroundColor: '#1E90FF' }} /> */}
                     </IconButton>
 
                 </div>
@@ -128,6 +131,9 @@ function Sidebar() {
                     </IconButton>
                     <IconButton onClick={handClick}>
                         <GroupAddIcon className='iconColor' />
+                    </IconButton>
+                    <IconButton>
+                        <PeopleAltIcon onClick={() => setShowListAccept(true)} className='iconColor' />
                     </IconButton>
                     <IconButton>
                         <AddCircleIcon onClick={() => setShowListFriend(true)} className='iconColor' />
@@ -147,6 +153,7 @@ function Sidebar() {
                 {users.map((item, index) => {
                     if (item.isGroup == false) {
                         // console.log(userData);
+                        // console.log(item);
                         if (userData.data._id == item.users[0]._id) {
                             item.chatName = item.users[1].name
                             // console.log(item.users[1].name);
@@ -169,25 +176,43 @@ function Sidebar() {
             {showModal ? <ModalComponent clockModal={setShowModal} /> : <div></div>}
             {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
             {showListFriend ? <FindAndAddFriendComponent closemodal={setShowListFriend} /> : <div></div>}
+            {showListAccept ? <FriendAccept closemodal={setShowListAccept} /> : <div></div>}
+
+            {/* profile */}
             <Modal open={open} onClose={handleClose}>
                 <div className="modal-style">
-                    <div className="modal-header">Thông Tin Cá Nhân</div>
-                    <div className="modal-body">
-                        <div className="modal-body-name">
-                            <p>Tên Đăng Nhập: </p> <p>{userData.data.name}</p>
+                    {/* upper */}
+                    <div className='modal-upper'>
+                        <IconButton>
+                            <MenuIcon className='iconColor2' />
+                        </IconButton>
+                    </div>
+                    {/* bottom */}
+                    <div className='modal-bottom'>
+                        <Avatar alt={userData.data.name} src="https://scontent.fsgn5-3.fna.fbcdn.net/v/t39.30808-6/411522943_373985608348589_889785018101940738_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=efb6e6&_nc_eui2=AeEamTt0rJAFTB6RfoXS4ngnxYyL2_YybPbFjIvb9jJs9pt9zhvp6TRX4bZZNJL476Ruij8pCjz8clb5RsQTbvLj&_nc_ohc=a4wxphwpC7cAX-Y_7Id&_nc_ht=scontent.fsgn5-3.fna&cb_e2o_trans=t&oh=00_AfDA9wMo0eBbIVcTT3TWosffHErD26nEGK5TDEw6AXV28g&oe=65ADAABD" sx={{ width: 80, height: 80, backgroundColor: '#1E90FF', position: 'relative', left: 155, bottom: 50, fontSize: 40 }} />
+                        <div className="modal-header">Thông Tin Cá Nhân</div>
+                        <div className="modal-body">
+                            <div className="modal-body-name">
+                                <p>Tên Đăng Nhập: </p> <p>{userData.data.name}</p>
+                            </div>
+                            <div className="modal-body-email">
+                                <p>Email: </p> <p>{userData.data.email}</p>
+                            </div>
+                            <div className="modal-body-email">
+                                <p>Ngày Sinh: </p>
+                            </div>
+                            <div className="modal-body-email">
+                                <p>Sở Thích: </p> <div><textarea className='input-area'></textarea></div>
+                            </div>
+
                         </div>
-                        <div className="modal-body-email">
-                            <p>Email: </p> <p>{userData.data.email}</p>
+                        <div className="modal-footer">
+                            <a href='/'>Chỉnh Sửa Thông Tin</a>
                         </div>
                     </div>
-                    <div className="modal-footer">
-                        <a href='/'>Chỉnh Sửa Thông Tin</a>
-                    </div>
-
-
-
                 </div>
             </Modal>
+            {/* profile */}
         </div >
 
 

@@ -113,6 +113,7 @@ const resetPassword = expreeAsynceHandle(async (req, res) => {
 const getOTPandSendToEmail = expreeAsynceHandle(async (req, res) => {
     const { email, otp } = req.body
     const uemail = await User.findOne({ email })
+    console.log(uemail);
     if (uemail) {
         throw new Error('user already exists!!')
     } else {
@@ -219,6 +220,7 @@ const acceptFriend = expreeAsynceHandle(async (req, res) => {
         );
         await User.findOneAndUpdate(
             {
+                _id: friend,
                 'friends.friend': user
             },
             { $set: { 'friends.$.accept': true } },
@@ -229,7 +231,7 @@ const acceptFriend = expreeAsynceHandle(async (req, res) => {
     }
 });
 const fetchInvitationFromClient = expreeAsynceHandle(async (req, res) => {
-    const admin = req.body.admin
+    const admin = req.body.name
     // console.log({ _id: ObjectId(userId) });
     try {
         // const result = await User.find({ _id: Object(req.body.userid) })
@@ -261,7 +263,7 @@ const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
     try {
         const result = await User.aggregate([
             {
-                $match: { name: { $ne: name } } // Lọc ra tất cả các người dùng không phải Alice
+                $match: { name: { $ne: name } } // Lọc ra tất cả các người dùng trừ họ
             },
             {
                 $lookup:
@@ -278,7 +280,7 @@ const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
                 }
             }
         ])
-        console.log(result);
+        // console.log(result);
         res.send(result)
         // console.log(result);
     } catch (error) {
@@ -286,43 +288,39 @@ const getUserNoAccept = expreeAsynceHandle(async (req, res) => {
     }
 })
 const getUserwaitAccept = expreeAsynceHandle(async (req, res) => {
-    const { name, userId } = req.body;
+    const { userId, name } = req.body;
     try {
         const result = await User.aggregate([
             {
                 $match: { name: { $ne: name } }
-            },
-            {
+            }, {
                 $unwind: "$friends" // Giải nén mảng "friends"
+            }, {
+                $match: { "friends.friend": new mongoose.Types.ObjectId(userId) }
             },
             {
-                $lookup:
-                {
-                    from: "users",
-                    let: { senderId: "$friends.sender" },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: { $eq: ["$_id", "$$senderId"] },
-                                "friends.accept": false
-                            }
-                        },
-                        {
-                            $project: { _id: 1, name: 1, accept: 1 }
-                        }
-                    ],
-                    as: "friends_docs"
-                }
+                $match: { "friends.sender": { $ne: new mongoose.Types.ObjectId(userId) } }
             },
             {
-                $match: {
-                    "friends_docs.0": { $exists: true },
-                    "friends.accept": false
-
-                }
-            }
+                $match: { "friends.accept": false }
+            },
+            // {
+            //     $lookup: {
+            //         from: "users",
+            //         localField: "friends.friend", // Trường trong mảng friends chứa _id của người bạn
+            //         foreignField: "_id",
+            //         as: "friendUsers" // Đặt tên cho mảng kết quả
+            //     }
+            // },
+            // {
+            //     $unwind: "$friendUsers" // Giải nén mảng kết quả
+            // },
+            // {
+            //     $match: {
+            //         "friendUsers._id": { $ne: userId } // Lọc ra các người bạn khác người dùng hiện tại
+            //     }
+            // }
         ]);
-        // console.log(result);
         res.send(result);
     } catch (error) {
         res.send(error);

@@ -107,6 +107,17 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
     res.json(message);
 })
 
+const blacnkMess = expressAsyncHandler(async (req, res) => {
+    const { messId } = req.body;
+    const result = await Message.findByIdAndUpdate(messId, { content: '' });
+    res.json(result);
+})
+const deleteMess = expressAsyncHandler(async (req, res) => {
+    const { messId } = req.body;
+    const result = await Message.deleteOne({ _id: messId });
+    res.json(result);
+})
+
 module.exports = {
-    sendMessage, allMessages, sendMessImage
+    sendMessage, allMessages, sendMessImage, blacnkMess, deleteMess
 }

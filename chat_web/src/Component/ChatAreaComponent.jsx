@@ -10,10 +10,11 @@ import { myContext } from './MainComponent';
 import { io } from 'socket.io-client';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Picker from 'emoji-picker-react';
 
 
-const socket = io("http://localhost:5678")
+var socket = io("http://localhost:5678")
 export default function ChatAreaComponent() {
     const [contentMess, setContentMess] = useState('')
     const [mess, setMess] = useState([])
@@ -22,81 +23,92 @@ export default function ChatAreaComponent() {
     const messageEndRef = useRef(null)
     const userData = JSON.parse(localStorage.getItem("userData"));
     const [loading, setLoading] = useState(false)
+    const [renderMess, setRenderMess] = useState(false)
+    const [showFormEmoji, setShowFormEmoji] = useState(false)
     const fileRef = useRef()
     const [imageData, setImageData] = useState([])
     const textRef = useRef()
-
+    const [scrollExecuted, setScrollExecuted] = useState(false);
+    const [chat_id, chat_user] = params.id.split("&");
+    const [objectChat, setObjectChat] = useState()
+    var emojiArray = []
+    const selectEmojiIcon = (emojiObject) => {
+        const emoji = emojiObject.emoji
+        emojiArray.push(emoji)
+        setContentMess(...emoji)
+    }
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
-    const scrollTobottom = () => {
-        messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest", scrollY: -1 })
-    }
-    const selectionEmoji = (event, emojiObject) => {
-        setContentMess(emojiObject)
-
-    }
-    const [chat_id, chat_user] = params.id.split("&");
-
-    //socket chạy tin nhắn tự động
     useEffect(() => {
-        socket.on("mess-rcv", (data) => {
-            // console.log("mess", data);
-            // setMess([...mess], data)
-            setMess([...mess], data)
-            // setMess([...mess], data)
-        })
-    }, [])
+        setObjectChat(chat_id)
 
+    }, [chat_id])
 
     //ket noi socket
     useEffect(() => {
-
         socket.emit("setup", userData)
         socket.on("connect", () => {
-            socket.on("disconnect", () => {
-                console.log("mess", socket);
-                console.log(`Socket disconnected: ${socket.id}`);
-            });
+            // socket.on("disconnect", () => {
+            //     console.log("mess", socket);
+            //     console.log(`Socket disconnected: ${socket.id}`);
+            // });
         })
     }, [])
-
-    //load mess
-    const rerenderMessage = async () => {
-
+    const renderChat = async () => {
         try {
             // setLoading(true)
-            const dataMessage = await axios.get(`http://localhost:5678/message/${chat_id}`, {
+            const dataMessage = await axios.get(`http://localhost:5678/message/${objectChat}`, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
                 }
             })
-            // setMess([])
-            setMess(dataMessage.data)
-            scrollTobottom()
-            // setLoading(false)
-        } catch (error) {
+            setTimeout(() => {
+                // setMess([])
+                setMess(dataMessage.data)
+            }, 1000)
+        }
+        catch (error) {
             console.log(error);
         }
     }
     useEffect(() => {
+        renderChat()
+        messageEndRef.current.scrollIntoView({ behavior: "auto", block: "end", inline: "nearest" })
+    }, [objectChat, mess, refresh, socket])
 
-        rerenderMessage()
+    // useEffect(() => {
+    //     socket.on("message recieved", (data) => {
+    //         // console.log(objectChat === data.chat._id);
+    //         if (objectChat === data.chat._id) {
+    //             // renderChat()
+    //             setMess([...mess, data])
+    //             // console.log(1);
+    //         } else {
+    //             console.log(data);
+    //         }
+    //     })
+    // })
 
-    }, [chat_id, mess])
+
+
     //send mess img -- 
     // lấy file send về be theo bằng formData để tạo 1 file có tên là fileImage
     const uploadmultiImage = async () => {
         const arrayListImage = Array.from(fileRef.current.files)
+
+
         const dataImge = []
+
         await Promise.all(arrayListImage.map(async (item) => {
             const dataRender = await sendMessImg(item)
             dataImge.push(dataRender)
         }))
+        // console.log(dataImge);
         const dataSend = await axios.post(
             "http://localhost:5678/message/", {
-            chatId: chat_id,
+            chatId: objectChat,
             ImageUrl: dataImge,
-            typeMess: "image"
+            typeMess: "Multimedia"
         },
             {
                 headers: {
@@ -104,15 +116,12 @@ export default function ChatAreaComponent() {
                 }
             }
         )
-
-        socket.emit("new-mes", dataSend.data)
-
-        messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+        socket.emit("new message", dataSend.data)
         socket.emit("render-box-chat", true)
-
         setContentMess("")
-        console.log(dataSend.data);
-
+        setRenderMess(!renderMess)
+        setMess([...mess, dataSend.data])
+        // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
 
     }
     const sendMessImg = async (items) => {
@@ -137,11 +146,11 @@ export default function ChatAreaComponent() {
 
     };
     const enterMess = async (e) => {
-        if (e.key == "Enter" && mess) {
+        if (e.key == "Enter" && contentMess) {
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
-                    chatId: chat_id,
+                    chatId: objectChat,
                     content: contentMess,
                     typeMess: "text"
                 },
@@ -151,13 +160,12 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", dataSend.data)
-                // setContentMess("")
-                setContentMess("")
-                // textRef.current.value = ' ';
+                socket.emit("new message", dataSend.data)
                 socket.emit("render-box-chat", true)
 
-                // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
+                setMess([...mess, dataSend.data])
+                setContentMess("")
+                setRenderMess(!renderMess)
             } catch (error) {
                 console.log(error);
             }
@@ -166,12 +174,13 @@ export default function ChatAreaComponent() {
 
     }
     const sendMess = async () => {
-        if (mess) {
+        if (contentMess) {
+            // console.log(true);
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
-                    chatId: chat_id,
-                    dataImge: contentMess,
+                    chatId: objectChat,
+                    content: contentMess,
                     typeMess: "text"
                 },
                     {
@@ -180,10 +189,11 @@ export default function ChatAreaComponent() {
                         }
                     }
                 )
-                socket.emit("new-mes", dataSend.data)
+                socket.emit("new message", dataSend.data)
                 socket.emit("render-box-chat", true)
 
-                // setContentMess("")
+                setMess([...mess, dataSend.data])
+                setRenderMess(!renderMess)
                 setContentMess("")
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
@@ -193,6 +203,7 @@ export default function ChatAreaComponent() {
 
 
     }
+
 
     return (
         <><Backdrop open={loading}
@@ -233,17 +244,20 @@ export default function ChatAreaComponent() {
 
                 {/* <div className="" ref={messageEndRef}></div> */}
 
+                <div className='emoji-form'>
+                    {/* {contentMess ? (
+                        <span>You chose: {contentMess.emoji}</span>
+                    ) : (
+                        <span>No emoji Chosen</span>
+                    )} */}
+                    <Picker open={showFormEmoji} onEmojiClick={selectEmojiIcon} />
+                </div>
                 <div className="chat-area-footer">
-                    <input onKeyDown={enterMess} ref={textRef} placeholder='Enter Message....' className='box-input' onChange={(e) => setContentMess(e.target.value)} value={contentMess} />
-                    {/* <div>
-                        {contentMess ? (
-                            <span>You chose: {contentMess.emoji}</span>
-                        ) : (
-                            <span>No emoji Chosen</span>
-                        )}
-                        <Picker onEmojiClick={selectionEmoji} />
-                    </div> */}
+                    <input onFocus={() => { messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" }); }} onKeyDown={enterMess} ref={textRef} placeholder='Enter Message....' className='box-input' onChange={(e) => setContentMess(e.target.value)} value={contentMess} />
                     <div className="">
+                        <IconButton onClick={() => setShowFormEmoji(!showFormEmoji)}>
+                            <EmojiEmotionsIcon />
+                        </IconButton>
                         <IconButton>
                             <label htmlFor="">
                                 <AttachFileIcon />

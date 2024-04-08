@@ -32,9 +32,7 @@
   border: 1px solid black;
   display: flex;
   flex-direction: column;
-
-  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1710346962/wfajods4ndivhdmjzarr.png');
-
+  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1712134367/gqqby58c4o90gursep6a.png');
   background-position: center;
   background-size: cover;
 }
@@ -63,8 +61,6 @@
   flex: 1;
   overflow: scroll;
 }
-
-.model-footer {}
 
 .modal-title {
   display: flex;
@@ -207,9 +203,11 @@
   align-items: center;
 }
 
+
 .login-form-container {
+  padding: 20px;
   width: 400px;
-  height: 400px;
+  height: max-content;
   background-color: #f9f9f9;
   display: flex;
   flex-direction: column;
@@ -498,6 +496,19 @@
   font-family: 'Times New Roman', Times, serif;
   align-self: flex-end;
   flex-direction: column;
+  position: relative;
+}
+
+.hidden-form {
+  position: absolute;
+  left: 0;
+  bottom: -15px;
+  display: none;
+}
+
+.my-message-row:hover .hidden-form {
+  display: block;
+  cursor: pointer;
 }
 
 .chat-row-time {
@@ -515,15 +526,15 @@
 }
 
 .modal-style {
-  top: 50%;
+  top: 30%;
   left: 50%;
   position: absolute;
-  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
+  /* background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
   height: 100vh;
   background-position: center;
-  background-size: cover;
+  background-size: cover; */
   transform: translate(-50%, -50%);
-  width: 400px;
+  width: 150px;
   height: 150px;
   border: 2px solid #000;
   box-shadow: 24px;
@@ -533,6 +544,28 @@
   justify-content: center;
   align-items: center;
 }
+.modal-bottom{
+  background-color: white;
+  width: 400px;
+  height: 300px;
+  position: relative;
+  border: 2px solid #000;
+  box-shadow: 24px;
+  padding: 7px;
+  border-width: 0px;
+  justify-content: center;
+  align-items: center;
+  
+}
+.modal-upper{
+  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
+  height: 100vh;
+  background-position: center;
+  background-size: cover;
+  width: 400px;
+  height: 100px;
+
+}
 
 .modal-header {
   font-size: 16px;
@@ -541,7 +574,7 @@
   font-weight: bold;
   padding: 5px;
   font-family: Arial, Helvetica, sans-serif;
-  color: white;
+  color: black;
 
 
 }
@@ -552,7 +585,7 @@
   justify-content: space-between;
   font-family: Arial, Helvetica, sans-serif;
   margin-top: 20px;
-  color: white;
+  color: black;
 
 }
 
@@ -562,7 +595,7 @@
   flex-direction: row;
   justify-content: space-between;
   font-family: Arial, Helvetica, sans-serif;
-  color: white;
+  color: black;
 
 }
 
@@ -576,7 +609,8 @@
 
 .modal-footer>a {
 
-  color: white;
+  color: black;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .reset-Container {
@@ -670,6 +704,12 @@ input[type="file"] {
 .iconColor {
   color: #1E90FF;
 }
+.iconColor2 {
+  color: white;
+  position: relative;
+  left: 350px;
+
+}
 
 .online {
   color: #32CD32;
@@ -711,13 +751,7 @@ input[type="file"] {
   display: grid;
   grid-template-columns: auto auto;
   grid-template-rows: auto auto;
-  /* flex-wrap: wrap; */
-  /* width: max-content;
-  height: max-content;
-  overflow: calc(33.33%); */
-  /* justify-content: center; */
 
-  /* align-items: center; */
 }
 
 .img-chat {
@@ -749,10 +783,11 @@ input[type="file"] {
   left: 30px;
   height: 40px;
   width: 100px;
-  background-color: #1E90FF;
-  border: none;
-  color: white;
+  background-color: white;
+  color: #1E90FF;
   border-radius: 5px;
+  border-width: 1px;
+  border-color: #1E90FF;
 }
 
 .btn-register {
@@ -768,4 +803,62 @@ input[type="file"] {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-/* 11:26 13/3/2024 */
+.icon-file {
+  height: 40px;
+  width: 40px;
+}
+
+.file-chat-icon {
+  margin: 5px;
+  /* Khoảng cách giữa các ảnh */
+  height: 40px;
+  width: 40px;
+
+
+}
+
+.file-chat-icon2 {
+  margin: 5px;
+  /* Khoảng cách giữa các ảnh */
+  height: 50px;
+  width: 50px;
+
+}
+
+.link-file {
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  bottom: 18px;
+  text-decoration: none;
+
+}
+
+.fr-cap {
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: 160px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.fr-cap2 {
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: 230px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+.input-area{
+  width: 130px;
+  height: 25px;
+  font-size: 15px;
+}
+
+.emoji-form {
+  position: absolute;
+  top: 43%;
+  right: 0;
+}
+
+/* 2/4/2024 */
