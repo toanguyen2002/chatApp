@@ -207,7 +207,7 @@ const SendMessage = () => {
 
   const renderItem = ({ item }) => {
     const isCurrentUser = item.sender._id === userData._id;
-
+  
     return (
       <View
         style={[
@@ -228,9 +228,9 @@ const SendMessage = () => {
           </Text>
         ) : (
           <View>
-            {item.content?.map((image, index) => (
+            {item.ImageUrl && Array.isArray(item.ImageUrl) && item.ImageUrl.map((image, index) => (
               <Image
-                key={index} // Sử dụng index của mảng làm key
+                key={index}
                 style={styles.image}
                 source={{ uri: image.url }}
               />
