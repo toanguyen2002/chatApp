@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity ,StyleSheet} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -150,9 +150,22 @@ function BottomTabButton({
   const labelColor = currentScreen === screenName ? "#3498DB" : "black";
 
   return (
-    <TouchableOpacity style={{ alignItems: "center" }} onPress={handlePress}>
-      <IconComponent name={iconName} size={24} color={iconColor} />
-      <Text style={{ color: labelColor, marginTop: 5 }}>{label}</Text>
+    <TouchableOpacity style={{ alignItems: 'center' }} onPress={handlePress}>
+      <IconComponent name={iconName} size={24} color="black" />
+      <Text style={{ color: 'black', marginTop: 5 }}>{label}</Text>
     </TouchableOpacity>
   );
 }
+
+const styles = StyleSheet.create({
+  tab: {
+    alignItems: "center",
+  },
+  activeTab: {
+    alignItems: "center",
+    backgroundColor: "#f0f0f0",
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+});
