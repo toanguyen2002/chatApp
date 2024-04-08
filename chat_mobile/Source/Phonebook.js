@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+const ip = "192.168.110.193";
 export default function Phonebook() {
   const navigation = useNavigation();
 
@@ -28,7 +28,6 @@ export default function Phonebook() {
   const [dataChatBox, setDataChatBox] = useState([]);
   const [users, setUsers] = useState([]);
   const [usersNotFriend, setUsersNotFriend] = useState([]);
-  const ip = "192.168.1.6";
 
   useEffect(() => {
     const fetchData = async () => {

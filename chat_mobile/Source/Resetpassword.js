@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, Pressable, StyleSheet, Alert } from "react-native";
-
+const ip = "192.168.110.193";
 const Resetpassword = ({navigation}) => {
   const [name, setName] = useState("");
   const resetPassword = async () => {
@@ -8,7 +8,7 @@ const Resetpassword = ({navigation}) => {
       const data = { name };
 
 
-      const dataRest = await fetch("http://192.168.1.6:5678/user/reset", { 
+      const dataRest = await fetch("http://"+ip+":5678/user/reset", { 
 
         method: 'POST',
         headers: {

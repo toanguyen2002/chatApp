@@ -12,98 +12,102 @@ import {
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
+import { io } from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+const ip = "192.168.110.193";
+const socket = io("http://localhost:5678")
 const MessageTC = ({ navigation }) => {
-  const rou = useRoute();
   const [userData, setUserData] = useState(null);
   const [dataChatBox, setDataChatBox] = useState([]);
-  const [search, setSearch] = useState("");
-  const [users, setUsers] = useState([]);
-
+  const sortByDateSend = (arr) => {
+    return arr.slice().sort((a, b) => {
+      if (!a.lastMessage || !b.lastMessage) return 0; // Nếu lastMessage rỗng, không cần sắp xếp
+      const dateA = new Date(a.lastMessage.dateSend);
+      const dateB = new Date(b.lastMessage.dateSend);
+      return dateB - dateA; // Sắp xếp giảm dần
+    });
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userDataString = await AsyncStorage.getItem("userData");
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
-
-
-        const response = await axios.get("http://192.168.1.6:5678/chat/", {
-
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchData();
+    socket.emit("setup", userData)
+    socket.on("connect", () => {
+        // socket.on("disconnect", () => {
+        //     console.log("mess", socket);
+        //     console.log(`Socket disconnected: ${socket.id}`);
+        // });
+    })
+    socket.emit("render-box-chat", true)
+}, [])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userDataString = await AsyncStorage.getItem("userData");
+        const userDataObject = JSON.parse(userDataString);
+        setUserData(userDataObject);
+        const response = await axios.get("http://" + ip + ":5678/chat/", {
           headers: {
             Authorization: `Bearer ${userDataObject.token}`,
           },
         });
-        setDataChatBox(response.data);
+        setDataChatBox(sortByDateSend(response.data));
+        socket.emit("render-box-chat", true)
         // console.log(response.data)
       } catch (error) {
         console.log("Error fetching data:", error);
       }
     };
-
     fetchData();
-  }, []);
+  }, [dataChatBox]);
 
-  // useEffect(() => {
-  //   const getChat = async () => {
-  //     try {
-  //       const chatData = await axios.get(
-  //         `http://192.168.1.6:5678/chat/findChatByName?chatName=${search}`,
-  //         {
-  //           headers: {
-  //             Authorization: `Bearer ${userData.token}`,
-  //           },
-  //         }
-  //       );
-  //       setUsers(chatData.data);
-  //       console.log(chatData.data)
-  //     } catch (error) {
-  //       console.log("lỗi không tìm thấy tên ", error);
-  //     }
-  //   };
-  //   getChat();
-  // }, [search, userData]);
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
+
   };
 
   const closeModal = () => {
     setIsModalVisible(false);
   };
-
   return (
-    
-      <View style={{ flex: 1 }}>
-        <KeyboardAvoidingView style={{ flex: 1 }} >
-          <View style={styles.container}>
-        <View style={styles.search}>
-          <AntDesign name="search1" size={25} color="white" />
+
+    <View style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }} >
+        <View style={styles.container}>
+          <View style={styles.search}>
+            <AntDesign name="search1" size={25} color="white" />
+          </View>
+          <Text style={styles.username}>{userData && userData.name}</Text>
+          <Pressable style={styles.plus} onPress={toggleModal}>
+            <AntDesign name="plus" size={25} color="white" />
+          </Pressable>
         </View>
-        <Text style={styles.username}>{userData && userData.name}</Text>
-        <Pressable style={styles.plus} onPress={toggleModal}>
-          <AntDesign name="plus" size={25} color="white" />
-        </Pressable>
-      </View>
 
-      <View style={styles.container1}>
-        {dataChatBox.map((item, index) => {
-          if (item.isGroup === false) {
-            if (userData && userData._id === item.users[0]._id) {
-              item.chatName = item.users[1].name;
-            } else {
-              
-              item.chatName = item.users[0].name;
+        <View style={styles.container1}>
+          {dataChatBox.map((item, index) => {
+            if (item.isGroup === false) {
+              if (userData && userData._id === item.users[0]._id) {
+                item.chatName = item.users[1].name;
+              } else {
+
+                item.chatName = item.users[0].name;
+              }
             }
-          }
-          return <MessageItem {...item} key={index} />;
-        })}
-      </View>
+            return <MessageItem {...item} key={index} />;
+          })}
+        </View>
 
-        </KeyboardAvoidingView>
-      
+      </KeyboardAvoidingView>
+
 
       {/* Modal */}
 
@@ -161,7 +165,7 @@ const MessageTC = ({ navigation }) => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      
+
       {/* Modal */}
     </View>
   );
@@ -169,35 +173,42 @@ const MessageTC = ({ navigation }) => {
 
 const MessageItem = (props) => {
   const navigation = useNavigation();
-
   const handlePress = () => {
     navigation.navigate("SenddMessage", props); // Navigate to SendMessage screen
   };
 
   return (
     <TouchableOpacity onPress={handlePress}>
-      <View style={{ flexDirection: "row", marginBottom: 10,  }}>
+      <View style={{ flexDirection: "row", marginBottom: 10, justifyContent: "space-between" }}>
         <View style={styles.ChatName}>
           <Text style={styles.Name}>{props.chatName[0]}</Text>
         </View>
-
-        <View style={styles.TextChat}>
-          <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.chatName}</Text>
-          {props.lastMessage ? (
-            props.lastMessage.typeMess === "text" ? (
-              <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text>
+        <View style={{ flex: 1,  }}>
+          <View style={styles.TextChat}>
+            <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.chatName}</Text>
+            {props.lastMessage ? (
+              props.lastMessage.typeMess === "text" ? (
+                <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text>
+              ) : (
+                <Text style={{ fontSize: 14 }}>hình ảnh</Text>
+              )
             ) : (
-              <Text style={{ fontSize: 14 }}>hình ảnh</Text>
-            )
-          ) : (
-            <Text></Text>
-          )}
-          <Text style={{ fontSize: 12 }}>{props.timeSend}</Text>
+              <Text></Text>
+            )}
+          </View>
+          {props.lastMessage && props.lastMessage.dateSend ? (
+            <Text style={[styles.TimeStamp, { textAlign: 'right' }]}>
+              {new Date(props.lastMessage.dateSend).toLocaleTimeString()}
+            </Text>
+          ) : null}
         </View>
       </View>
-
     </TouchableOpacity>
   );
+  
+  
+  
+  
 };
 
 const styles = StyleSheet.create({
@@ -245,26 +256,26 @@ const styles = StyleSheet.create({
     height: 320,
   },
   ChatName: {
-    
+
     height: 60,
     width: 60,
     borderRadius: 50,
-    justifyContent:"center",
+    justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#1E90FF",
-    
+
   },
   Name: {
     fontSize: 25,
     color: "white",
     fontWeight: "bold"
   },
-  TextChat:{
+  TextChat: {
     left: 15,
     justifyContent: "center",
     alignItems: "center",
-    
-   
+
+
   }
 });
 
