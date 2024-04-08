@@ -238,6 +238,7 @@ const SendMessage = () => {
   };
   
   
+  
 
   return (
     <SafeAreaView style={styles.container}>
