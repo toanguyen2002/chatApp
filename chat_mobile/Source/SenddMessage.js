@@ -48,7 +48,7 @@
       setUserData(userData);
       //
       try {
-        const response = await fetch(`http://172.20.10.5:5678/message/${route.params._id}`,{
+        const response = await fetch(`http://192.168.1.6:5678/message/${route.params._id}`,{
           method: 'GET',
           headers: {
             "Content-Type": "application/json",
@@ -97,7 +97,7 @@
     
       try {
         const respone = await axios.post(
-          "http://172.20.10.5:5678/message/messImage",
+          "http://192.168.1.6:5678/message/messImage",
           formData,
           {
             headers: {
@@ -107,7 +107,7 @@
         );
         
         const dataSend = await axios.post(
-          "http://172.20.10.5:5678/message/",
+          "http://192.168.1.6:5678/message/",
           {
             chatId: route.params._id,
             content: responseData.url, 
@@ -158,7 +158,7 @@
       if (messages) {
         try {
           const dataSend = await axios.post(
-            "http://172.20.10.5:5678/message/",
+            "http://192.168.1.6:5678/message/",
             {
               chatId: route.params._id,
               content: text,

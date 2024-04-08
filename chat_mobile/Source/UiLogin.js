@@ -16,7 +16,8 @@ const UiLogin = ({ navigation }) => {
   const [errorModalVisible, setErrorModalVisible] = useState(false);
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://172.20.10.5:5678/user/login", {
+      const response = await fetch("http://192.168.1.6:5678/user/login", {
+
         method: "POST",
         headers: {
           Accept: "application/json",

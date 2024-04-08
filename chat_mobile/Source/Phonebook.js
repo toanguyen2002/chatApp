@@ -19,7 +19,8 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Phonebook() {
-  const navigation = useNavigation(); 
+  const navigation = useNavigation();
+
   const [activeForm, setActiveForm] = useState("friend");
   const [activeForm1, setActiveForm1] = useState("all");
   const [selectedChar, setSelectedChar] = useState(null);
@@ -27,7 +28,7 @@ export default function Phonebook() {
   const [dataChatBox, setDataChatBox] = useState([]);
   const [users, setUsers] = useState([]);
   const [usersNotFriend, setUsersNotFriend] = useState([]);
-  const ip = "172.20.10.5"
+  const ip = "192.168.1.6";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,28 +48,6 @@ export default function Phonebook() {
       }
     };
     fetchData();
-  }, []);
-
-  useEffect(() => {
-    const getUserNotFriend = async () => {
-      const userDataString = await AsyncStorage.getItem("userData");
-      const userData = JSON.parse(userDataString);
-      setUsers([]);
-      const dataUser = await axios.post(
-        `http://${ip}:5678/user/getUserNotFriend`,
-        {
-          name: userData.name,
-          userId: userData._id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
-      setUsersNotFriend(dataUser.data);
-    };
-    getUserNotFriend();
   }, []);
 
   useEffect(() => {
@@ -93,6 +72,28 @@ export default function Phonebook() {
     getUser();
   }, []);
 
+  useEffect(() => {
+    const getUserNotFriend = async () => {
+      const userDataString = await AsyncStorage.getItem("userData");
+      const userData = JSON.parse(userDataString);
+      setUsers([]);
+      const dataUser = await axios.post(
+        `http://${ip}:5678/user/getUserNotFriend`,
+        {
+          name: userData.name,
+          userId: userData._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      setUsersNotFriend(dataUser.data);
+    };
+    getUserNotFriend();
+  }, []);
+
   const handlePress = (form) => {
     setActiveForm(form);
     setActiveForm1(form);
@@ -100,12 +101,14 @@ export default function Phonebook() {
   };
 
   const MessageItem = (props) => {
+    const navigation = useNavigation();
+
     const handlePress = () => {
-      navigation.navigate("SenddMessage", props); // Navigate to SendMessage screen
+      navigation.navigate("SenddMessage", props);
     };
 
     return (
-      <TouchableOpacity onPress={handlePress}>
+      <TouchableOpacity onPress={handlePress} key={props.id}>
         <Text style={{ fontSize: 20 }}>{props.name[0]}</Text>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.name}</Text>
       </TouchableOpacity>
@@ -134,9 +137,9 @@ export default function Phonebook() {
               <Text>Danh sách bạn bè</Text>
             </View>
             <View style={{ flexDirection: "column" }}>
-              {users.map((item, index) => {
-                return <MessageItem {...item} key={index} />;
-              })}
+              {users.map((item, index) => (
+                <MessageItem {...item} key={item.id || index.toString()} />
+              ))}
             </View>
           </View>
         )}
@@ -144,9 +147,16 @@ export default function Phonebook() {
           <View style={{}}>
             <View style={styles.tabContainer2}>
               <Pressable onPress={() => navigation.navigate("NewGroup")}>
-                <View style={{ flex: 2, flexDirection: "row", alignItems: 'center', top: 10 }}>
+                <View
+                  style={{
+                    flex: 2,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    top: 10,
+                  }}
+                >
                   <Image
-                    style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                    style={{ width: 70, height: 70, resizeMode: "contain" }}
                     source={require("../assets/newgrp.png")}
                   />
                   <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
@@ -155,58 +165,111 @@ export default function Phonebook() {
               <View style={styles.separator}></View>
               <View style={{ flexDirection: "column" }}>
                 <View style={{ left: 20, bottom: 10 }}>
-                  <Text style={{ fontWeight: "600", fontSize: 15 }}>Tính năng nổi bật</Text>
+                  <Text style={{ fontWeight: 600, fontSize: 15 }}>
+                    Tính năng nổi bật
+                  </Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-around", marginBottom: 20 }}>
-                  <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    marginBottom: 20,
+                  }}
+                >
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     <Image
-                      style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                      style={{ width: 70, height: 70, resizeMode: "contain" }}
                       source={require("../assets/tool1.png")}
                     />
-                    <Text style={{ fontWeight: "450", fontSize: 15 }}>Lịch</Text>
+                    <Text style={{ fontWeight: 400, fontSize: 15 }}>Lịch</Text>
                   </View>
-                  <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     <Image
-                      style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                      style={{ width: 70, height: 70, resizeMode: "contain" }}
                       source={require("../assets/tool2.png")}
                     />
-                    <Text style={{ fontWeight: "450", fontSize: 15 }}>Nhắc hẹn</Text>
+                    <Text style={{ fontWeight: 400, fontSize: 15 }}>
+                      Nhắc hẹn
+                    </Text>
                   </View>
-                  <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     <Image
-                      style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                      style={{ width: 70, height: 70, resizeMode: "contain" }}
                       source={require("../assets/tool3.png")}
                     />
-                    <Text style={{ fontWeight: "450", fontSize: 15 }}>Nhóm online</Text>
+                    <Text style={{ fontWeight: 400, fontSize: 15 }}>
+                      Nhóm online
+                    </Text>
                   </View>
-                  <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                  <View
+                    style={{
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
                     <Image
-                      style={{ width: 70, height: 70, resizeMode: 'contain' }}
+                      style={{ width: 70, height: 70, resizeMode: "contain" }}
                       source={require("../assets/tool4.png")}
                     />
-                    <Text style={{ fontWeight: "450", fontSize: 15 }}>Chia sẻ ảnh</Text>
+                    <Text style={{ fontWeight: 400, fontSize: 15 }}>
+                      Chia sẻ ảnh
+                    </Text>
                   </View>
                 </View>
               </View>
               <View style={styles.separator}></View>
               <View style={{ flexDirection: "column" }}>
                 <View style={{ left: 20, bottom: 10 }}>
-                  <Text style={{ fontWeight: "600", fontSize: 15 }}>Nhóm đang tham gia</Text>
+                  <Text style={{ fontWeight: "600", fontSize: 15 }}>
+                    Nhóm đang tham gia
+                  </Text>
                 </View>
-                <View style={{ flex: 1, flexDirection: "row", justifyContent: "space-around", marginBottom: 20 }}>
+                <View
+                  style={{
+                    flex: 1,
+                    flexDirection: "row",
+                    justifyContent: "space-around",
+                    marginBottom: 20,
+                  }}
+                >
                   <View style={styles.container1}>
-                    {dataChatBox.filter(item => item.isGroup === true).map((item, index) => {
-                      const navigation = useNavigation();
-                      const handlePress = () => {
-                        navigation.navigate("SenddMessage", item); // Navigate to SendMessage screen
-                      };
-
-                      return (
-                        <TouchableOpacity key={index.toString()} onPress={handlePress} >
-                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>{item.chatName}</Text>
+                    {dataChatBox
+                      .filter((item) => item.isGroup === true)
+                      .map((item, index) => (
+                        <TouchableOpacity
+                          onPress={() =>
+                            navigation.navigate("SenddMessage", item)
+                          }
+                          key={item._id || index.toString()}
+                        >
+                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                            {item.chatName}
+                          </Text>
                           {item.lastMessage ? (
                             item.lastMessage.typeMess === "text" ? (
-                              <Text style={{ fontSize: 14 }}>{item.lastMessage.content}</Text>
+                              <Text style={{ fontSize: 14 }}>
+                                {item.lastMessage.content}
+                              </Text>
                             ) : (
                               <Text style={{ fontSize: 14 }}>hình ảnh</Text>
                             )
@@ -215,8 +278,7 @@ export default function Phonebook() {
                           )}
                           <Text style={{ fontSize: 12 }}>{item.timeSend}</Text>
                         </TouchableOpacity>
-                      );
-                    })}
+                      ))}
                   </View>
                 </View>
               </View>
@@ -229,13 +291,20 @@ export default function Phonebook() {
     );
   };
 
-
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
       <ScrollView>
         <View>
           <View style={{ marginBottom: 50 }}></View>
-          <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              backgroundColor: "blue",
+              height: 50,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <AntDesign name="search1" size={25} color="white" />
             <View style={{ marginLeft: 5, marginTop: 2 }}>
               <TextInput
@@ -263,12 +332,12 @@ export default function Phonebook() {
             justifyContent: "space-around",
             borderRadius: 5,
             right: 27,
-            top: 3
+            top: 3,
           }}
         >
           <Pressable
             onPress={() => handlePress("friend")}
-            style={[activeForm === "friend" && styles.activeTab,]}
+            style={[activeForm === "friend" && styles.activeTab]}
           >
             <Text
               style={[
@@ -302,6 +371,9 @@ export default function Phonebook() {
   );
 }
 
+
+
+// StyleSheet để tạo kiểu cho các phần giao diện
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -310,7 +382,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   activeTabText1: {
-    right: 10
+    right: 10,
   },
   tabContainer: {
     top: 20,
@@ -320,7 +392,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginBottom: 20,
-
   },
   tabText: {
     marginLeft: 20,
@@ -355,12 +426,12 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-    borderColor: 'blue',
+    borderColor: "blue",
   },
   activeTabText: {
     color: "blue",
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   charBar: {
     flexDirection: "row",
@@ -421,14 +492,16 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginLeft: 20,
     borderRadius: 90,
-    resizeMode: 'contain'
+    resizeMode: "contain",
   },
   tabContainer2: {
-    backgroundColor: 'white'
-  }, container1: {//style của nhóm chat
+    backgroundColor: "white",
+  },
+  container1: {
+    //style của nhóm chat
     flex: 9,
     backgroundColor: "gray",
     padding: 10,
-    width: 100
+    width: 100,
   },
 });

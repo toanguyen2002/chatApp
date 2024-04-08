@@ -7,7 +7,9 @@ const Resetpassword = ({navigation}) => {
     try {
       const data = { name };
 
-      const dataRest = await fetch("http://172.20.10.5:5678/user/reset", { 
+
+      const dataRest = await fetch("http://192.168.1.6:5678/user/reset", { 
+
         method: 'POST',
         headers: {
           "Content-Type": "application/json"

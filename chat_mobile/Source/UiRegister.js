@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, Button, View, Image, Pressable, Modal, Alert } from 'react-native';
 import axios from "axios";
-const ip = "192.168.0.241";
+const ip = "192.168.1.6";
 const UiRegister = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
