@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.1.6";
+const ip = "192.168.110.194";
 export default function Phonebook() {
   const navigation = useNavigation();
 
@@ -69,28 +69,6 @@ export default function Phonebook() {
       setUsers(dataUser.data);
     };
     getUser();
-  }, []);
-
-  useEffect(() => {
-    const getUserNotFriend = async () => {
-      const userDataString = await AsyncStorage.getItem("userData");
-      const userData = JSON.parse(userDataString);
-      setUsers([]);
-      const dataUser = await axios.post(
-        `http://${ip}:5678/user/getUserNotFriend`,
-        {
-          name: userData.name,
-          userId: userData._id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
-      setUsersNotFriend(dataUser.data);
-    };
-    getUserNotFriend();
   }, []);
 
   const handlePress = (form) => {

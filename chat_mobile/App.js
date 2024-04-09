@@ -29,7 +29,7 @@ export default function App() {
         <Stack.Screen name="MessageTC" component={MessageTC} />
         <Stack.Screen name="UiRegister" component={UiRegister} />
         <Stack.Screen name="SenddMessage" component={SenddMessage} />
-        <Stack.Screen name="PhoneBook" component={PhoneBook} />
+        <Stack.Screen name="PhoneBook" component={Phonebook} />
         <Stack.Screen name="Personal" component={Personal} />
         <Stack.Screen name="Diary" component={Diary} />
         <Stack.Screen name="Discover" component={Discover} />

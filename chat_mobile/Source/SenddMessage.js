@@ -20,8 +20,7 @@ import { io } from "socket.io-client";
 import * as ImagePicker from "expo-image-picker";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.1.6";
-
+const ip = "192.168.110.194";
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -29,8 +28,8 @@ const SendMessage = () => {
   const route = useRoute();
   const flatListRef = useRef(null);
   const [userData, setUserData] = useState(null);
+  const [hasNewMessage, setHasNewMessage] = useState(false);
   const [longPressedMessageId, setLongPressedMessageId] = useState(null);
-
   //chọn ảnh
   const [selectedImage, setSelectedImage] = useState(null);
   const fileRef = useRef(null);
@@ -51,15 +50,17 @@ const SendMessage = () => {
     };
     fetchData();
     socket.emit("setup", userData);
-    socket.on("connect", () => {});
+    socket.on("connect", () => { });
     socket.emit("render-box-chat", true);
   }, []);
 
   const scrollTobottom = () => {
-    if (flatListRef.current) {
+    if (hasNewMessage && flatListRef.current) {
       flatListRef.current.scrollToEnd({ animated: true });
+      setHasNewMessage(false); // Đặt lại biến đánh dấu sau khi cuộn xuống
     }
   };
+
 
   const rerenderMessage = async () => {
     const userDataString = await AsyncStorage.getItem("userData");
@@ -77,48 +78,57 @@ const SendMessage = () => {
         }
       );
       const responseData = await response.json();
-
-      const updatedMessages = responseData.filter(
-        (message) => message._id !== longPressedMessageId
-      );
-
-      scrollTobottom();
-      setMessages(updatedMessages);
+      setMessages(responseData);
     } catch (error) {
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    scrollTobottom();
+  }, [hasNewMessage]);
   useEffect(() => {
     rerenderMessage();
-    scrollTobottom();
+    // setHasNewMessage(true);
+    setHasNewMessage(true)
   }, [messages]);
-
+  const handleScrollToBottom = () => {
+    if (hasNewMessage) {
+      scrollTobottom();
+    }
+  };
   const pickImage = async () => {
     let permissionResult;
     if (Platform.OS !== "web") {
-      permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permissionResult.granted === false) {
-        alert(
-          "Xin lỗi, chúng tôi cần quyền truy cập vào thư viện ảnh để chọn ảnh!"
-        );
+        alert("Xin lỗi, chúng tôi cần quyền truy cập vào thư viện ảnh để chọn ảnh!");
         return;
       }
     }
-
     try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        allowsMultipleSelection: true,
+      let result = await ImagePicker.launchImageLibraryAsync({
+          allowsMultipleSelection: true,
       });
       if (!result.cancelled) {
-        const selectedImages = result.uri;
-        sendMessImg(selectedImages);
+          let selectedImages;
+          if (Array.isArray(result.assets)) {
+              selectedImages = result.assets.map(asset => ({
+                  uri: asset.uri,
+                  fileName: asset.fileName,
+              }));
+          } else {
+              selectedImages = [{
+                  uri: result.assets[0].uri,
+                  fileName: result.assets[0].fileName,
+              }];
+          }
+          sendMessImg(selectedImages);
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Error picking images:", error);
-    }
+  }
   };
+
 
   const sendMessImg = async (selectedImages) => {
     try {
@@ -126,45 +136,58 @@ const SendMessage = () => {
         if (uri) {
           const formData = new FormData();
           formData.append("fileImage", {
-            uri,
+            uri: uri.uri,
             type: "image/jpeg",
-            name: "photo.jpg",
+            name: uri.fileName,
           });
-
-          const response = await axios.post(
-            "http://" + ip + ":5678/message/messImage",
-            formData,
+  
+          const response = await fetch(`http://${ip}:5678/message/messImage`, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: `Bearer ${userData.token}`,
+            },
+          });
+  
+          if (!response.ok) {
+            throw new Error(`Error uploading image: HTTP status ${response.status}`);
+          }
+  
+          const responseData = await response.json();
+          
+          const dataSend = await axios.post(
+            "http://" + ip + ":5678/message/",
+            {
+              chatId: route.params._id,
+              ImageUrl: responseData,
+              typeMess: "Multimedia",
+            },
             {
               headers: {
-                "Content-Type": "multipart/form-data",
+                Authorization: `Bearer ${userData.token}`,
               },
             }
           );
-
-          const dataSend = await axios.post("http://" + ip + ":5678/message/", {
-            chatId: route.params._id,
-            content: response.data.url,
-            typeMess: "image",
-          });
-
-          if (!dataSend.ok) {
-            throw new Error(
-              `Error sending message: HTTP status ${dataSend.status}`
-            );
+  
+          if (!dataSend.data) {
+            throw new Error(`Error sending message: Empty response data`);
           }
-
-          const newMessage = await dataSend.json();
+  
+          const newMessage = dataSend.data;
           setMessages([...messages, newMessage]);
-          socket.emit("new message", dataSend.data);
+          socket.emit("new message", newMessage);
           socket.emit("render-box-chat", true);
         }
       }
     } catch (error) {
       console.error("Error:", error);
     }
-
+  
     setSelectedImage(null);
   };
+
+
 
   const sendMess = async () => {
     if (messages) {
@@ -197,6 +220,7 @@ const SendMessage = () => {
       }
     }
   };
+
 
   const handleGetidMessAndDelete = async (messId) => {
     try {
@@ -268,7 +292,7 @@ const SendMessage = () => {
                 item.ImageUrl.map((image, index) => (
                   <Image
                     key={index}
-                    style={styles.image}
+                    style={{ width: 150, height: 200, resizeMode: "contain" }}
                     source={{ uri: image.url }}
                   />
                 ))}
@@ -291,12 +315,21 @@ const SendMessage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        <TouchableOpacity onPress={handleGoBack}>
-          <Text>Trở về</Text>
-        </TouchableOpacity>
-        <View>
-          <Text>{route.params.chatName}</Text>
+        <View style={styles.headers}>
+          <TouchableOpacity onPress={handleGoBack} style={{ backgroundColor: "#3468DB", borderRadius: 10, padding: 10, alignItems: "center", }} >
+            {/* //Icon */}
+            <Text style={{ textAlign: "center", fontWeight: "bold", color: "#FFF" }}>Trở về</Text>
+          </TouchableOpacity>
+          <View style={{ padding: 10, marginRight: 10 }}>
+            <Text style={{ textAlign: "center", fontWeight: "bold", color: "#FFF", fontSize: 16 }}>{route.params.chatName}</Text>
+          </View>
+          <View>
+
+          </View>
         </View>
+        <TouchableOpacity onPress={handleScrollToBottom} style={hasNewMessage ? styles.scrollToBottomButton : styles.hidden}>
+          <Text style={styles.scrollToBottomText}>Cuộn xuống</Text>
+        </TouchableOpacity>
         <FlatList
           ref={flatListRef}
           data={messages}
@@ -330,6 +363,7 @@ const SendMessage = () => {
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
+
     </SafeAreaView>
   );
 };
@@ -384,8 +418,26 @@ const styles = StyleSheet.create({
     backgroundColor: "#E5E5EA",
   },
   image: {
-    width: 150,
-    height: 200,
+
+  },
+  headers: {
+    backgroundColor: "#3498DB",
+    flexDirection: "row",
+    height: 40,
+    justifyContent: "space-between", alignItems: "center"
+  }, scrollToBottomButton: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    backgroundColor: '#3498DB',
+    padding: 10,
+    borderRadius: 5,
+  },
+  scrollToBottomText: {
+    color: '#FFF',
+  },
+  hidden: {
+    display: 'none',
   },
   deleteButtonContainer: {
     position: "absolute",
