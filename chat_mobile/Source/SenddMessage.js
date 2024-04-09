@@ -13,11 +13,14 @@ import {
   Button,
   SafeAreaView,
   KeyboardAvoidingView,
+  Video
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
+import Icon from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from 'expo-document-picker';
 
 const socket = io("http://localhost:5678");
 const ip = "192.168.110.194";
@@ -44,6 +47,7 @@ const SendMessage = () => {
         const userDataString = await AsyncStorage.getItem("userData");
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
+        // setHasNewMessage(true);
       } catch (error) {
         console.log("Error fetching data:", error);
       }
@@ -65,7 +69,7 @@ const SendMessage = () => {
   const rerenderMessage = async () => {
     const userDataString = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(userDataString);
-
+    setUserData(userData)
     try {
       const response = await fetch(
         `http://${ip}:5678/message/${route.params._id}`,
@@ -85,17 +89,36 @@ const SendMessage = () => {
   };
   useEffect(() => {
     scrollTobottom();
-  }, [hasNewMessage]);
+  }, [messages, hasNewMessage]);
   useEffect(() => {
     rerenderMessage();
-    // setHasNewMessage(true);
-    setHasNewMessage(true)
-  }, [messages]);
+  }, [messages, hasNewMessage]);
   const handleScrollToBottom = () => {
     if (hasNewMessage) {
       scrollTobottom();
     }
   };
+
+  const pickFile = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        multiple: true,
+      });
+      if (!result.cancelled) {
+        let selectedDocuments = result.assets.map(doc => ({
+          uri: doc.uri,
+          fileName: doc.name,
+          type: doc.mimeType,
+        }));
+
+        console.log('Selected documents:', selectedDocuments);
+        sendMessImg(selectedDocuments);
+      }
+    } catch (error) {
+      // console.error("Error picking documents:", error);
+    }
+  };
+
   const pickImage = async () => {
     let permissionResult;
     if (Platform.OS !== "web") {
@@ -107,28 +130,37 @@ const SendMessage = () => {
     }
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
-          allowsMultipleSelection: true,
+        allowsMultipleSelection: true,
       });
       if (!result.cancelled) {
-          let selectedImages;
-          if (Array.isArray(result.assets)) {
-              selectedImages = result.assets.map(asset => ({
-                  uri: asset.uri,
-                  fileName: asset.fileName,
-              }));
-          } else {
-              selectedImages = [{
-                  uri: result.assets[0].uri,
-                  fileName: result.assets[0].fileName,
-              }];
-          }
-          sendMessImg(selectedImages);
+        let selectedImages;
+        if (result.assets && Array.isArray(result.assets)) {
+          selectedImages = result.assets.map(asset => ({
+            uri: asset.uri,
+            fileName: asset.fileName,
+          }));
+        }else if(result && Array.isArray(result) ){
+          selectedImages = result.map(asset => ({
+            uri: asset.uri,
+            fileName: asset.fileName,
+          }));
+        }else if(!result.assets && !Array.isArray(result.assets)){
+          selectedImages = [{
+            uri: result.uri,
+            fileName: result.fileName,
+          }];
+        }else {
+          selectedImages = [{
+            uri: result.asset[0].uri,
+            fileName: result.asset[0].fileName,
+          }];
+        }
+        sendMessImg(selectedImages);
       }
-  } catch (error) {
-      console.error("Error picking images:", error);
-  }
+    } catch (error) {
+      // console.error("Error picking images:", error);
+    }
   };
-
 
   const sendMessImg = async (selectedImages) => {
     try {
@@ -137,10 +169,10 @@ const SendMessage = () => {
           const formData = new FormData();
           formData.append("fileImage", {
             uri: uri.uri,
-            type: "image/jpeg",
+            // type: "image/jpeg",
             name: uri.fileName,
           });
-  
+
           const response = await fetch(`http://${ip}:5678/message/messImage`, {
             method: 'POST',
             body: formData,
@@ -149,13 +181,13 @@ const SendMessage = () => {
               Authorization: `Bearer ${userData.token}`,
             },
           });
-  
+
           if (!response.ok) {
             throw new Error(`Error uploading image: HTTP status ${response.status}`);
           }
-  
+
           const responseData = await response.json();
-          
+
           const dataSend = await axios.post(
             "http://" + ip + ":5678/message/",
             {
@@ -169,11 +201,11 @@ const SendMessage = () => {
               },
             }
           );
-  
+
           if (!dataSend.data) {
             throw new Error(`Error sending message: Empty response data`);
           }
-  
+
           const newMessage = dataSend.data;
           setMessages([...messages, newMessage]);
           socket.emit("new message", newMessage);
@@ -183,7 +215,7 @@ const SendMessage = () => {
     } catch (error) {
       console.error("Error:", error);
     }
-  
+
     setSelectedImage(null);
   };
 
@@ -249,7 +281,23 @@ const SendMessage = () => {
       console.log("Lỗi khi gửi yêu cầu xóa tin nhắn:", error);
     }
   };
+  const handleGetidMessAndReplaceToNone = async (id) => {
+    const userDataString = await AsyncStorage.getItem("userData");
+    const userData = JSON.parse(userDataString);
 
+    try {
+      await axios.post(`http://${ip}:5678/message/blankMess`, {
+        messId: id
+      }, {
+        headers: {
+          Authorization: `Bearer ${userData.token}`,
+        },
+      })
+    } catch (error) {
+      console.log(error);
+    }
+    // console.log(idUser);
+  }
   const handleLongPress = (messageId) => {
     setLongPressedMessageId(messageId);
   };
@@ -287,16 +335,42 @@ const SendMessage = () => {
             </Text>
           ) : (
             <View>
-              {item.ImageUrl &&
-                Array.isArray(item.ImageUrl) &&
-                item.ImageUrl.map((image, index) => (
-                  <Image
-                    key={index}
-                    style={{ width: 150, height: 200, resizeMode: "contain" }}
-                    source={{ uri: image.url }}
-                  />
-                ))}
+              {item.ImageUrl.map((item, index) => (
+                <View key={index} style={{ marginBottom: 10 }}>
+                  {item.url.endsWith('docx') &&
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071261/e8zf6xlepys4jevrmf7q.png" }} />
+                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
+                    </View>
+                  }
+                  {item.url.endsWith('xlsx') &&
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071046/covmtdumtqntlsvx9jyi.png" }} />
+                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
+                    </View>
+                  }
+                  {item.url.endsWith('pptx') &&
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070852/gocyslxocjixjrfzaszh.png" }} />
+                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
+                    </View>
+                  }
+                  {item.url.endsWith('pdf') &&
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070523/s5o96ckawemcfztbomuw.png" }} />
+                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
+                    </View>
+                  }
+                  {(item.url.endsWith('png') || item.url.endsWith('jpg') || item.url.endsWith('jpeg')) &&
+                    <Image style={{ width: 150, height: 200, resizeMode: 'contain' }} source={{ uri: item.url }} />
+                  }
+                  {item.url.endsWith('mp4') &&
+                    <Video source={{ uri: item.url }} style={{ width: 320, height: 300 }} controls={true} />
+                  }
+                </View>
+              ))}
             </View>
+
           )}
           {longPressedMessageId === item._id && (
             <View style={styles.deleteButtonContainer}>
@@ -305,8 +379,14 @@ const SendMessage = () => {
               >
                 <Text style={styles.deleteButton}>Xóa</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleGetidMessAndReplaceToNone(item._id)}
+              >
+                <Text style={styles.deleteButton}>Thu hồi</Text>
+              </TouchableOpacity>
             </View>
           )}
+
         </View>
       </TouchableOpacity>
     );
@@ -344,16 +424,13 @@ const SendMessage = () => {
             onChangeText={setText}
             placeholder="Nhập tin nhắn..."
           />
-          <View
-            style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-          >
-            <Button title="Chọn ảnh" onPress={pickImage} />
-            {selectedImage && (
-              <Button
-                title="Gửi ảnh"
-                onPress={() => sendMessImg(selectedImage)}
-              />
-            )}
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center", flexDirection: 'row' }}          >
+            <TouchableOpacity onPress={pickImage} style={styles.button}>
+              <Icon name="image-outline" size={24} color="white" />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={pickFile} style={styles.button}>
+              <Icon name="document-outline" size={24} color="white" />
+            </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={sendMess}>
             <Image
@@ -446,9 +523,20 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     padding: 5,
     borderRadius: 5,
+    margin: 10
+
   },
   deleteButton: {
     color: "white",
+    marginBottom: 10
+  },
+  button: {
+    backgroundColor: 'blue',
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 10,
+    alignItems: 'center',
+    marginBottom: 10
   },
 });
 
