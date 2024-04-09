@@ -19,6 +19,7 @@ import AddFriend from "./Source/AddFriend";
 import Friend from "./Source/Friend";
 import NewGroup from "./Source/NewGroup";
 import Resetpassword from "./Source/Resetpassword";
+import WebViewScreen from "./Source/WebViewScreen";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -37,6 +38,7 @@ export default function App() {
         <Stack.Screen name="Friend" component={Friend} />
         <Stack.Screen name="NewGroup" component={NewGroup} />
         <Stack.Screen name="Resetpassword" component={Resetpassword} />
+        <Stack.Screen name="WebViewScreen" component={WebViewScreen} />
         {/* <Stack.Screen name="Setting" component={Setting} /> */}
       </Stack.Navigator>
       <BottomNavigation />
@@ -63,7 +65,8 @@ function BottomNavigation() {
     currentScreen === "Resetpassword" ||
     currentScreen === "Resetpassword" ||
     currentScreen === "AddFriend" ||
-    currentScreen === "SenddMessage"
+    currentScreen === "SenddMessage" ||
+    currentScreen === "WebViewScreen"
   ) {
     return null; // Ẩn BottomNavigation khi ở màn hình UiLogin
   }

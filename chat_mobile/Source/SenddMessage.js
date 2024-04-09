@@ -13,7 +13,7 @@ import {
   Button,
   SafeAreaView,
   KeyboardAvoidingView,
-  Video
+  Pressable,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -21,6 +21,8 @@ import { io } from "socket.io-client";
 import Icon from 'react-native-vector-icons/Ionicons';
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from 'expo-document-picker';
+import Video from 'react-native-video';
+
 
 const socket = io("http://localhost:5678");
 const ip = "192.168.110.194";
@@ -131,6 +133,7 @@ const SendMessage = () => {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         allowsMultipleSelection: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
       });
       if (!result.cancelled) {
         let selectedImages;
@@ -139,17 +142,17 @@ const SendMessage = () => {
             uri: asset.uri,
             fileName: asset.fileName,
           }));
-        }else if(result && Array.isArray(result) ){
+        } else if (result && Array.isArray(result)) {
           selectedImages = result.map(asset => ({
             uri: asset.uri,
             fileName: asset.fileName,
           }));
-        }else if(!result.assets && !Array.isArray(result.assets)){
+        } else if (!result.assets && !Array.isArray(result.assets)) {
           selectedImages = [{
             uri: result.uri,
             fileName: result.fileName,
           }];
-        }else {
+        } else {
           selectedImages = [{
             uri: result.asset[0].uri,
             fileName: result.asset[0].fileName,
@@ -281,23 +284,44 @@ const SendMessage = () => {
       console.log("Lỗi khi gửi yêu cầu xóa tin nhắn:", error);
     }
   };
-  const handleGetidMessAndReplaceToNone = async (id) => {
-    const userDataString = await AsyncStorage.getItem("userData");
-    const userData = JSON.parse(userDataString);
-
+  const handleGetidMessAndReplaceToNone = async (messId) => {
     try {
-      await axios.post(`http://${ip}:5678/message/blankMess`, {
-        messId: id
-      }, {
-        headers: {
-          Authorization: `Bearer ${userData.token}`,
+      const userDataString = await AsyncStorage.getItem("userData");
+      const userData = JSON.parse(userDataString);
+
+      const response = await axios.post(
+        `http://${ip}:5678/message/blankMess`,
+        {
+          messId: messId,
         },
-      })
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Tin nhắn đã được thu hồi thành công");
+        rerenderMessage();
+      } else {
+        console.log("Có lỗi xảy ra khi thu hồi tin nhắn");
+      }
     } catch (error) {
-      console.log(error);
+      console.log("Lỗi khi gửi yêu cầu thu hồi tin nhắn:", error);
     }
-    // console.log(idUser);
-  }
+  };
+  const handleOpenWebView = (url) => {
+    console.log('====================================');
+    console.log(url);
+    console.log('====================================');
+    if (!url) {
+      return
+    } else {
+      navigation.navigate('WebViewScreen', { url: url });
+    }
+  };
+
   const handleLongPress = (messageId) => {
     setLongPressedMessageId(messageId);
   };
@@ -312,65 +336,98 @@ const SendMessage = () => {
     return (
       <TouchableOpacity
         onLongPress={() => handleLongPress(item._id)}
-        onPress={handleCancelLongPress}
+        onPress={() => {
+          if (!longPressedMessageId) {
+            handleOpenWebView(item.url);
+          }
+        }}
       >
         <View
           style={[
             styles.viewMess,
-            isCurrentUser
-              ? styles.viewMessCurrentUser
-              : styles.viewMessOtherUser,
+            isCurrentUser ? styles.viewMessCurrentUser : styles.viewMessOtherUser,
           ]}
         >
           {item.typeMess === "text" ? (
             <Text
               style={[
                 styles.textMess,
-                isCurrentUser
-                  ? styles.textMessCurrentUser
-                  : styles.textMessOtherUser,
+                isCurrentUser ? styles.textMessCurrentUser : styles.textMessOtherUser,
               ]}
             >
               {item.content}
             </Text>
           ) : (
             <View>
-              {item.ImageUrl.map((item, index) => (
+              {item.ImageUrl.map((imgItem, index) => (
                 <View key={index} style={{ marginBottom: 10 }}>
-                  {item.url.endsWith('docx') &&
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071261/e8zf6xlepys4jevrmf7q.png" }} />
-                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
-                    </View>
-                  }
-                  {item.url.endsWith('xlsx') &&
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071046/covmtdumtqntlsvx9jyi.png" }} />
-                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
-                    </View>
-                  }
-                  {item.url.endsWith('pptx') &&
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070852/gocyslxocjixjrfzaszh.png" }} />
-                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
-                    </View>
-                  }
-                  {item.url.endsWith('pdf') &&
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070523/s5o96ckawemcfztbomuw.png" }} />
-                      <Text style={{ marginLeft: 10 }}>{item.url.split('/')[3]}</Text>
-                    </View>
-                  }
-                  {(item.url.endsWith('png') || item.url.endsWith('jpg') || item.url.endsWith('jpeg')) &&
-                    <Image style={{ width: 150, height: 200, resizeMode: 'contain' }} source={{ uri: item.url }} />
-                  }
-                  {item.url.endsWith('mp4') &&
-                    <Video source={{ uri: item.url }} style={{ width: 320, height: 300 }} controls={true} />
-                  }
+                  {imgItem.url.endsWith('.docx') && (
+                    <Pressable
+                      onPress={() => handleOpenWebView(imgItem.url)}
+                      android_ripple={{ color: 'transparent' }}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071261/e8zf6xlepys4jevrmf7q.png" }} />
+                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      </View>
+                    </Pressable>
+                  )}
+                  {imgItem.url.endsWith('.xlsx') && (
+                    <Pressable
+                      onPress={() => handleOpenWebView(imgItem.url)}
+                      android_ripple={{ color: 'transparent' }}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071046/covmtdumtqntlsvx9jyi.png" }} />
+                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      </View>
+                    </Pressable>
+                  )}
+                  {imgItem.url.endsWith('.pptx') && (
+                    <Pressable
+                      onPress={() => handleOpenWebView(imgItem.url)}
+                      android_ripple={{ color: 'transparent' }}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070852/gocyslxocjixjrfzaszh.png" }} />
+                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      </View>
+                    </Pressable>
+                  )}
+                  {imgItem.url.endsWith('.pdf') && (
+                    <Pressable
+                      onPress={() => handleOpenWebView(imgItem.url)}
+                      android_ripple={{ color: 'transparent' }}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070523/s5o96ckawemcfztbomuw.png" }} />
+                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      </View>
+                    </Pressable>
+                  )}
+                  {(imgItem.url.endsWith('.png') || imgItem.url.endsWith('.jpg') || imgItem.url.endsWith('.jpeg')) && (
+                    <Pressable
+                      onPress={() => handleOpenWebView(imgItem.url)}
+                      android_ripple={{ color: 'transparent' }}
+                    >
+                      <Image style={{ width: 150, height: 200, resizeMode: 'contain' }} source={{ uri: imgItem.url }} />
+                    </Pressable>
+                  )}
+                  {imgItem.url.endsWith('.mp4') && (
+                    <Pressable
+                      onPress={() => handleOpenWebView(imgItem.url)}
+                      android_ripple={{ color: 'transparent' }}
+                    >
+                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Icon name="play-circle-outline" size={50} color="#000" />
+                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      </View>
+                    </Pressable>
+                  )}
                 </View>
+
               ))}
             </View>
-
           )}
           {longPressedMessageId === item._id && (
             <View style={styles.deleteButtonContainer}>
@@ -384,14 +441,22 @@ const SendMessage = () => {
               >
                 <Text style={styles.deleteButton}>Thu hồi</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleOpenWebView(item.url)}
+              >
+                <Text style={styles.deleteButton}>Xem</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => handleCancelLongPress()}
+              >
+                <Text style={styles.deleteButton}>Hủy</Text>
+              </TouchableOpacity>
             </View>
           )}
-
         </View>
       </TouchableOpacity>
     );
-  };
-
+  }
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
@@ -424,19 +489,16 @@ const SendMessage = () => {
             onChangeText={setText}
             placeholder="Nhập tin nhắn..."
           />
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center", flexDirection: 'row' }}          >
+          <View style={{ alignItems: "", justifyContent: "center", flexDirection: 'row' }}          >
             <TouchableOpacity onPress={pickImage} style={styles.button}>
-              <Icon name="image-outline" size={24} color="white" />
+              <Icon name="image-outline" size={20} color="white" style={styles.sendIcon} />
             </TouchableOpacity>
             <TouchableOpacity onPress={pickFile} style={styles.button}>
-              <Icon name="document-outline" size={24} color="white" />
+              <Icon name="document-outline" size={20} color="white" style={styles.sendIcon} />
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={sendMess}>
-            <Image
-              source={require("../assets/zalo.png")}
-              style={styles.sendIcon}
-            />
+            <Icon name="send" size={24} color="#000" style={styles.sendIcon} />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -523,7 +585,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)",
     padding: 5,
     borderRadius: 5,
-    margin: 10
+    margin: 10,
+    marginRight: 10
 
   },
   deleteButton: {
@@ -532,11 +595,17 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'blue',
-    padding: 10,
+    padding: 5,
     borderRadius: 5,
     marginVertical: 10,
     alignItems: 'center',
-    marginBottom: 10
+    marginBottom: 10, top: 0,
+    marginLeft: 5,
+    marginRight: 10
+  }, sendIcon: {
+    alignSelf: 'center', // Để icon nằm giữa theo chiều dọc
+    justifyContent: 'center', // Để icon nằm giữa theo chiều ngang
+    paddingHorizontal: 10, // Để tạo ra một khoảng trống xung quanh icon (tùy chỉnh theo nhu cầu của bạn)
   },
 });
 
