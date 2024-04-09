@@ -26,34 +26,36 @@ export default function Phonebook() {
   const [selectedChar, setSelectedChar] = useState(null);
   const [showCharBar, setShowCharBar] = useState(true);
   const [dataChatBox, setDataChatBox] = useState([]);
+  const [usersData, setUsersData] = useState([]);
   const [users, setUsers] = useState([]);
   const [usersNotFriend, setUsersNotFriend] = useState([]);
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const userDataString = await AsyncStorage.getItem("userData");
-        const userData = JSON.parse(userDataString);
-        setUsers([]);
-
+        const userDataObject = JSON.parse(userDataString);
         const response = await axios.get("http://" + ip + ":5678/chat/", {
           headers: {
-            Authorization: `Bearer ${userData.token}`,
+            Authorization: `Bearer ${userDataObject.token}`,
           },
         });
         setDataChatBox(response.data);
+        socket.emit("render-box-chat", true);
+        // console.log(response.data)
       } catch (error) {
         console.log("Error fetching data:", error);
       }
     };
     fetchData();
-  }, []);
+  }, [dataChatBox]);
 
   useEffect(() => {
     const getUser = async () => {
       const userDataString = await AsyncStorage.getItem("userData");
       const userData = JSON.parse(userDataString);
-      setUsers([]);
+      setUsersData(userData);
       const dataUser = await axios.post(
         `http://${ip}:5678/user/getUserAccept`,
         {
@@ -70,7 +72,28 @@ export default function Phonebook() {
     };
     getUser();
   }, []);
-
+  const accessChatOneToOne = async (item) => {
+    const userDataString = await AsyncStorage.getItem("userData");
+    const userData = JSON.parse(userDataString);
+    try {
+      const respone = await axios.post(
+        "http://" + ip + ":5678/chat/",
+        {
+          userId: item._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          }
+        }
+      );
+      console.log(respone.data);
+      // Chuyển hướng tới màn hình SendMessage với thông tin của cuộc trò chuyện vừa tạo
+      navigation.navigate('SenddMessage', { chatId: respone.data._id, userName: respone.data.users[1].name });
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const handlePress = (form) => {
     setActiveForm(form);
     setActiveForm1(form);
@@ -81,13 +104,18 @@ export default function Phonebook() {
     const navigation = useNavigation();
 
     const handlePress = () => {
-      navigation.navigate("SenddMessage", props);
+      accessChatOneToOne(props);
+      // navigation.navigate("SenddMessage", props);
     };
 
     return (
       <TouchableOpacity onPress={handlePress} key={props.id}>
-        <Text style={{ fontSize: 20 }}>{props.name[0]}</Text>
-        <Text style={{ fontSize: 16, fontWeight: "bold" }}>{props.name}</Text>
+        <View style={{ flexDirection: "row", alignItems: "center", margin: 4 }}>
+          <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: "#1E90FF", justifyContent: "center", alignItems: "center" }}>
+            <Text style={{ fontSize: 24, color: "white" }}>{props.name.charAt(0)}</Text>
+          </View>
+          <Text style={{ fontSize: 20, color: "gray", fontWeight: "bold", marginLeft: 20 }}>{props.name}</Text>
+        </View>
       </TouchableOpacity>
     );
   };
@@ -101,26 +129,26 @@ export default function Phonebook() {
         {(formToShow === "friend" ||
           formToShow1 === "all" ||
           formToShow1 === "recent") && (
-          <View style={styles.tabContainer}>
-            <Pressable onPress={() => navigation.navigate("Friend")}>
-              <View style={styles.tabItem}>
-                <View style={{ marginLeft: 15 }}>
-                  <FontAwesome5 name="user-friends" size={24} color="black" />
+            <View style={styles.tabContainer}>
+              <Pressable onPress={() => navigation.navigate("Friend")}>
+                <View style={styles.tabItem}>
+                  <View style={{ marginLeft: 15 }}>
+                    <FontAwesome5 name="user-friends" size={24} color="black" />
+                  </View>
+                  <Text style={styles.tabText}>Lời mời kết bạn</Text>
                 </View>
-                <Text style={styles.tabText}>Lời mời kết bạn</Text>
+              </Pressable>
+              <View style={styles.tabItem}>
+                <Text style={{ fontSize: 17 }}>Danh sách bạn bè</Text>
               </View>
-            </Pressable>
-            <View style={styles.tabItem}>
-              <Text style={{fontSize:17}}>Danh sách bạn bè</Text>
+
+              <View style={{ flexDirection: "column" }}>
+                {users.map((item, index) => (
+                  <MessageItem {...item} key={item.id || index.toString()} />
+                ))}
+              </View>
             </View>
-            
-            <View style={{ flexDirection: "column" }}>
-              {users.map((item, index) => (
-                <MessageItem {...item} key={item.id || index.toString()} />
-              ))}
-            </View>
-          </View>
-        )}
+          )}
         {formToShow === "group" && (
           <View style={{}}>
             <View style={styles.tabContainer2}>
