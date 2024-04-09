@@ -1,6 +1,8 @@
 import axios from 'axios'
 import React, { useContext, useRef } from 'react'
 import { myContext } from '../Component/MainComponent'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import UndoIcon from '@mui/icons-material/Undo';
 
 function MyMessageConponent({ props }) {
     const refBox = useRef(null)
@@ -122,8 +124,13 @@ function MyMessageConponent({ props }) {
 
             <div className="my-message-row">
                 <div className='hidden-form'>
-                    <button onClick={handleGetidMessAndReplaceToNone}>Thu Hồi</button>
-                    <button onClick={handleGetidMessAndDelete}>Xóa</button>
+                    <button className='hidden-button' onClick={handleGetidMessAndReplaceToNone}>
+                        <UndoIcon className='icon3'></UndoIcon>Thu Hồi
+                    </button>
+                    <br />
+                    <button className='hidden-button' onClick={handleGetidMessAndDelete}>
+                        <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>Xóa
+                    </button>
                 </div>
                 {
 
