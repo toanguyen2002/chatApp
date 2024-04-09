@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
@@ -14,14 +15,13 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import axios from "axios";
-import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { io } from "socket.io-client";
 import * as ImagePicker from "expo-image-picker";
 
 const socket = io("http://localhost:5678");
 const ip = "192.168.1.6";
+
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -29,6 +29,7 @@ const SendMessage = () => {
   const route = useRoute();
   const flatListRef = useRef(null);
   const [userData, setUserData] = useState(null);
+  const [longPressedMessageId, setLongPressedMessageId] = useState(null);
 
   //chọn ảnh
   const [selectedImage, setSelectedImage] = useState(null);
@@ -37,6 +38,7 @@ const SendMessage = () => {
   const handleGoBack = () => {
     navigation.goBack();
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,14 +51,10 @@ const SendMessage = () => {
     };
     fetchData();
     socket.emit("setup", userData);
-    socket.on("connect", () => {
-      // socket.on("disconnect", () => {
-      //     console.log("mess", socket);
-      //     console.log(`Socket disconnected: ${socket.id}`);
-      // });
-    });
+    socket.on("connect", () => {});
     socket.emit("render-box-chat", true);
   }, []);
+
   const scrollTobottom = () => {
     if (flatListRef.current) {
       flatListRef.current.scrollToEnd({ animated: true });
@@ -66,8 +64,7 @@ const SendMessage = () => {
   const rerenderMessage = async () => {
     const userDataString = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(userDataString);
-    setUserData(userData);
-    //
+
     try {
       const response = await fetch(
         `http://${ip}:5678/message/${route.params._id}`,
@@ -81,8 +78,12 @@ const SendMessage = () => {
       );
       const responseData = await response.json();
 
+      const updatedMessages = responseData.filter(
+        (message) => message._id !== longPressedMessageId
+      );
+
       scrollTobottom();
-      setMessages(responseData);
+      setMessages(updatedMessages);
     } catch (error) {
       console.log(error);
     }
@@ -108,12 +109,11 @@ const SendMessage = () => {
 
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        allowsMultipleSelection: true, // Cho phép chọn nhiều ảnh
+        allowsMultipleSelection: true,
       });
       if (!result.cancelled) {
-        // Nếu người dùng đã chọn ảnh
-        const selectedImages = result.uri; // Mảng các uri của ảnh đã chọn
-        sendMessImg(selectedImages); // Gửi mảng ảnh đã chọn
+        const selectedImages = result.uri;
+        sendMessImg(selectedImages);
       }
     } catch (error) {
       console.error("Error picking images:", error);
@@ -122,18 +122,15 @@ const SendMessage = () => {
 
   const sendMessImg = async (selectedImages) => {
     try {
-      // Lặp qua mỗi ảnh đã chọn để gửi
       for (const uri of selectedImages) {
         if (uri) {
-          // Kiểm tra xem URI có tồn tại không
           const formData = new FormData();
           formData.append("fileImage", {
             uri,
             type: "image/jpeg",
             name: "photo.jpg",
-          }); // Thêm ảnh vào formData
+          });
 
-          // Gửi formData chứa ảnh
           const response = await axios.post(
             "http://" + ip + ":5678/message/messImage",
             formData,
@@ -144,7 +141,6 @@ const SendMessage = () => {
             }
           );
 
-          // Gửi thông tin tin nhắn (link ảnh) tới server
           const dataSend = await axios.post("http://" + ip + ":5678/message/", {
             chatId: route.params._id,
             content: response.data.url,
@@ -157,7 +153,6 @@ const SendMessage = () => {
             );
           }
 
-          // Cập nhật danh sách tin nhắn
           const newMessage = await dataSend.json();
           setMessages([...messages, newMessage]);
           socket.emit("new message", dataSend.data);
@@ -168,7 +163,6 @@ const SendMessage = () => {
       console.error("Error:", error);
     }
 
-    // Sau khi gửi xong, reset selectedImage về null
     setSelectedImage(null);
   };
 
@@ -176,7 +170,6 @@ const SendMessage = () => {
     if (messages) {
       try {
         if (selectedImage) {
-          // Nếu đã chọn ảnh, gửi ảnh đi
           sendMessImg(selectedImage);
         } else {
           const dataSend = await axios.post(
@@ -205,39 +198,93 @@ const SendMessage = () => {
     }
   };
 
+  const handleGetidMessAndDelete = async (messId) => {
+    try {
+      const userDataString = await AsyncStorage.getItem("userData");
+      const userData = JSON.parse(userDataString);
+
+      const response = await axios.post(
+        `http://${ip}:5678/message/deleteMess`,
+        {
+          messId: messId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData && userData.token}`,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Tin nhắn đã được xóa thành công");
+        rerenderMessage();
+      } else {
+        console.log("Có lỗi xảy ra khi xóa tin nhắn");
+      }
+    } catch (error) {
+      console.log("Lỗi khi gửi yêu cầu xóa tin nhắn:", error);
+    }
+  };
+
+  const handleLongPress = (messageId) => {
+    setLongPressedMessageId(messageId);
+  };
+
+  const handleCancelLongPress = () => {
+    setLongPressedMessageId(null);
+  };
+
   const renderItem = ({ item }) => {
     const isCurrentUser = item.sender._id === userData._id;
-  
+
     return (
-      <View
-        style={[
-          styles.viewMess,
-          isCurrentUser ? styles.viewMessCurrentUser : styles.viewMessOtherUser,
-        ]}
+      <TouchableOpacity
+        onLongPress={() => handleLongPress(item._id)}
+        onPress={handleCancelLongPress}
       >
-        {item.typeMess === "text" ? (
-          <Text
-            style={[
-              styles.textMess,
-              isCurrentUser
-                ? styles.textMessCurrentUser
-                : styles.textMessOtherUser,
-            ]}
-          >
-            {item.content}
-          </Text>
-        ) : (
-          <View>
-            {item.ImageUrl && Array.isArray(item.ImageUrl) && item.ImageUrl.map((image, index) => (
-              <Image
-                key={index}
-                style={styles.image}
-                source={{ uri: image.url }}
-              />
-            ))}
-          </View>
-        )}
-      </View>
+        <View
+          style={[
+            styles.viewMess,
+            isCurrentUser
+              ? styles.viewMessCurrentUser
+              : styles.viewMessOtherUser,
+          ]}
+        >
+          {item.typeMess === "text" ? (
+            <Text
+              style={[
+                styles.textMess,
+                isCurrentUser
+                  ? styles.textMessCurrentUser
+                  : styles.textMessOtherUser,
+              ]}
+            >
+              {item.content}
+            </Text>
+          ) : (
+            <View>
+              {item.ImageUrl &&
+                Array.isArray(item.ImageUrl) &&
+                item.ImageUrl.map((image, index) => (
+                  <Image
+                    key={index}
+                    style={styles.image}
+                    source={{ uri: image.url }}
+                  />
+                ))}
+            </View>
+          )}
+          {longPressedMessageId === item._id && (
+            <View style={styles.deleteButtonContainer}>
+              <TouchableOpacity
+                onPress={() => handleGetidMessAndDelete(item._id)}
+              >
+                <Text style={styles.deleteButton}>Xóa</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -245,7 +292,6 @@ const SendMessage = () => {
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <TouchableOpacity onPress={handleGoBack}>
-          {/* //Icon */}
           <Text>Trở về</Text>
         </TouchableOpacity>
         <View>
@@ -255,7 +301,7 @@ const SendMessage = () => {
           ref={flatListRef}
           data={messages}
           renderItem={renderItem}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => item._id}
           style={styles.messagesList}
         />
         <View style={styles.footer}>
@@ -265,25 +311,17 @@ const SendMessage = () => {
             onChangeText={setText}
             placeholder="Nhập tin nhắn..."
           />
-
-          {/* <TouchableOpacity onPress={}>
-          <FontAwesome name="send" size={24} color="black" />
-
-        
-        </TouchableOpacity> */}
           <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
+            <Button title="Chọn ảnh" onPress={pickImage} />
             {selectedImage && (
-              <Image
-                source={{ uri: selectedImage }}
-                style={{ width: 10, height: 10, resizeMode: "contain" }}
+              <Button
+                title="Gửi ảnh"
+                onPress={() => sendMessImg(selectedImage)}
               />
             )}
-            <Button title="Chọn ảnh" onPress={pickImage} />
-            {selectedImage && <Button title="Gửi ảnh" onPress={() => sendMessImg(selectedImage)} />}
           </View>
-
           <TouchableOpacity onPress={sendMess}>
             <Image
               source={require("../assets/zalo.png")}
@@ -323,6 +361,7 @@ const styles = StyleSheet.create({
   },
   viewMess: {
     marginBottom: 20,
+    position: "relative",
   },
   viewMessCurrentUser: {
     flex: 1,
@@ -347,6 +386,17 @@ const styles = StyleSheet.create({
   image: {
     width: 150,
     height: 200,
+  },
+  deleteButtonContainer: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    padding: 5,
+    borderRadius: 5,
+  },
+  deleteButton: {
+    color: "white",
   },
 });
 
