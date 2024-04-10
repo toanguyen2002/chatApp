@@ -10,13 +10,16 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import ErrorModal from "./modal/ErrorModalLogin";
 import axios from "axios";
-
+import { useEffect } from "react";
+const ip = "192.168.110.194";
 const UiLogin = ({ navigation }) => {
   const [data, setData] = useState({ name: "admin3", password: "123" });
   const [errorModalVisible, setErrorModalVisible] = useState(false);
+
   const handleLogin = async () => {
     try {
-      const response = await fetch("http://192.168.0.241:5678/user/login", {
+      const response = await fetch("http://"+ip+":5678/user/login", {
+
         method: "POST",
         headers: {
           Accept: "application/json",

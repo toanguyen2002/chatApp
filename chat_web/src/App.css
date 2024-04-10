@@ -20,13 +20,14 @@
 }
 
 .get-users-modal {
+  z-index: 1000;
   position: absolute;
   width: 350px;
   width: 350px;
   width: 600px;
   height: 500px;
-  left: 50%;
-  top: 25%;
+  left: 40%;
+  top: 10%;
   overflow: scroll;
   border-radius: 0px;
   border: 1px solid black;
@@ -501,11 +502,25 @@
 
 .hidden-form {
   position: absolute;
-  left: 0;
-  bottom: -15px;
+  left: -100px;
+  bottom: -10px;
   display: none;
+  z-index: 1000;
+  background-color: white;
+  width: 100px;
+  height: max-content;
+  border-radius: 5px;
+  color: #FF0000;
 }
-
+.hidden-button{
+  background-color: white;
+  border: none;
+  color: #FF0000;
+  position: relative;
+  left: 15px;
+  z-index: 1000;
+  font-family: Arial, Helvetica, sans-serif;
+}
 .my-message-row:hover .hidden-form {
   display: block;
   cursor: pointer;
@@ -546,8 +561,8 @@
 }
 .modal-bottom{
   background-color: white;
-  width: 300px;
-  height: 300px;
+  width: 450px;
+  height: 350px;
   position: relative;
   border: 2px solid #000;
   box-shadow: 24px;
@@ -562,7 +577,7 @@
   height: 100vh;
   background-position: center;
   background-size: cover;
-  width: 300px;
+  width: 450px;
   height: 100px;
 
 }
@@ -590,7 +605,7 @@
 }
 
 .modal-body-email {
-  margin-top: 5px;
+  margin-top: 15px;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -610,6 +625,7 @@
 .modal-footer>a {
 
   color: black;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 .reset-Container {
@@ -706,7 +722,7 @@ input[type="file"] {
 .iconColor2 {
   color: white;
   position: relative;
-  left: 250px;
+  left: 400px;
 
 }
 
@@ -852,12 +868,18 @@ input[type="file"] {
   width: 130px;
   height: 25px;
   font-size: 15px;
+  resize: none;
 }
 
 .emoji-form {
   position: absolute;
   top: 43%;
   right: 0;
+}
+.icon3{
+  position: relative;
+  right: 5px;
+  top: 5px;
 }
 
 /* 2/4/2024 */
