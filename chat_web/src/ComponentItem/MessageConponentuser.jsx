@@ -50,6 +50,7 @@ function MyMessageConponent({ props }) {
                 </div>
             )
         }
+
         else {
             if (props.typeMess === 'text') {
                 return (
@@ -57,6 +58,13 @@ function MyMessageConponent({ props }) {
                         <div className='text-content'>
                             <p className='chat-title'>{props.content}</p>
                         </div>
+                    </div>
+                );
+            }
+            else if (props.typeMess === 'videoCall') {
+                return (
+                    <div className='text-content'>
+                        <a href={props.content} className='chat-title'>Click To Join</a>
                     </div>
                 );
             }

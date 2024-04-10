@@ -21,6 +21,13 @@ function MessageComponent({ props }) {
                     </div>
                 );
             }
+            else if (props.typeMess === 'videoCall') {
+                return (
+                    <div className='text-content'>
+                        <a href={props.content} className='chat-title'>Click To Join</a>
+                    </div>
+                );
+            }
             else {
                 return (
                     <div className='img-box' ref={refBox}>

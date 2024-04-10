@@ -14,8 +14,11 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Picker from 'emoji-picker-react';
 
 
+
 var socket = io("http://localhost:5678")
+
 export default function ChatAreaComponent() {
+    // const navigate = useNA
     const [contentMess, setContentMess] = useState('')
     const [mess, setMess] = useState([])
     const { refresh, setRefresh } = useContext(myContext)
@@ -31,17 +34,28 @@ export default function ChatAreaComponent() {
     const [scrollExecuted, setScrollExecuted] = useState(false);
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
-    var emojiArray = []
+    //call video
+    // const [stream, setStream] = useState();
+    // const [reciverCall, setReciverCall] = useState();
+    // const [name, setName] = useState();
+    // const [callAccepted, setCallAccepted] = useState(false)
+    // const [callEnd, setCallEnd] = useState(false)
+    // const [callerSignal, setCallerSignal] = useState();
+    // const [caller, setCaller] = useState();
+    // const myVideo = useRef()
+    // const userVideo = useRef()
+    // const connectionRef = useRef()
+
+
+
     const selectEmojiIcon = (emojiObject) => {
         const emoji = emojiObject.emoji
-        emojiArray.push(emoji)
-        setContentMess(...emoji)
+        setContentMess(contentMess + emoji)
     }
 
     //chạy xuống bottom mỗi khi có tin nhắn mới
     useEffect(() => {
         setObjectChat(chat_id)
-
     }, [chat_id])
 
     //ket noi socket
@@ -63,9 +77,8 @@ export default function ChatAreaComponent() {
                 }
             })
             setTimeout(() => {
-                // setMess([])
                 setMess(dataMessage.data)
-            }, 1000)
+            }, 1500)
         }
         catch (error) {
             console.log(error);
@@ -73,7 +86,7 @@ export default function ChatAreaComponent() {
     }
     useEffect(() => {
         renderChat()
-        messageEndRef.current.scrollIntoView({ behavior: "auto", block: "end", inline: "nearest" })
+
     }, [objectChat, mess, refresh, socket])
 
     // useEffect(() => {
@@ -150,7 +163,7 @@ export default function ChatAreaComponent() {
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
-                    chatId: objectChat,
+                    chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
                 },
@@ -163,9 +176,9 @@ export default function ChatAreaComponent() {
                 socket.emit("new message", dataSend.data)
                 socket.emit("render-box-chat", true)
 
-                setMess([...mess, dataSend.data])
+                // setMess([...mess, dataSend.data])
                 setContentMess("")
-                setRenderMess(!renderMess)
+                // setRenderMess(!renderMess)
             } catch (error) {
                 console.log(error);
             }
@@ -179,7 +192,7 @@ export default function ChatAreaComponent() {
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
-                    chatId: objectChat,
+                    chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
                 },
@@ -193,7 +206,7 @@ export default function ChatAreaComponent() {
                 socket.emit("render-box-chat", true)
 
                 setMess([...mess, dataSend.data])
-                setRenderMess(!renderMess)
+                // setRenderMess(!renderMess)
                 setContentMess("")
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
@@ -204,6 +217,53 @@ export default function ChatAreaComponent() {
 
     }
 
+    useEffect(() => {
+        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+            .then((stream) => {
+                setStream(stream)
+                myVideo.current.srcObject = stream
+            })
+        socket.on("callUser", (data) => {
+            setReciverCall(true)
+            setCaller(data.from)
+            setName(data.name)
+            setCallerSignal(data.signal)
+
+        })
+    }, [])
+    const callUser = async (id) => {
+        window.open(`http://localhost:5173/room/${id}`)
+        try {
+            const dataSend = await axios.post(
+                "http://localhost:5678/message/", {
+                chatId: objectChat,
+                content: `http://localhost:5173/room/${id}`,
+                typeMess: "videoCall"
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userData.data.token}`,
+                    }
+                }
+            )
+            socket.emit("new message", dataSend.data)
+            socket.emit("render-box-chat", true)
+        } catch (error) {
+            console.log(error);
+        }
+        // const peer = new RTCPeerConnection()
+        // console.log(peer);
+
+        // const localStream = navigator.mediaDevices.getUserMedia({video:true,audio:false})
+    }
+
+    const answerCall = () => {
+
+
+    }
+    const leaveCall = () => {
+
+    }
 
     return (
         <><Backdrop open={loading}
@@ -220,7 +280,7 @@ export default function ChatAreaComponent() {
                         <div className="online">online</div>
                         {/* <p className='chat-time'>{data.timeSend}</p> */}
                     </div>
-                    <IconButton onClick={() => console.log(chat_id)}>
+                    <IconButton onClick={() => callUser(chat_id)}>
                         <VideocamIcon />
                     </IconButton>
                     <IconButton onClick={() => console.log(chat_id)}>
@@ -231,10 +291,13 @@ export default function ChatAreaComponent() {
                     {mess.map((item, index) => {
                         if (item.sender._id != userData.data._id) {
                             return <MessageComponent props={item} key={index} />
-
                         }
                         else
-                            return <MyMessageConponent props={item} key={index} />
+                            if (item.removeWitMe == true) {
+                                return <></>
+                            } else {
+                                return <MyMessageConponent props={item} key={index} />
+                            }
 
                     })}
                     {/* <div>a</div> */}
@@ -245,11 +308,6 @@ export default function ChatAreaComponent() {
                 {/* <div className="" ref={messageEndRef}></div> */}
 
                 <div className='emoji-form'>
-                    {/* {contentMess ? (
-                        <span>You chose: {contentMess.emoji}</span>
-                    ) : (
-                        <span>No emoji Chosen</span>
-                    )} */}
                     <Picker open={showFormEmoji} onEmojiClick={selectEmojiIcon} />
                 </div>
                 <div className="chat-area-footer">
