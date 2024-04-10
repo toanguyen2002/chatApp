@@ -13,7 +13,7 @@ const { protect } = require("../middleware/auth")
 router.route("/:chatId").get(protect, allMessages)
 router.route("/").post(protect, sendMessage)
 router.route("/blankMess").post(protect, blacnkMess)
-router.route("/deleteMess").post(protect, deleteMess)
+router.route("/removeMess").post(protect, deleteMess)
 router.post("/messImage", upload.single("fileImage"), sendMessImage)
 
 

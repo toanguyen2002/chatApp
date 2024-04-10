@@ -114,8 +114,11 @@ const blacnkMess = expressAsyncHandler(async (req, res) => {
 })
 const deleteMess = expressAsyncHandler(async (req, res) => {
     const { messId } = req.body;
-    const result = await Message.deleteOne({ _id: messId });
+    const result = await Message.findByIdAndUpdate(messId, { removeWitMe: true });
     res.json(result);
+})
+const getUserFromGroupChat = expressAsyncHandler(async (req, res) => {
+
 })
 
 module.exports = {

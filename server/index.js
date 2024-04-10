@@ -72,12 +72,21 @@ io.on("connection", (socket) => {
 
     // })
     //})
-    socket.on("demo", (data) => {
-        console.log(data.mes);
-        socket.broadcast.emit("demo-rcv", data)
+    // socket.on("demo", (data) => {
+    //     console.log(data.mes);
+    //     socket.broadcast.emit("demo-rcv", data)
 
+    // })
+
+    socket.on("CallUser", (data) => {
+        console.log(data);
+        io.to(data.UserCall).emit("CallUser", { signal: data.signalData, from: data.from, name: data.name })
     })
 
+    socket.on("answerCall", (data) => {
+        io.to(data.to)
+            .emit("callAccept", data.signal)
+    })
     socket.on("new-group", (data) => {
         console.log(data);
         socket.broadcast.emit("group-rcv", data)

@@ -20,12 +20,16 @@ const messageEntity = mongooes.Schema({
     ImageUrl: {
         type: Array
     },
+    removeWitMe: {
+        type: Boolean,
+        default: false
+    },
     typeMess: {
         type: String
-    }, dateSend: {
+    },
+    dateSend: {
         type: Date,
         default: Date.now
-
     }
 }, {
     TimeStamp: true

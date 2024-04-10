@@ -12,11 +12,13 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Picker from 'emoji-picker-react';
-import Peer from 'simple-peer'
+
 
 
 var socket = io("http://localhost:5678")
+
 export default function ChatAreaComponent() {
+    // const navigate = useNA
     const [contentMess, setContentMess] = useState('')
     const [mess, setMess] = useState([])
     const { refresh, setRefresh } = useContext(myContext)
@@ -33,16 +35,16 @@ export default function ChatAreaComponent() {
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
     //call video
-    const [stream, setStream] = useState();
-    const [reciverCall, setReciverCall] = useState();
-    const [name, setName] = useState();
-    const [callAccepted, setCallAccepted] = useState(false)
-    const [callEnd, setCallEnd] = useState(false)
-    const [callerSignal, setCallerSignal] = useState();
-    const [caller, setCaller] = useState();
-    const myVideo = useRef()
-    const userVideo = useRef()
-    const connectionRef = useRef()
+    // const [stream, setStream] = useState();
+    // const [reciverCall, setReciverCall] = useState();
+    // const [name, setName] = useState();
+    // const [callAccepted, setCallAccepted] = useState(false)
+    // const [callEnd, setCallEnd] = useState(false)
+    // const [callerSignal, setCallerSignal] = useState();
+    // const [caller, setCaller] = useState();
+    // const myVideo = useRef()
+    // const userVideo = useRef()
+    // const connectionRef = useRef()
 
 
 
@@ -54,7 +56,6 @@ export default function ChatAreaComponent() {
     //chạy xuống bottom mỗi khi có tin nhắn mới
     useEffect(() => {
         setObjectChat(chat_id)
-
     }, [chat_id])
 
     //ket noi socket
@@ -76,9 +77,8 @@ export default function ChatAreaComponent() {
                 }
             })
             setTimeout(() => {
-                // setMess([])
                 setMess(dataMessage.data)
-            }, 1000)
+            }, 1500)
         }
         catch (error) {
             console.log(error);
@@ -86,7 +86,7 @@ export default function ChatAreaComponent() {
     }
     useEffect(() => {
         renderChat()
-        messageEndRef.current.scrollIntoView({ behavior: "auto", block: "end", inline: "nearest" })
+
     }, [objectChat, mess, refresh, socket])
 
     // useEffect(() => {
@@ -163,7 +163,7 @@ export default function ChatAreaComponent() {
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
-                    chatId: objectChat,
+                    chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
                 },
@@ -176,9 +176,9 @@ export default function ChatAreaComponent() {
                 socket.emit("new message", dataSend.data)
                 socket.emit("render-box-chat", true)
 
-                setMess([...mess, dataSend.data])
+                // setMess([...mess, dataSend.data])
                 setContentMess("")
-                setRenderMess(!renderMess)
+                // setRenderMess(!renderMess)
             } catch (error) {
                 console.log(error);
             }
@@ -192,7 +192,7 @@ export default function ChatAreaComponent() {
             try {
                 const dataSend = await axios.post(
                     "http://localhost:5678/message/", {
-                    chatId: objectChat,
+                    chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
                 },
@@ -206,7 +206,7 @@ export default function ChatAreaComponent() {
                 socket.emit("render-box-chat", true)
 
                 setMess([...mess, dataSend.data])
-                setRenderMess(!renderMess)
+                // setRenderMess(!renderMess)
                 setContentMess("")
                 messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
             } catch (error) {
@@ -231,53 +231,38 @@ export default function ChatAreaComponent() {
 
         })
     }, [])
-    const callUser = (id) => {
-        const peer = new Peer()
+    const callUser = async (id) => {
+        window.open(`http://localhost:5173/room/${id}`)
+        try {
+            const dataSend = await axios.post(
+                "http://localhost:5678/message/", {
+                chatId: objectChat,
+                content: `http://localhost:5173/room/${id}`,
+                typeMess: "videoCall"
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userData.data.token}`,
+                    }
+                }
+            )
+            socket.emit("new message", dataSend.data)
+            socket.emit("render-box-chat", true)
+        } catch (error) {
+            console.log(error);
+        }
+        // const peer = new RTCPeerConnection()
+        // console.log(peer);
 
-
-        // peer.on("signal", (data) => {
-        //     socket.emit("callUser", {
-        //         userToCall: id,
-        //         singleData: data,
-        //         from: userData.data.name,
-        //         name: userData.data.name
-        //     })
-        // })
-
-
-        // peer.on("stream", (stream) => {
-        //     userVideo.current.srcObject = stream
-        // })
-
-        // socket.on("callAccept", (signal) => {
-        //     setCallAccepted(true)
-        //     peer.signal(signal)
-        // })
-
-        // connectionRef.current = peer
+        // const localStream = navigator.mediaDevices.getUserMedia({video:true,audio:false})
     }
 
     const answerCall = () => {
-        setCallAccepted(true)
-        const peer = new Peer({
-            initiator: false,
-            trickle: false,
-            stream: stream
-        })
 
-        peer.on("signal", (data) => {
-            socket.emit("answerCall", { signal: data, to: caller })
-        })
-        peer.on("stream", (stream) => {
-            userVideo.current.srcObject = stream
-        })
-        peer.signal(callerSignal)
-        connectionRef.current = peer
 
     }
     const leaveCall = () => {
-        setCallEnd(true)
-        connectionRef.current.destroy()
+
     }
 
     return (
@@ -306,10 +291,13 @@ export default function ChatAreaComponent() {
                     {mess.map((item, index) => {
                         if (item.sender._id != userData.data._id) {
                             return <MessageComponent props={item} key={index} />
-
                         }
                         else
-                            return <MyMessageConponent props={item} key={index} />
+                            if (item.removeWitMe == true) {
+                                return <></>
+                            } else {
+                                return <MyMessageConponent props={item} key={index} />
+                            }
 
                     })}
                     {/* <div>a</div> */}
@@ -320,11 +308,6 @@ export default function ChatAreaComponent() {
                 {/* <div className="" ref={messageEndRef}></div> */}
 
                 <div className='emoji-form'>
-                    {/* {contentMess ? (
-                        <span>You chose: {contentMess.emoji}</span>
-                    ) : (
-                        <span>No emoji Chosen</span>
-                    )} */}
                     <Picker open={showFormEmoji} onEmojiClick={selectEmojiIcon} />
                 </div>
                 <div className="chat-area-footer">
