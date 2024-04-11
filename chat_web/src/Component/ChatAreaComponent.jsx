@@ -12,8 +12,8 @@ import AttachFileIcon from '@mui/icons-material/AttachFile';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Picker from 'emoji-picker-react';
-
-
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 
 var socket = io("http://localhost:5678")
 
@@ -34,6 +34,7 @@ export default function ChatAreaComponent() {
     const [scrollExecuted, setScrollExecuted] = useState(false);
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
+    const [chatView, setChatView] = useState(false)
     //call video
     // const [stream, setStream] = useState();
     // const [reciverCall, setReciverCall] = useState();
@@ -218,25 +219,36 @@ export default function ChatAreaComponent() {
     }
 
     useEffect(() => {
-        navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-            .then((stream) => {
-                setStream(stream)
-                myVideo.current.srcObject = stream
-            })
-        socket.on("callUser", (data) => {
-            setReciverCall(true)
-            setCaller(data.from)
-            setName(data.name)
-            setCallerSignal(data.signal)
+        // http://localhost:5678/chat/fetchChatsById
+        const renderChatGroup = async () => {
+            console.log(chat_id);
+            try {
+                // setLoading(true)
+                const dataMessage = await axios.post(`http://localhost:5678/chat/fetchChatsById`,
+                    {
+                        chatId: chat_id
+                    }
+                    , {
+                        headers: {
+                            Authorization: `Bearer ${userData.data.token}`,
+                        }
+                    })
+                setChatView(dataMessage.data.isGroup)
+                console.log(dataMessage.data.isGroup);
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        renderChatGroup()
+    }, [chat_id])
 
-        })
-    }, [])
     const callUser = async (id) => {
         window.open(`http://localhost:5173/room/${id}`)
         try {
             const dataSend = await axios.post(
                 "http://localhost:5678/message/", {
-                chatId: objectChat,
+                chatId: chat_id,
                 content: `http://localhost:5173/room/${id}`,
                 typeMess: "videoCall"
             },
@@ -280,7 +292,18 @@ export default function ChatAreaComponent() {
                         <div className="online">online</div>
                         {/* <p className='chat-time'>{data.timeSend}</p> */}
                     </div>
-                    <IconButton onClick={() => callUser(chat_id)}>
+                    {
+                        // console.log(chatView.isGroup)
+                        chatView ? <>
+                            <IconButton onClick={() => callUser(chat_id)}>
+                                <GroupAddIcon />
+                            </IconButton>
+                            <IconButton onClick={() => console.log(chat_id)}>
+                                <ReduceCapacityIcon />
+                            </IconButton></> : <></>
+
+                    }
+                    <IconButton onClick={() => console.log(chat_id)}>
                         <VideocamIcon />
                     </IconButton>
                     <IconButton onClick={() => console.log(chat_id)}>

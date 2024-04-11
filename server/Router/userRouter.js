@@ -1,6 +1,6 @@
 const express = require('express')
 const Router = express.Router()
-const { getUserwaitAccept, fetchInvitationFromClient, getUserNoAccept, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend, removeAddFriend, getUserAccept, fetchUserById, getOTPandSendToEmail } = require('../Controllers/userController')
+const { getUserwaitAccept, fetchInvitationFromClient, getUserNoAccept, loginController, registerController, fetchUser, resetPassword, addFriend, acceptFriend, removeAddFriend, getUserAccept, fetchUserById, getOTPandSendToEmail, getUserFromGroupChat, getUserOutCurrentGroupChat } = require('../Controllers/userController')
 const { protect } = require('../middleware/auth')
 
 
@@ -20,6 +20,9 @@ Router.post('/fetchInvitationFromClient', fetchInvitationFromClient)
 Router.post('/fetchUserById', fetchUserById)
 Router.route('/getUserAccept').post(protect, getUserAccept)
 Router.route('/getUserwaitAccept').post(protect, getUserwaitAccept)
+Router.route('/getUserFromGroupChat').post(protect, getUserFromGroupChat)
+Router.route('/getUserOutCurrentGroupChat').post(protect, getUserOutCurrentGroupChat)
+
 
 
 module.exports = Router

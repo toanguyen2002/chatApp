@@ -63,7 +63,29 @@ const fetchChats = asynceHandle(async (req, res) => {
                 });
                 res.status(200).send(results);
             });
-        // console.log();
+    } catch (error) {
+        res.status(400);
+        throw new Error(error.message);
+    }
+
+}); const fetchChatsById = asynceHandle(async (req, res) => {
+    const chatId = req.body.chatId
+    try {
+        // console.log("Fetch Chats : ", req);
+
+        Chat.findOne({ _id: chatId })
+            .populate("users", "-password")
+            .populate("groupAdmin", "-password")
+            .populate("lastMessage")
+            .sort({ _id: -1 })
+            .then(async (results) => {
+
+                results = await User.populate(results, {
+                    path: "lastMessage.sender",
+                    select: "name email",
+                });
+                res.status(200).send(results);
+            });
     } catch (error) {
         res.status(400);
         throw new Error(error.message);
@@ -207,7 +229,6 @@ module.exports = {
     renameGroupChat,
     addUserToGroup,
     removeUserFromGroup,
-    findChatByName
-
-
+    findChatByName,
+    fetchChatsById
 }

@@ -36,8 +36,7 @@ function ModalChatOne({ clockModal }) {
     }
     useEffect(() => {
         const getUser = async () => {
-
-            const dataUser = await axios.post(`http://localhost:5678/user/getUserAccept`, {
+            const dataUser = await axios.get(`http://localhost:5678/user/getUserAccept`, {
                 name: userData.data.name,
                 userId: userData.data._id
             }, {
@@ -45,11 +44,8 @@ function ModalChatOne({ clockModal }) {
                     Authorization: `Bearer ${userData.data.token}`,
                 },
             })
-            // console.log(dataUser.data);
-            // console.log(userData.name);
-            // console.log(userData._id);
-
             setUsers(dataUser.data);
+            console.log(dataUser.data);
         }
         getUser()
 

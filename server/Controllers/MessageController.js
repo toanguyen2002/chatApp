@@ -4,14 +4,12 @@ const User = require("../Entity/userEntity");
 const Chat = require("../Entity/chatEntity");
 const { promisify } = require("util");
 const crypto = require('crypto')
-
+const mongodb = require('mongodb');
+const { default: mongoose } = require("mongoose");
 
 
 
 const AWS = require('aws-sdk')
-
-// const multers3 = require('multer-s3');
-// const { json } = require("react-router-dom");
 const { log } = require("console");
 const { send } = require("process");
 const randomBytes = promisify(crypto.randomBytes)
@@ -83,7 +81,8 @@ const allMessages = expressAsyncHandler(async (req, res) => {
 
 const sendMessage = expressAsyncHandler(async (req, res) => {
     const { content, chatId, typeMess, ImageUrl } = req.body;
-    console.log(req.body);
+    const chat = await Chat.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(chatId) } }])
+    const arrOfStrings = chat[0].users.map(objId => objId.toString());
     var newMessage = {
         sender: req.user._id,
         content: content,
@@ -91,10 +90,10 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
         typeMess: typeMess,
         ImageUrl: ImageUrl
     };
-
-
+    if (!arrOfStrings.includes(req.user._id.toString())) {
+        return res.status(404).json({ message: "Cuộc trò chuyện không tồn tại." });
+    }
     var message = await Message.create(newMessage);
-
     message = await message.populate("sender", "name");
     message = await message.populate("chat");
     message = await message.populate("reciever");
@@ -102,7 +101,6 @@ const sendMessage = expressAsyncHandler(async (req, res) => {
         path: "chat.users",
         select: "name email",
     });
-
     await Chat.findByIdAndUpdate(req.body.chatId, { lastMessage: message });
     res.json(message);
 })
@@ -117,9 +115,7 @@ const deleteMess = expressAsyncHandler(async (req, res) => {
     const result = await Message.findByIdAndUpdate(messId, { removeWitMe: true });
     res.json(result);
 })
-const getUserFromGroupChat = expressAsyncHandler(async (req, res) => {
 
-})
 
 module.exports = {
     sendMessage, allMessages, sendMessImage, blacnkMess, deleteMess
