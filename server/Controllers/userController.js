@@ -1,10 +1,12 @@
 const express = require("express");
 var nodemailer = require('nodemailer');
 const User = require("../Entity/userEntity");
+const Chat = require("../Entity/chatEntity");
 const expreeAsynceHandle = require("express-async-handler");
 const generateToken = require("../config/generateToken");
 const mongodb = require('mongodb');
 const { default: mongoose } = require("mongoose");
+const e = require("express");
 
 const loginController = expreeAsynceHandle(async (req, res) => {
     const { name, password } = req.body;
@@ -376,6 +378,58 @@ const getUserAccept = expreeAsynceHandle(async (req, res) => {
         res.send(error);
     }
 });
+const getUserFromGroupChat = expreeAsynceHandle(async (req, res) => {
+    const chatId = req.body.chatId
+
+    try {
+        const chatGroup = await Chat.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(chatId) } },
+            {
+                $lookup: {
+                    from: 'users', // Tên của bảng User 
+                    localField: 'users', // Trường trong bảng Chat
+                    foreignField: '_id', // Trường trong bảng User 
+                    as: 'userEntities'
+                }
+            }, {
+                $project: { userEntities: 1 }
+            }
+        ]);
+        res.send(chatGroup)
+    } catch (error) {
+        console.log(error);
+    }
+
+})
+const getUserOutCurrentGroupChat = expreeAsynceHandle(async (req, res) => {
+    const chatId = req.body.chatId
+
+    try {
+        const chatGroup = await Chat.aggregate([
+            { $match: { _id: new mongoose.Types.ObjectId(chatId) } },
+            {
+                $lookup: {
+                    from: 'users', // Tên của bảng User 
+                    localField: 'users', // Trường trong bảng Chat
+                    foreignField: '_id', // Trường trong bảng User 
+                    as: 'userEntities'
+                }
+            }, {
+                $project: { userEntities: 1 }
+            }
+        ]);
+        const userIdsInChat = chatGroup[0].userEntities.map(user => user._id);
+
+        // Tìm người dùng không thuộc nhóm chat bằng cách sử dụng $nin (not in)
+        const usersNotInChat = await User.aggregate([
+            { $match: { _id: { $nin: userIdsInChat } } }
+        ]);
+        res.send(usersNotInChat)
+    } catch (error) {
+        console.log(error);
+    }
+
+})
 
 module.exports = {
     fetchUserById,
@@ -390,5 +444,7 @@ module.exports = {
     addFriend,
     acceptFriend,
     getUserwaitAccept,
-    getOTPandSendToEmail
+    getOTPandSendToEmail,
+    getUserFromGroupChat,
+    getUserOutCurrentGroupChat
 }
