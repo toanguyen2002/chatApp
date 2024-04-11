@@ -37,7 +37,21 @@
   background-position: center;
   background-size: cover;
 }
-
+.get-users-modal2 {
+  z-index: 1000;
+  position: absolute;
+  width: 400px;
+  height: 600px;
+  left: 40%;
+  top: 10%;
+  border-radius: 0px;
+  display: flex;
+  flex-direction: column;
+  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1712844956/ew9qcljeix9lhzoa2rc7.jpg');
+  background-position: center;
+  background-size: cover;
+  border-radius: 15px;
+}
 
 .model-header {
   display: flex;
@@ -864,6 +878,15 @@ input[type="file"] {
   left: 230px;
   font-family: Arial, Helvetica, sans-serif;
 }
+.fr-cap3 {
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: 100px;
+  font-family: Arial, Helvetica, sans-serif;
+  color: white;
+}
+
 .input-area{
   width: 130px;
   height: 25px;
@@ -880,6 +903,9 @@ input[type="file"] {
   position: relative;
   right: 5px;
   top: 5px;
+}
+.icon4{
+  color: white;
 }
 
 /* 2/4/2024 */
