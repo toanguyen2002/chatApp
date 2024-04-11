@@ -14,7 +14,7 @@ function DeleteAndAddMemberModal({ closemodal }) {
                 <div className="modal-title">
                     <h3 className='fr-cap3'>Danh Sách Thành Viên</h3>
                     <IconButton onClick={() => closemodal(false)}>
-                        <ClearIcon />
+                        <ClearIcon className='icon4'/>
                     </IconButton>
                 </div>
                 <div className="list-body">

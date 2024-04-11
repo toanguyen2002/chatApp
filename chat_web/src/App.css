@@ -47,7 +47,7 @@
   border-radius: 0px;
   display: flex;
   flex-direction: column;
-  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1712134367/gqqby58c4o90gursep6a.png');
+  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1712844956/ew9qcljeix9lhzoa2rc7.jpg');
   background-position: center;
   background-size: cover;
   border-radius: 15px;
@@ -884,7 +884,7 @@ input[type="file"] {
   position: relative;
   left: 100px;
   font-family: Arial, Helvetica, sans-serif;
-
+  color: white;
 }
 
 .input-area{
