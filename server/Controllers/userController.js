@@ -402,7 +402,8 @@ const getUserFromGroupChat = expreeAsynceHandle(async (req, res) => {
 
 })
 const getUserOutCurrentGroupChat = expreeAsynceHandle(async (req, res) => {
-    const chatId = req.body.chatId
+    // const chatId = req.body.chatId
+    const { chatId, name, userId } = req.body
 
     try {
         const chatGroup = await Chat.aggregate([
@@ -415,16 +416,59 @@ const getUserOutCurrentGroupChat = expreeAsynceHandle(async (req, res) => {
                     as: 'userEntities'
                 }
             }, {
-                $project: { userEntities: 1 }
+                $project: { _id: 0, userEntities: 1 }
             }
         ]);
-        const userIdsInChat = chatGroup[0].userEntities.map(user => user._id);
+        //chuyển chuỗi
+        const userIdsInChat = chatGroup[0].userEntities.map(user => user._id.toString());
 
-        // Tìm người dùng không thuộc nhóm chat bằng cách sử dụng $nin (not in)
+
         const usersNotInChat = await User.aggregate([
             { $match: { _id: { $nin: userIdsInChat } } }
         ]);
-        res.send(usersNotInChat)
+        const result = await User.aggregate([
+            {
+                $match: { name: { $ne: name } }
+            },
+            {
+                $unwind: "$friends" // Giải nén mảng "friends"
+            },
+            {
+                $match: { "friends.friend": new mongoose.Types.ObjectId(userId) }
+            },
+
+            {
+                $lookup:
+                {
+                    from: "users",
+                    let: { senderId: "$friends.sender" },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: { $eq: ["$_id", "$$senderId"] },
+                                // "friends.accept": true
+                            }
+                        },
+                        {
+                            $project: { _id: 1, name: 1, accept: 1 }
+                        }
+                    ],
+                    as: "friends_docs"
+                }
+            },
+            {
+                $match: {
+                    "friends_docs": { $exists: true },
+                    "friends.accept": true
+
+                }
+            }
+        ]);
+
+        const friendUser = result.filter(item => !userIdsInChat.includes(item._id.toString()))
+
+        // console.log(friendUser);
+        res.send(friendUser)
     } catch (error) {
         console.log(error);
     }

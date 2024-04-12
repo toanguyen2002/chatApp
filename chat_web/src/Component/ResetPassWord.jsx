@@ -1,7 +1,8 @@
 import axios from 'axios';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-
+//${IP}
+const IP = "http://localhost:5678"
 function ResetPassWord() {
     const [name, setName] = useState("")
     const [error, setError] = useState(false)
@@ -9,7 +10,7 @@ function ResetPassWord() {
     const resetPassword = async () => {
         try {
             const dataRest = await axios.post(
-                "http://localhost:5678/user/reset", {
+                `${IP}/user/reset`, {
                 name: name
             }
             )

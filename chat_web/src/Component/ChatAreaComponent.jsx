@@ -14,8 +14,8 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Picker from 'emoji-picker-react';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
-
-var socket = io("http://localhost:5678")
+const IP = "http://localhost:5678"
+var socket = io("")
 
 export default function ChatAreaComponent() {
     // const navigate = useNA
@@ -72,7 +72,7 @@ export default function ChatAreaComponent() {
     const renderChat = async () => {
         try {
             // setLoading(true)
-            const dataMessage = await axios.get(`http://localhost:5678/message/${objectChat}`, {
+            const dataMessage = await axios.get(`${IP}/message/${objectChat}`, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
                 }
@@ -119,7 +119,7 @@ export default function ChatAreaComponent() {
         }))
         // console.log(dataImge);
         const dataSend = await axios.post(
-            "http://localhost:5678/message/", {
+            "${IP}/message/", {
             chatId: objectChat,
             ImageUrl: dataImge,
             typeMess: "Multimedia"
@@ -143,7 +143,7 @@ export default function ChatAreaComponent() {
         formData.append('fileImage', items);
         try {
 
-            const respone = await axios.post("http://localhost:5678/message/messImage",
+            const respone = await axios.post("${IP}/message/messImage",
                 formData,
                 {
                     headers: {
@@ -163,7 +163,7 @@ export default function ChatAreaComponent() {
         if (e.key == "Enter" && contentMess) {
             try {
                 const dataSend = await axios.post(
-                    "http://localhost:5678/message/", {
+                    "${IP}/message/", {
                     chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
@@ -192,7 +192,7 @@ export default function ChatAreaComponent() {
             // console.log(true);
             try {
                 const dataSend = await axios.post(
-                    "http://localhost:5678/message/", {
+                    "${IP}/message/", {
                     chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
@@ -219,12 +219,12 @@ export default function ChatAreaComponent() {
     }
 
     useEffect(() => {
-        // http://localhost:5678/chat/fetchChatsById
+        // ${IP}/chat/fetchChatsById
         const renderChatGroup = async () => {
             console.log(chat_id);
             try {
                 // setLoading(true)
-                const dataMessage = await axios.post(`http://localhost:5678/chat/fetchChatsById`,
+                const dataMessage = await axios.post(`${IP}/chat/fetchChatsById`,
                     {
                         chatId: chat_id
                     }
