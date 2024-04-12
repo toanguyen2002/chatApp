@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.110.194";
+const ip = "192.168.1.6";
 export default function Phonebook() {
   const navigation = useNavigation();
 
@@ -28,28 +28,29 @@ export default function Phonebook() {
   const [dataChatBox, setDataChatBox] = useState([]);
   const [usersData, setUsersData] = useState([]);
   const [users, setUsers] = useState([]);
+
   const [usersNotFriend, setUsersNotFriend] = useState([]);
 
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const userDataString = await AsyncStorage.getItem("userData");
-        const userDataObject = JSON.parse(userDataString);
-        const response = await axios.get("http://" + ip + ":5678/chat/", {
-          headers: {
-            Authorization: `Bearer ${userDataObject.token}`,
-          },
-        });
-        setDataChatBox(response.data);
-        socket.emit("render-box-chat", true);
-        // console.log(response.data)
-      } catch (error) {
-        console.log("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, [dataChatBox]);
+  //lỗi socket ở chỗ này gọi ra mà ko sài nên nó lỗi
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     try {
+  //       const userDataString = await AsyncStorage.getItem("userData");
+  //       const userDataObject = JSON.parse(userDataString);
+  //       const response = await axios.get("http://" + ip + ":5678/chat/", {
+  //         headers: {
+  //           Authorization: `Bearer ${userDataObject.token}`,
+  //         },
+  //       });
+  //       setDataChatBox(response.data);
+  //       socket.emit("render-box-chat", true);
+  //       // console.log(response.data)
+  //     } catch (error) {
+  //       console.log("Error fetching data:", error);
+  //     }
+  //   };
+  //   fetchData();
+  // }, [dataChatBox]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -84,16 +85,19 @@ export default function Phonebook() {
         {
           headers: {
             Authorization: `Bearer ${userData.token}`,
-          }
+          },
         }
       );
       console.log(respone.data);
       // Chuyển hướng tới màn hình SendMessage với thông tin của cuộc trò chuyện vừa tạo
-      navigation.navigate('SenddMessage', { chatId: respone.data._id, userName: respone.data.users[1].name });
+      navigation.navigate("SenddMessage", {
+        chatId: respone.data._id,
+        userName: respone.data.users[1].name,
+      });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
   const handlePress = (form) => {
     setActiveForm(form);
     setActiveForm1(form);
@@ -111,10 +115,30 @@ export default function Phonebook() {
     return (
       <TouchableOpacity onPress={handlePress} key={props.id}>
         <View style={{ flexDirection: "row", alignItems: "center", margin: 4 }}>
-          <View style={{ width: 50, height: 50, borderRadius: 25, backgroundColor: "#1E90FF", justifyContent: "center", alignItems: "center" }}>
-            <Text style={{ fontSize: 24, color: "white" }}>{props.name.charAt(0)}</Text>
+          <View
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 25,
+              backgroundColor: "#1E90FF",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ fontSize: 24, color: "white" }}>
+              {props.name.charAt(0)}
+            </Text>
           </View>
-          <Text style={{ fontSize: 20, color: "gray", fontWeight: "bold", marginLeft: 20 }}>{props.name}</Text>
+          <Text
+            style={{
+              fontSize: 20,
+              color: "gray",
+              fontWeight: "bold",
+              marginLeft: 20,
+            }}
+          >
+            {props.name}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -129,26 +153,40 @@ export default function Phonebook() {
         {(formToShow === "friend" ||
           formToShow1 === "all" ||
           formToShow1 === "recent") && (
-            <View style={styles.tabContainer}>
-              <Pressable onPress={() => navigation.navigate("Friend")}>
-                <View style={styles.tabItem}>
-                  <View style={{ marginLeft: 15 }}>
-                    <FontAwesome5 name="user-friends" size={24} color="black" />
-                  </View>
-                  <Text style={styles.tabText}>Lời mời kết bạn</Text>
-                </View>
-              </Pressable>
+          <View style={styles.tabContainer}>
+            <Pressable onPress={() => navigation.navigate("Friend")}>
               <View style={styles.tabItem}>
-                <Text style={{ fontSize: 17 }}>Danh sách bạn bè</Text>
+                <View style={{ marginLeft: 15 }}>
+                  <FontAwesome5 name="user-friends" size={24} color="black" />
+                </View>
+                <Text style={styles.tabText}>Lời mời kết bạn</Text>
               </View>
-
-              <View style={{ flexDirection: "column" }}>
+            </Pressable>
+            <View style={styles.tabItem}>
+              <Text style={{ fontSize: 17 ,fontWeight:"bold"}}>Danh sách bạn bè : </Text>
+            </View>
+           
+            <View
+              style={{
+                flexDirection: "column",
+                backgroundColor: "#C6E2FF",
+                borderRadius: 5,
+                right: 5,
+              }}
+            >
+              <View >
                 {users.map((item, index) => (
-                  <MessageItem {...item} key={item.id || index.toString()} />
+                  <React.Fragment key={item.id || index.toString()}>
+                    <MessageItem  {...item} />
+                    {index !== users.length - 1 && (
+                      <View style={styles.separator1} />
+                    )}
+                  </React.Fragment>
                 ))}
               </View>
             </View>
-          )}
+          </View>
+        )}
         {formToShow === "group" && (
           <View style={{}}>
             <View style={styles.tabContainer2}>
@@ -258,6 +296,7 @@ export default function Phonebook() {
                     marginBottom: 20,
                   }}
                 >
+                  {/* ở đây */}
                   <View style={styles.container1}>
                     {dataChatBox
                       .filter((item) => item.isGroup === true)
@@ -377,9 +416,6 @@ export default function Phonebook() {
   );
 }
 
-
-
-// StyleSheet để tạo kiểu cho các phần giao diện
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -509,5 +545,19 @@ const styles = StyleSheet.create({
     backgroundColor: "gray",
     padding: 10,
     width: 100,
+  },
+  separator1: {
+    borderBottomColor: "#EAEAEA",
+    borderBottomWidth: 5,
+    marginVertical: 10,
+    borderRadius: 20,
+  },
+  listFriend: {
+    // backgroundColor: "red"
+    
+  },
+  customStyle:{
+    color:"black",
+
   },
 });

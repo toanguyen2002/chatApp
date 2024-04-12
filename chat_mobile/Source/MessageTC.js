@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.110.194";
+const ip = "192.168.1.6";
 
 const socket = io("http://localhost:5678");
 const MessageTC = ({ navigation }) => {
