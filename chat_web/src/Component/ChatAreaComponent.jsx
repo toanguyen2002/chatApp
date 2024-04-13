@@ -38,7 +38,8 @@ export default function ChatAreaComponent() {
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
     const [chatView, setChatView] = useState(false)
-    const [showListMem, setShowListMem] = useState(false)
+    const [open, setOpen] = useState(false)
+    const handleOpen = () => setOpen(true);
     //call video
     // const [stream, setStream] = useState();
     // const [reciverCall, setReciverCall] = useState();
@@ -123,7 +124,7 @@ export default function ChatAreaComponent() {
         }))
         // console.log(dataImge);
         const dataSend = await axios.post(
-            "${IP}/message/", {
+            `${IP}/message/`, {
             chatId: objectChat,
             ImageUrl: dataImge,
             typeMess: "Multimedia"
@@ -147,7 +148,7 @@ export default function ChatAreaComponent() {
         formData.append('fileImage', items);
         try {
 
-            const respone = await axios.post("${IP}/message/messImage",
+            const respone = await axios.post(`${IP}/message/messImage`,
                 formData,
                 {
                     headers: {
@@ -167,7 +168,7 @@ export default function ChatAreaComponent() {
         if (e.key == "Enter" && contentMess) {
             try {
                 const dataSend = await axios.post(
-                    "${IP}/message/", {
+                    `${IP}/message/`, {
                     chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
@@ -188,6 +189,7 @@ export default function ChatAreaComponent() {
                 console.log(error);
             }
         }
+        // console.log(e);
 
 
     }
@@ -196,7 +198,7 @@ export default function ChatAreaComponent() {
             // console.log(true);
             try {
                 const dataSend = await axios.post(
-                    "${IP}/message/", {
+                    `${IP}/message/`, {
                     chatId: chat_id,
                     content: contentMess,
                     typeMess: "text"
@@ -251,7 +253,7 @@ export default function ChatAreaComponent() {
         window.open(`http://localhost:5173/room/${id}`)
         try {
             const dataSend = await axios.post(
-                "http://localhost:5678/message/", {
+                `${IP}/message/`, {
                 chatId: chat_id,
                 content: `http://localhost:5173/room/${id}`,
                 typeMess: "videoCall"
@@ -287,6 +289,7 @@ export default function ChatAreaComponent() {
         >
             <CircularProgress color="inherit" />
         </Backdrop>
+            {open ? <DeleteAndAddMemberModal closemodal={setOpen} prop={{ _id: chat_id }} /> : <></>}
             <div className='chat-area'>
                 <div className="chat-area-header">
                     <p className='chat-icon'>{chat_user[0]}</p>
@@ -302,25 +305,18 @@ export default function ChatAreaComponent() {
                             <IconButton onClick={() => callUser(chat_id)}>
                                 <GroupAddIcon />
                             </IconButton>
-                            {/* <IconButton>
+                            <IconButton onClick={handleOpen}>
                                 <ReduceCapacityIcon />
-                            </IconButton> */}
-                        </> : <></>
+                            </IconButton></> : <></>
 
                     }
-                    <IconButton onClick={() => setShowListMem(true)}>
-                        <ReduceCapacityIcon />
-                    </IconButton>
-                    <IconButton onClick={() => console.log(chat_id)}>
+                    <IconButton onClick={() => callUser(chat_id)}>
                         <VideocamIcon />
                     </IconButton>
                     <IconButton onClick={() => console.log(chat_id)}>
                         <DeleteIcon />
                     </IconButton>
                 </div>
-
-                {showListMem ? <DeleteAndAddMemberModal closemodal={setShowListMem} /> : <div></div>}
-
                 <div className="chat-area-body" >
                     {mess.map((item, index) => {
                         if (item.sender._id != userData.data._id) {
