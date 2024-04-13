@@ -15,6 +15,7 @@ import Picker from 'emoji-picker-react';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import DeleteAndAddMemberModal from './DeleteAndAddMemberModal'
+import ModalAddMember from './ModalAddMember'
 
 const IP = "http://localhost:5678"
 var socket = io(IP)
@@ -38,8 +39,13 @@ export default function ChatAreaComponent() {
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
     const [chatView, setChatView] = useState(false)
+
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(true);
+
+    const [showListMem, setShowListMem] = useState(false)
+    const [showAddMem, setShowAddMem] = useState(false)
+
     //call video
     // const [stream, setStream] = useState();
     // const [reciverCall, setReciverCall] = useState();
@@ -302,21 +308,36 @@ export default function ChatAreaComponent() {
                     {
                         // console.log(chatView.isGroup)
                         chatView ? <>
-                            <IconButton onClick={() => callUser(chat_id)}>
+                            <IconButton onClick={() => setShowAddMem(true)}>
                                 <GroupAddIcon />
                             </IconButton>
+
                             <IconButton onClick={handleOpen}>
                                 <ReduceCapacityIcon />
                             </IconButton></> : <></>
 
                     }
                     <IconButton onClick={() => callUser(chat_id)}>
+
+//                             <IconButton onClick={() => setShowListMem(true)}>
+//                                 <ReduceCapacityIcon />
+//                             </IconButton>
+                        </> : <></>
+
+                    }
+
+                    <IconButton onClick={() => console.log(chat_id)}>
+
                         <VideocamIcon />
                     </IconButton>
                     <IconButton onClick={() => console.log(chat_id)}>
                         <DeleteIcon />
                     </IconButton>
                 </div>
+                
+                {showAddMem ? <ModalAddMember closemodal={setShowAddMem} /> : <div></div>}
+
+
                 <div className="chat-area-body" >
                     {mess.map((item, index) => {
                         if (item.sender._id != userData.data._id) {
