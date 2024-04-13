@@ -14,8 +14,11 @@ import EmojiEmotionsIcon from '@mui/icons-material/EmojiEmotions';
 import Picker from 'emoji-picker-react';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+import DeleteAndAddMemberModal from './DeleteAndAddMemberModal'
+
 const IP = "http://localhost:5678"
-var socket = io("")
+var socket = io(IP)
+
 
 export default function ChatAreaComponent() {
     // const navigate = useNA
@@ -35,6 +38,7 @@ export default function ChatAreaComponent() {
     const [chat_id, chat_user] = params.id.split("&");
     const [objectChat, setObjectChat] = useState()
     const [chatView, setChatView] = useState(false)
+    const [showListMem, setShowListMem] = useState(false)
     //call video
     // const [stream, setStream] = useState();
     // const [reciverCall, setReciverCall] = useState();
@@ -298,11 +302,15 @@ export default function ChatAreaComponent() {
                             <IconButton onClick={() => callUser(chat_id)}>
                                 <GroupAddIcon />
                             </IconButton>
-                            <IconButton onClick={() => console.log(chat_id)}>
+                            {/* <IconButton>
                                 <ReduceCapacityIcon />
-                            </IconButton></> : <></>
+                            </IconButton> */}
+                        </> : <></>
 
                     }
+                    <IconButton onClick={() => setShowListMem(true)}>
+                        <ReduceCapacityIcon />
+                    </IconButton>
                     <IconButton onClick={() => console.log(chat_id)}>
                         <VideocamIcon />
                     </IconButton>
@@ -310,6 +318,9 @@ export default function ChatAreaComponent() {
                         <DeleteIcon />
                     </IconButton>
                 </div>
+
+                {showListMem ? <DeleteAndAddMemberModal closemodal={setShowListMem} /> : <div></div>}
+
                 <div className="chat-area-body" >
                     {mess.map((item, index) => {
                         if (item.sender._id != userData.data._id) {

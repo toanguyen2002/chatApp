@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState, useEffect, useRef } from "react";
 import {
   StyleSheet,
@@ -18,14 +17,14 @@ import {
 import { useNavigation, useRoute } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from "react-native-vector-icons/Ionicons";
 import * as ImagePicker from "expo-image-picker";
-import * as DocumentPicker from 'expo-document-picker';
-import Video from 'react-native-video';
-
+import * as DocumentPicker from "expo-document-picker";
+import Video from "react-native-video";
+import axios from "axios";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.110.194";
+const ip = "192.168.1.6";
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -35,6 +34,7 @@ const SendMessage = () => {
   const [userData, setUserData] = useState(null);
   const [hasNewMessage, setHasNewMessage] = useState(false);
   const [longPressedMessageId, setLongPressedMessageId] = useState(null);
+  const [showOptions, setShowOptions] = useState(false);
   //chọn ảnh
   const [selectedImage, setSelectedImage] = useState(null);
   const fileRef = useRef(null);
@@ -56,7 +56,7 @@ const SendMessage = () => {
     };
     fetchData();
     socket.emit("setup", userData);
-    socket.on("connect", () => { });
+    socket.on("connect", () => {});
     socket.emit("render-box-chat", true);
   }, []);
 
@@ -67,11 +67,10 @@ const SendMessage = () => {
     }
   };
 
-
   const rerenderMessage = async () => {
     const userDataString = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(userDataString);
-    setUserData(userData)
+    setUserData(userData);
     try {
       const response = await fetch(
         `http://${ip}:5678/message/${route.params._id}`,
@@ -107,13 +106,13 @@ const SendMessage = () => {
         multiple: true,
       });
       if (!result.cancelled) {
-        let selectedDocuments = result.assets.map(doc => ({
+        let selectedDocuments = result.assets.map((doc) => ({
           uri: doc.uri,
           fileName: doc.name,
           type: doc.mimeType,
         }));
 
-        console.log('Selected documents:', selectedDocuments);
+        console.log("Selected documents:", selectedDocuments);
         sendMessImg(selectedDocuments);
       }
     } catch (error) {
@@ -124,9 +123,12 @@ const SendMessage = () => {
   const pickImage = async () => {
     let permissionResult;
     if (Platform.OS !== "web") {
-      permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (permissionResult.granted === false) {
-        alert("Xin lỗi, chúng tôi cần quyền truy cập vào thư viện ảnh để chọn ảnh!");
+        alert(
+          "Xin lỗi, chúng tôi cần quyền truy cập vào thư viện ảnh để chọn ảnh!"
+        );
         return;
       }
     }
@@ -138,25 +140,29 @@ const SendMessage = () => {
       if (!result.cancelled) {
         let selectedImages;
         if (result.assets && Array.isArray(result.assets)) {
-          selectedImages = result.assets.map(asset => ({
+          selectedImages = result.assets.map((asset) => ({
             uri: asset.uri,
             fileName: asset.fileName,
           }));
         } else if (result && Array.isArray(result)) {
-          selectedImages = result.map(asset => ({
+          selectedImages = result.map((asset) => ({
             uri: asset.uri,
             fileName: asset.fileName,
           }));
         } else if (!result.assets && !Array.isArray(result.assets)) {
-          selectedImages = [{
-            uri: result.uri,
-            fileName: result.fileName,
-          }];
+          selectedImages = [
+            {
+              uri: result.uri,
+              fileName: result.fileName,
+            },
+          ];
         } else {
-          selectedImages = [{
-            uri: result.asset[0].uri,
-            fileName: result.asset[0].fileName,
-          }];
+          selectedImages = [
+            {
+              uri: result.asset[0].uri,
+              fileName: result.asset[0].fileName,
+            },
+          ];
         }
         sendMessImg(selectedImages);
       }
@@ -177,7 +183,7 @@ const SendMessage = () => {
           });
 
           const response = await fetch(`http://${ip}:5678/message/messImage`, {
-            method: 'POST',
+            method: "POST",
             body: formData,
             headers: {
               "Content-Type": "multipart/form-data",
@@ -186,7 +192,9 @@ const SendMessage = () => {
           });
 
           if (!response.ok) {
-            throw new Error(`Error uploading image: HTTP status ${response.status}`);
+            throw new Error(
+              `Error uploading image: HTTP status ${response.status}`
+            );
           }
 
           const responseData = await response.json();
@@ -222,8 +230,6 @@ const SendMessage = () => {
     setSelectedImage(null);
   };
 
-
-
   const sendMess = async () => {
     if (messages) {
       try {
@@ -255,7 +261,9 @@ const SendMessage = () => {
       }
     }
   };
-
+  const toggleOptions = () => {
+    setShowOptions(!showOptions);
+  };
 
   const handleGetidMessAndDelete = async (messId) => {
     try {
@@ -312,13 +320,13 @@ const SendMessage = () => {
     }
   };
   const handleOpenWebView = (url) => {
-    console.log('====================================');
+    console.log("====================================");
     console.log(url);
-    console.log('====================================');
+    console.log("====================================");
     if (!url) {
-      return
+      return;
     } else {
-      navigation.navigate('WebViewScreen', { url: url });
+      navigation.navigate("WebViewScreen", { url: url });
     }
   };
 
@@ -345,14 +353,18 @@ const SendMessage = () => {
         <View
           style={[
             styles.viewMess,
-            isCurrentUser ? styles.viewMessCurrentUser : styles.viewMessOtherUser,
+            isCurrentUser
+              ? styles.viewMessCurrentUser
+              : styles.viewMessOtherUser,
           ]}
         >
           {item.typeMess === "text" ? (
             <Text
               style={[
                 styles.textMess,
-                isCurrentUser ? styles.textMessCurrentUser : styles.textMessOtherUser,
+                isCurrentUser
+                  ? styles.textMessCurrentUser
+                  : styles.textMessOtherUser,
               ]}
             >
               {item.content}
@@ -361,71 +373,139 @@ const SendMessage = () => {
             <View>
               {item.ImageUrl.map((imgItem, index) => (
                 <View key={index} style={{ marginBottom: 10 }}>
-                  {imgItem.url.endsWith('.docx') && (
+                  {imgItem.url.endsWith(".docx") && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: 'transparent' }}
+                      android_ripple={{ color: "transparent" }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071261/e8zf6xlepys4jevrmf7q.png" }} />
-                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Image
+                          style={{
+                            width: 50,
+                            height: 50,
+                            resizeMode: "contain",
+                          }}
+                          source={{
+                            uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071261/e8zf6xlepys4jevrmf7q.png",
+                          }}
+                        />
+                        <Text style={{ marginLeft: 10 }}>
+                          {imgItem.url.split("/")[3]}
+                        </Text>
                       </View>
                     </Pressable>
                   )}
-                  {imgItem.url.endsWith('.xlsx') && (
+                  {imgItem.url.endsWith(".xlsx") && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: 'transparent' }}
+                      android_ripple={{ color: "transparent" }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071046/covmtdumtqntlsvx9jyi.png" }} />
-                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Image
+                          style={{
+                            width: 50,
+                            height: 50,
+                            resizeMode: "contain",
+                          }}
+                          source={{
+                            uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712071046/covmtdumtqntlsvx9jyi.png",
+                          }}
+                        />
+                        <Text style={{ marginLeft: 10 }}>
+                          {imgItem.url.split("/")[3]}
+                        </Text>
                       </View>
                     </Pressable>
                   )}
-                  {imgItem.url.endsWith('.pptx') && (
+                  {imgItem.url.endsWith(".pptx") && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: 'transparent' }}
+                      android_ripple={{ color: "transparent" }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070852/gocyslxocjixjrfzaszh.png" }} />
-                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Image
+                          style={{
+                            width: 50,
+                            height: 50,
+                            resizeMode: "contain",
+                          }}
+                          source={{
+                            uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070852/gocyslxocjixjrfzaszh.png",
+                          }}
+                        />
+                        <Text style={{ marginLeft: 10 }}>
+                          {imgItem.url.split("/")[3]}
+                        </Text>
                       </View>
                     </Pressable>
                   )}
-                  {imgItem.url.endsWith('.pdf') && (
+                  {imgItem.url.endsWith(".pdf") && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: 'transparent' }}
+                      android_ripple={{ color: "transparent" }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image style={{ width: 50, height: 50, resizeMode: 'contain' }} source={{ uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070523/s5o96ckawemcfztbomuw.png" }} />
-                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Image
+                          style={{
+                            width: 50,
+                            height: 50,
+                            resizeMode: "contain",
+                          }}
+                          source={{
+                            uri: "https://res.cloudinary.com/dhyt592i7/image/upload/v1712070523/s5o96ckawemcfztbomuw.png",
+                          }}
+                        />
+                        <Text style={{ marginLeft: 10 }}>
+                          {imgItem.url.split("/")[3]}
+                        </Text>
                       </View>
                     </Pressable>
                   )}
-                  {(imgItem.url.endsWith('.png') || imgItem.url.endsWith('.jpg') || imgItem.url.endsWith('.jpeg')) && (
+                  {(imgItem.url.endsWith(".png") ||
+                    imgItem.url.endsWith(".jpg") ||
+                    imgItem.url.endsWith(".jpeg")) && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: 'transparent' }}
+                      android_ripple={{ color: "transparent" }}
                     >
-                      <Image style={{ width: 150, height: 200, resizeMode: 'contain' }} source={{ uri: imgItem.url }} />
+                      <Image
+                        style={{
+                          width: 150,
+                          height: 200,
+                          resizeMode: "contain",
+                        }}
+                        source={{ uri: imgItem.url }}
+                      />
                     </Pressable>
                   )}
-                  {imgItem.url.endsWith('.mp4') && (
+                  {imgItem.url.endsWith(".mp4") && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: 'transparent' }}
+                      android_ripple={{ color: "transparent" }}
                     >
-                      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Icon name="play-circle-outline" size={50} color="#000" />
-                        <Text style={{ marginLeft: 10 }}>{imgItem.url.split('/')[3]}</Text>
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Icon
+                          name="play-circle-outline"
+                          size={50}
+                          color="#000"
+                        />
+                        <Text style={{ marginLeft: 10 }}>
+                          {imgItem.url.split("/")[3]}
+                        </Text>
                       </View>
                     </Pressable>
                   )}
                 </View>
-
               ))}
             </View>
           )}
@@ -441,14 +521,10 @@ const SendMessage = () => {
               >
                 <Text style={styles.deleteButton}>Thu hồi</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleOpenWebView(item.url)}
-              >
+              <TouchableOpacity onPress={() => handleOpenWebView(item.url)}>
                 <Text style={styles.deleteButton}>Xem</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => handleCancelLongPress()}
-              >
+              <TouchableOpacity onPress={() => handleCancelLongPress()}>
                 <Text style={styles.deleteButton}>Hủy</Text>
               </TouchableOpacity>
             </View>
@@ -456,23 +532,49 @@ const SendMessage = () => {
         </View>
       </TouchableOpacity>
     );
-  }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         <View style={styles.headers}>
-          <TouchableOpacity onPress={handleGoBack} style={{ backgroundColor: "#3468DB", borderRadius: 10, padding: 10, alignItems: "center", }} >
+          <TouchableOpacity
+            onPress={handleGoBack}
+            style={{
+              backgroundColor: "#4876FF",
+              borderRadius: 10,
+              padding: 10,
+              alignItems: "center",
+            }}
+          >
             {/* //Icon */}
-            <Text style={{ textAlign: "center", fontWeight: "bold", color: "#FFF" }}>Trở về</Text>
+            <Text
+              style={{ textAlign: "center", fontWeight: "bold", color: "#FFF" }}
+            >
+              Trở về
+            </Text>
           </TouchableOpacity>
           <View style={{ padding: 10, marginRight: 10 }}>
-            <Text style={{ textAlign: "center", fontWeight: "bold", color: "#FFF", fontSize: 16 }}>{route.params.chatName}</Text>
+            <Text
+              style={{
+                textAlign: "center",
+                fontWeight: "bold",
+                color: "#FFF",
+                fontSize: 16,
+              }}
+            >
+              {route.params.chatName}
+            </Text>
           </View>
           <View>
-
+            <TouchableOpacity >
+              <Icon name="call-outline" size={24} color="white" />
+            </TouchableOpacity>
           </View>
         </View>
-        <TouchableOpacity onPress={handleScrollToBottom} style={hasNewMessage ? styles.scrollToBottomButton : styles.hidden}>
+        <TouchableOpacity
+          onPress={handleScrollToBottom}
+          style={hasNewMessage ? styles.scrollToBottomButton : styles.hidden}
+        >
           <Text style={styles.scrollToBottomText}>Cuộn xuống</Text>
         </TouchableOpacity>
         <FlatList
@@ -483,26 +585,49 @@ const SendMessage = () => {
           style={styles.messagesList}
         />
         <View style={styles.footer}>
+          <TouchableOpacity onPress={toggleOptions}>
+            <Icon
+              name={showOptions ? "arrow-down" : "arrow-up"}
+              size={24}
+              color="#4876FF"
+            />
+          </TouchableOpacity>
+          {showOptions && (
+            <>
+              <TouchableOpacity onPress={pickImage} style={styles.button}>
+                <Icon
+                  name="image-outline"
+                  size={20}
+                  color="white"
+                  style={styles.sendIcon}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={pickFile} style={styles.button}>
+                <Icon
+                  name="document-outline"
+                  size={20}
+                  color="white"
+                  style={styles.sendIcon}
+                />
+              </TouchableOpacity>
+            </>
+          )}
           <TextInput
             style={styles.input}
             value={text}
             onChangeText={setText}
             placeholder="Nhập tin nhắn..."
           />
-          <View style={{ alignItems: "", justifyContent: "center", flexDirection: 'row' }}          >
-            <TouchableOpacity onPress={pickImage} style={styles.button}>
-              <Icon name="image-outline" size={20} color="white" style={styles.sendIcon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={pickFile} style={styles.button}>
-              <Icon name="document-outline" size={20} color="white" style={styles.sendIcon} />
-            </TouchableOpacity>
-          </View>
           <TouchableOpacity onPress={sendMess}>
-            <Icon name="send" size={24} color="#000" style={styles.sendIcon} />
+            <Icon
+              name="send"
+              size={24}
+              color="#4876FF"
+              style={styles.sendIcon}
+            />
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-
     </SafeAreaView>
   );
 };
@@ -523,7 +648,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   input: {
-    flex: 1,
+    flex: 3,
     height: 40,
     padding: 10,
     borderRadius: 5,
@@ -531,6 +656,7 @@ const styles = StyleSheet.create({
   sendIcon: {
     width: 20,
     height: 20,
+    backgroundColor: "",
   },
   viewMess: {
     marginBottom: 20,
@@ -556,27 +682,27 @@ const styles = StyleSheet.create({
   textMessOtherUser: {
     backgroundColor: "#E5E5EA",
   },
-  image: {
-
-  },
+  image: {},
   headers: {
     backgroundColor: "#3498DB",
     flexDirection: "row",
     height: 40,
-    justifyContent: "space-between", alignItems: "center"
-  }, scrollToBottomButton: {
-    position: 'absolute',
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  scrollToBottomButton: {
+    position: "absolute",
     bottom: 10,
     right: 10,
-    backgroundColor: '#3498DB',
+    backgroundColor: "#3498DB",
     padding: 10,
     borderRadius: 5,
   },
   scrollToBottomText: {
-    color: '#FFF',
+    color: "#FFF",
   },
   hidden: {
-    display: 'none',
+    display: "none",
   },
   deleteButtonContainer: {
     position: "absolute",
@@ -586,25 +712,26 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 5,
     margin: 10,
-    marginRight: 10
-
+    marginRight: 10,
   },
   deleteButton: {
     color: "white",
-    marginBottom: 10
+    marginBottom: 10,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: "#00BFFF",
     padding: 5,
     borderRadius: 5,
     marginVertical: 10,
-    alignItems: 'center',
-    marginBottom: 10, top: 0,
+    alignItems: "center",
+    marginBottom: 10,
+    top: 0,
     marginLeft: 5,
-    marginRight: 10
-  }, sendIcon: {
-    alignSelf: 'center', // Để icon nằm giữa theo chiều dọc
-    justifyContent: 'center', // Để icon nằm giữa theo chiều ngang
+    marginRight: 10,
+  },
+  sendIcon: {
+    alignSelf: "center", // Để icon nằm giữa theo chiều dọc
+    justifyContent: "center", // Để icon nằm giữa theo chiều ngang
     paddingHorizontal: 10, // Để tạo ra một khoảng trống xung quanh icon (tùy chỉnh theo nhu cầu của bạn)
   },
 });
