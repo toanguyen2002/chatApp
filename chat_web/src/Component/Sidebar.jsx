@@ -23,6 +23,8 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import FindAndAddFriendComponent from './FindAndAddFriendComponent';
 import FriendAccept from './FriendAccept';
+import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
+import DeleteAndAddMemberModal from './DeleteAndAddMemberModal';
 
 //${IP}
 const IP = "http://localhost:5678"
@@ -32,7 +34,8 @@ function Sidebar() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
+    const [openFNC, setOpenFNC] = useState(false)
+    const handleOpenFNC = () => setOpenFNC(true);
 
     const params = useParams()
     // const [chat_id, chat_user] = params.id.split("&");
@@ -44,7 +47,7 @@ function Sidebar() {
     const [showOne, setShowOne] = useState(false)
     const [showListFriend, setShowListFriend] = useState(false)
     const [showListAccept, setShowListAccept] = useState(false)
-
+    const [chatView, setChatView] = useState(false)
 
 
     const [search, setSearch] = useState("")
@@ -163,12 +166,19 @@ function Sidebar() {
                             item.chatName = item.users[0].name
                         }
                     }
-                    return (<div key={index} className="" onClick={() => {
-                        // console.log(item.isGroup);
-                    }}>
-
+                    return (<div key={index} className="" onClick={() => { }}>
                         <ChatBox props={item} />
+                        {/* {
+                            // console.log(chatView.isGroup)
+                            item.isGroup ? <>
+                                <IconButton>
+                                    <GroupAddIcon />
+                                </IconButton>
+                                <IconButton onClick={() => handleOpenFNC(true)}>
+                                    <ReduceCapacityIcon />
+                                </IconButton></> : <></>
 
+                        } */}
                     </div>)
                 }
                 )}
@@ -178,6 +188,7 @@ function Sidebar() {
             {showOne ? <ModalChatOne clockModal={setShowOne} /> : <div></div>}
             {showListFriend ? <FindAndAddFriendComponent closemodal={setShowListFriend} /> : <div></div>}
             {showListAccept ? <FriendAccept closemodal={setShowListAccept} /> : <div></div>}
+            {/* {openFNC ? <DeleteAndAddMemberModal closemodal={setOpenFNC} prop={{ _id: "66112bffd488b068ee661544" }} /> : <div></div>} */}
 
             {/* profile */}
             <Modal open={open} onClose={handleClose}>
