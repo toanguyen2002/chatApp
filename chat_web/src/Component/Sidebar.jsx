@@ -24,8 +24,9 @@ import Modal from '@mui/material/Modal';
 import FindAndAddFriendComponent from './FindAndAddFriendComponent';
 import FriendAccept from './FriendAccept';
 
-
-const socket = io("http://localhost:5678")
+//${IP}
+const IP = "http://localhost:5678"
+const socket = io(IP)
 function Sidebar() {
 
     const [open, setOpen] = useState(false);
@@ -49,7 +50,7 @@ function Sidebar() {
     const [search, setSearch] = useState("")
     const renderChatBox = async () => {
         try {
-            const dataRender = await axios.get("http://localhost:5678/chat/", {
+            const dataRender = await axios.get(`${IP}/chat/`, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
                 },
@@ -70,7 +71,7 @@ function Sidebar() {
     useEffect(() => {
         const getChat = async () => {
             try {
-                const chatData = await axios.get(`http://localhost:5678/chat/findChatByName?chatName=${search}`, {
+                const chatData = await axios.get(`${IP}/chat/findChatByName?chatName=${search}`, {
                     headers: {
                         Authorization: `Bearer ${userData.data.token}`,
                     }
