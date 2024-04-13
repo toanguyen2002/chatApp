@@ -15,6 +15,7 @@ import Picker from 'emoji-picker-react';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import DeleteAndAddMemberModal from './DeleteAndAddMemberModal'
+import ModalAddMember from './ModalAddMember'
 
 const IP = "http://localhost:5678"
 var socket = io(IP)
@@ -39,6 +40,7 @@ export default function ChatAreaComponent() {
     const [objectChat, setObjectChat] = useState()
     const [chatView, setChatView] = useState(false)
     const [showListMem, setShowListMem] = useState(false)
+    const [showAddMem, setShowAddMem] = useState(false)
     //call video
     // const [stream, setStream] = useState();
     // const [reciverCall, setReciverCall] = useState();
@@ -299,18 +301,16 @@ export default function ChatAreaComponent() {
                     {
                         // console.log(chatView.isGroup)
                         chatView ? <>
-                            <IconButton onClick={() => callUser(chat_id)}>
+                            <IconButton onClick={() => setShowAddMem(true)}>
                                 <GroupAddIcon />
                             </IconButton>
-                            {/* <IconButton>
+                            <IconButton onClick={() => setShowListMem(true)}>
                                 <ReduceCapacityIcon />
-                            </IconButton> */}
+                            </IconButton>
                         </> : <></>
 
                     }
-                    <IconButton onClick={() => setShowListMem(true)}>
-                        <ReduceCapacityIcon />
-                    </IconButton>
+
                     <IconButton onClick={() => console.log(chat_id)}>
                         <VideocamIcon />
                     </IconButton>
@@ -320,6 +320,7 @@ export default function ChatAreaComponent() {
                 </div>
 
                 {showListMem ? <DeleteAndAddMemberModal closemodal={setShowListMem} /> : <div></div>}
+                {showAddMem ? <ModalAddMember closemodal={setShowAddMem} /> : <div></div>}
 
                 <div className="chat-area-body" >
                     {mess.map((item, index) => {
