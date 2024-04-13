@@ -4,7 +4,8 @@ import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import UserComponent from '../ComponentItem/UserComponent';
 import { myContext } from './MainComponent';
-
+//${IP}
+const IP = "http://localhost:5678"
 function FriendAccept({ closemodal }) {
     const [users, setUsers] = useState([])
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -13,7 +14,7 @@ function FriendAccept({ closemodal }) {
     useEffect(() => {
         const getUser = async () => {
 
-            const dataUser = await axios.post(`http://localhost:5678/user/getUserwaitAccept`, {
+            const dataUser = await axios.post(`${IP}/user/getUserwaitAccept`, {
                 name: userData.data.name,
                 userId: userData.data._id
             }, {
@@ -33,7 +34,7 @@ function FriendAccept({ closemodal }) {
     const handlaccept = async (idUser) => {
         console.log(idUser);
         try {
-            await axios.post(`http://localhost:5678/user/acceptFriend`, {
+            await axios.post(`${IP}/user/acceptFriend`, {
                 userid: userData.data._id,
                 friendId: idUser
             }, {

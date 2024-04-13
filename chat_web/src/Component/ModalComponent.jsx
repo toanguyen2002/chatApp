@@ -5,7 +5,9 @@ import { myContext } from './MainComponent';
 import axios from 'axios';
 import ChatBox from '../ComponentItem/ChatBox';
 import { io } from 'socket.io-client';
-const socket = io("http://localhost:5678")
+//${IP}
+const IP = "http://localhost:5678"
+const socket = io(IP)
 function ModalComponent({ clockModal }) {
     const [users, setUsers] = useState([]);
     const [checkboxValues, setCheckboxValues] = useState([]);
@@ -30,7 +32,7 @@ function ModalComponent({ clockModal }) {
     const createGroupChat = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:5678/chat/createGroupChat",
+                `${IP}/chat/createGroupChat`,
                 {
                     name: nameGroup,
                     users: JSON.stringify(checkboxValues)
@@ -59,7 +61,7 @@ function ModalComponent({ clockModal }) {
     useEffect(() => {
         const getUser = async () => {
 
-            const dataUser = await axios.post(`http://localhost:5678/user/getUserAccept`, {
+            const dataUser = await axios.post(`${IP}/user/getUserAccept`, {
                 name: userData.data.name,
                 userId: userData.data._id
             }, {
