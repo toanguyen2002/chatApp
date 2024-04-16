@@ -8,7 +8,7 @@ function VideoCall() {
     const myMetting = async (element) => {
         const appId = 1369038062
         const server = "9f5459f14ae93ae1beffbcde28709515"
-        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appId, server, roomId, Date.now().toString(), "end")
+        const kitToken = ZegoUIKitPrebuilt.generateKitTokenForTest(appId, server, roomId, Date.now().toString(), "NameMember")
         const zc = ZegoUIKitPrebuilt.create(kitToken)
         zc.joinRoom({
             container: element,
@@ -16,11 +16,16 @@ function VideoCall() {
                 mode: ZegoUIKitPrebuilt.GroupCall
             },
             showScreenSharingButton: true,
-            showLeaveRoomConfirmDialog: true
+            showLeaveRoomConfirmDialog: true,
+            showPreJoinView: false,
+            preJoinViewConfig: false,
+            // onJoinRoom:
+            // show
+
 
         })
     }
-    console.log(myMetting);
+    // console.log(myMetting);
 
     return (
         <div>

@@ -21,8 +21,8 @@ const messageEntity = mongooes.Schema({
         type: Array
     },
     removeWitMe: {
-        type: Boolean,
-        default: false
+        type: Array,
+        default: []
     },
     typeMess: {
         type: String

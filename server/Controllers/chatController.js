@@ -194,6 +194,19 @@ const removeUserFromGroup = asynceHandle(async (req, res) => {
         res.json(remove)
     }
 })
+const removeAllUserFromGroup = asynceHandle(async (req, res) => {
+    const { chatId, userId } = req.body
+    const remove = await Chat.findByIdAndUpdate(
+        chatId, { users: [] },
+    )
+    if (remove) {
+        res.status(200).send(remove)
+    }
+    else {
+        res.status(404).send("remove fall")
+
+    }
+})
 const findChatByName = asynceHandle(async (req, res) => {
     try {
         const results = await Chat.find({
@@ -221,6 +234,7 @@ const findChatByName = asynceHandle(async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 })
+
 module.exports = {
     accessChat,
     fetchChats,
@@ -230,5 +244,6 @@ module.exports = {
     addUserToGroup,
     removeUserFromGroup,
     findChatByName,
-    fetchChatsById
+    fetchChatsById,
+    removeAllUserFromGroup
 }

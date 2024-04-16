@@ -27,8 +27,9 @@ function MyMessageConponent({ props }) {
     const handleGetidMessAndDelete = async (e) => {
         //http://localhost:5678/message/deleteMess
         try {
-            await axios.post(`http://localhost:5678/message/deleteMess`, {
-                messId: props._id
+            await axios.post(`http://localhost:5678/message/removeMess`, {
+                messId: props._id,
+                userId: userData.data._id
             }, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
