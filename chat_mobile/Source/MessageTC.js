@@ -187,8 +187,14 @@ const MessageTC = ({ navigation }) => {
 const MessageItem = (props) => {
   const navigation = useNavigation();
   const handlePress = () => {
-    navigation.navigate("SenddMessage", props); // Navigate to SendMessage screen
+    if (props.isGroup) {
+      navigation.navigate("SendMessageGroup", props); // Navigate to SendMessageGroup screen
+    } else {
+      navigation.navigate("SenddMessage", props); // Navigate to SendMessage screen
+    }
   };
+
+
 
   return (
     <TouchableOpacity onPress={handlePress}>
