@@ -4,7 +4,7 @@ import { Backdrop, Box, Button, CircularProgress, IconButton, Modal, Typography 
 import SendIcon from '@mui/icons-material/Send';
 import MessageComponent from '../ComponentItem/MessageComponent';
 import MyMessageConponent from '../ComponentItem/MessageConponentuser';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { myContext } from './MainComponent';
 import { io } from 'socket.io-client';
@@ -16,7 +16,7 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import DeleteAndAddMemberModal from './DeleteAndAddMemberModal'
 import ModalAddMember from './ModalAddMember'
-
+import LogoutIcon from '@mui/icons-material/Logout';
 const IP = "http://localhost:5678"
 var socket = io(IP)
 
@@ -42,9 +42,12 @@ export default function ChatAreaComponent() {
 
     const [open, setOpen] = useState(false)
     const handleOpen = () => setOpen(true);
+    const [ownGroup, setOwnGroup] = useState('')
 
     const [showListMem, setShowListMem] = useState(false)
     const [showAddMem, setShowAddMem] = useState(false)
+
+    const nav = useNavigate()
 
     //call video
     // const [stream, setStream] = useState();
@@ -143,9 +146,9 @@ export default function ChatAreaComponent() {
         )
         socket.emit("new message", dataSend.data)
         socket.emit("render-box-chat", true)
-        setContentMess("")
-        setRenderMess(!renderMess)
-        setMess([...mess, dataSend.data])
+        // setContentMess("")
+        // setRenderMess(!renderMess)
+        // setMess([...mess, dataSend.data])
         // messageEndRef.current.scrollIntoView({ behavior: 'smooth' })
 
     }
@@ -233,7 +236,7 @@ export default function ChatAreaComponent() {
     useEffect(() => {
         // ${IP}/chat/fetchChatsById
         const renderChatGroup = async () => {
-            console.log(chat_id);
+            // console.log(chat_id);
             try {
                 // setLoading(true)
                 const dataMessage = await axios.post(`${IP}/chat/fetchChatsById`,
@@ -246,7 +249,8 @@ export default function ChatAreaComponent() {
                         }
                     })
                 setChatView(dataMessage.data.isGroup)
-                console.log(dataMessage.data.isGroup);
+                setOwnGroup(dataMessage.data.groupAdmin._id)
+                // console.log(dataMessage.data);
             }
             catch (error) {
                 console.log(error);
@@ -254,14 +258,50 @@ export default function ChatAreaComponent() {
         }
         renderChatGroup()
     }, [chat_id])
-
+    const handleRemoveMember = async () => {
+        try {
+            const deleteUser = await axios.post(`${IP}/chat/removeUserFromGroup`, {
+                chatId: chat_id,
+                userId: userData.data._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            setRefresh(!refresh)
+            // socket.emit("render-box-chat", true)
+            nav("/app")
+        } catch (error) {
+            console.log(error);
+        }
+        console.log(userData.data._id);
+    }
+    const handleRemoveAll = async () => {
+        try {
+            const deleteAllUser = await axios.post(`${IP}/chat/removeAllUserFromGroup`, {
+                chatId: chat_id,
+                // userId: userData.data._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            setRefresh(!refresh)
+            socket.emit("render-box-chat", true)
+            nav("/app")
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const callUser = async (id) => {
-        window.open(`http://localhost:5173/room/${id}`)
+        window.open(`/room/${id}`)
+        // console.log(window.location.href.split("/app/chat/")[0] + `/room/${id}`);
+        // nav(`/room/${id}`)
         try {
             const dataSend = await axios.post(
                 `${IP}/message/`, {
                 chatId: chat_id,
-                content: `http://localhost:5173/room/${id}`,
+                content: window.location.href.split("/app/chat/")[0] + `/room/${id}`,
                 typeMess: "videoCall"
             },
                 {
@@ -280,15 +320,6 @@ export default function ChatAreaComponent() {
 
         // const localStream = navigator.mediaDevices.getUserMedia({video:true,audio:false})
     }
-
-    const answerCall = () => {
-
-
-    }
-    const leaveCall = () => {
-
-    }
-
     return (
         <><Backdrop open={loading}
             sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -296,55 +327,69 @@ export default function ChatAreaComponent() {
             <CircularProgress color="inherit" />
         </Backdrop>
             {open ? <DeleteAndAddMemberModal closemodal={setOpen} prop={{ _id: chat_id }} /> : <></>}
+            {showAddMem ? <ModalAddMember closemodal={setShowAddMem} prop={{ _id: chat_id }} /> : <div></div>}
+
             <div className='chat-area'>
                 <div className="chat-area-header">
                     <p className='chat-icon'>{chat_user[0]}</p>
 
                     <div className="chat-area-text">
                         <p className='chat-name'>{chat_user}</p>
-                        <div className="online">online</div>
+                        {/* <div className="online">online</div> */}
                         {/* <p className='chat-time'>{data.timeSend}</p> */}
                     </div>
+
+
                     {
-                        // console.log(chatView.isGroup)
                         chatView ? <>
                             <IconButton onClick={() => setShowAddMem(true)}>
                                 <GroupAddIcon />
                             </IconButton>
 
-                            <IconButton onClick={handleOpen}>
+                            {ownGroup === userData.data._id ? <IconButton onClick={handleOpen}>
                                 <ReduceCapacityIcon />
-                            </IconButton></> : <></>
+                            </IconButton> : <></>}
 
-                    }
-                    <IconButton onClick={() => callUser(chat_id)}>
-
-//                             <IconButton onClick={() => setShowListMem(true)}>
-//                                 <ReduceCapacityIcon />
-//                             </IconButton>
                         </> : <></>
 
                     }
+                    {/* <IconButton onClick={() => callUser(chat_id)}>
 
-                    <IconButton onClick={() => console.log(chat_id)}>
+                             <IconButton onClick={() => setShowListMem(true)}>
+                                 <ReduceCapacityIcon />
+                            </IconButton>
+                        </> : <></>
 
+                    } */}
+
+                    <IconButton onClick={() => callUser(chat_id)}>
                         <VideocamIcon />
                     </IconButton>
-                    <IconButton onClick={() => console.log(chat_id)}>
-                        <DeleteIcon />
-                    </IconButton>
+
+
+                    {chatView ?
+                        ownGroup === userData.data._id ? <IconButton onClick={handleRemoveAll}>
+                            <DeleteIcon />
+                        </IconButton> :
+                            <IconButton onClick={handleRemoveMember} >
+                                <LogoutIcon />
+                            </IconButton> : <></>
+                    }
+
                 </div>
-                
-                {showAddMem ? <ModalAddMember closemodal={setShowAddMem} /> : <div></div>}
+
 
 
                 <div className="chat-area-body" >
                     {mess.map((item, index) => {
                         if (item.sender._id != userData.data._id) {
+                            if (item.removeWitMe.includes(userData.data._id)) {
+                                return <></>
+                            }
                             return <MessageComponent props={item} key={index} />
                         }
                         else
-                            if (item.removeWitMe == true) {
+                            if (item.removeWitMe.includes(userData.data._id)) {
                                 return <></>
                             } else {
                                 return <MyMessageConponent props={item} key={index} />

@@ -37,6 +37,7 @@
   background-position: center;
   background-size: cover;
 }
+
 .get-users-modal2 {
   z-index: 1000;
   position: absolute;
@@ -489,7 +490,7 @@
   margin: 10px;
   border-radius: 20px;
   font-family: 'Times New Roman', Times, serif;
-
+  position: relative;
 
 }
 
@@ -525,20 +526,37 @@
   height: max-content;
   border-radius: 5px;
   color: #FF0000;
+  background: 1px;
 }
-.hidden-button{
+
+.hidden-button {
   background-color: white;
   border: none;
   color: #FF0000;
   position: relative;
   left: 15px;
+  background: 1px;
   z-index: 1000;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 .my-message-row:hover .hidden-form {
   display: block;
   cursor: pointer;
 }
+
+.hidden-client {
+  display: none;
+  position: absolute;
+  right: -35px;
+  bottom: 0px;
+}
+
+.message-container:hover .hidden-client {
+  display: block;
+  cursor: pointer;
+}
+
 
 .chat-row-time {
   display: flex;
@@ -573,7 +591,8 @@
   justify-content: center;
   align-items: center;
 }
-.modal-bottom{
+
+.modal-bottom {
   background-color: white;
   width: 450px;
   height: 350px;
@@ -584,9 +603,10 @@
   border-width: 0px;
   justify-content: center;
   align-items: center;
-  
+
 }
-.modal-upper{
+
+.modal-upper {
   background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
   height: 100vh;
   background-position: center;
@@ -733,6 +753,7 @@ input[type="file"] {
 .iconColor {
   color: #1E90FF;
 }
+
 .iconColor2 {
   color: white;
   position: relative;
@@ -878,6 +899,7 @@ input[type="file"] {
   left: 230px;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 .fr-cap3 {
   justify-content: center;
   align-items: center;
@@ -885,6 +907,7 @@ input[type="file"] {
   left: 100px;
   font-family: Arial, Helvetica, sans-serif;
 }
+
 .fr-cap4 {
   justify-content: center;
   align-items: center;
@@ -893,7 +916,7 @@ input[type="file"] {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-.input-area{
+.input-area {
   width: 130px;
   height: 25px;
   font-size: 15px;
@@ -905,7 +928,8 @@ input[type="file"] {
   top: 43%;
   right: 0;
 }
-.icon3{
+
+.icon3 {
   position: relative;
   right: 5px;
   top: 5px;

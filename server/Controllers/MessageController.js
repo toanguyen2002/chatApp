@@ -111,8 +111,11 @@ const blacnkMess = expressAsyncHandler(async (req, res) => {
     res.json(result);
 })
 const deleteMess = expressAsyncHandler(async (req, res) => {
-    const { messId } = req.body;
-    const result = await Message.findByIdAndUpdate(messId, { removeWitMe: true });
+    const { messId, userId } = req.body;
+    const result = await Message.findOne({ _id: messId });
+    result.removeWitMe.push(userId)
+    result.save()
+    // console.log();
     res.json(result);
 })
 

@@ -14,6 +14,11 @@ const chatEntity = mongooes.Schema({
         ref: "User"
     }
     ,
+    silverKey: {
+        type: Array,
+        default: []
+    }
+    ,
     lastMessage: {
         type: mongooes.Schema.Types.ObjectId,
         ref: "Message"

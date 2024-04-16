@@ -1,7 +1,30 @@
-import React, { useRef } from 'react'
-
+import axios from 'axios'
+import React, { useContext, useRef } from 'react'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import UndoIcon from '@mui/icons-material/Undo';
+import { myContext } from '../Component/MainComponent';
 function MessageComponent({ props }) {
     const refBox = useRef(null)
+    const { refresh, setRefresh } = useContext(myContext)
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    const handleGetidMessAndDelete = async (e) => {
+        //http://localhost:5678/message/deleteMess
+        // console.log(props._id);
+        try {
+            const rs = await axios.post(`http://localhost:5678/message/removeMess`, {
+                messId: props._id,
+                userId: userData.data._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            setRefresh(!refresh)
+            console.log(rs);
+        } catch (error) {
+            console.log(error);
+        }
+    }
     const renderContent = () => {
         if (props.content === '') {
             // console.log(props._id);
@@ -88,9 +111,16 @@ function MessageComponent({ props }) {
     return (
         <div className='message-container'>
             <p className='chat-icon'>{props.sender.name[0]}</p>
+            <br />
+            <div className='hidden-client'>
+                <button className='hidden-button ' onClick={handleGetidMessAndDelete}>
+                    <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>Xóa
+                </button>
+            </div>
             <div className='text-content'>
                 <p className='chat-name'>{props.sender.name}</p>
                 {renderContent()}
+
             </div>
 
         </div >
