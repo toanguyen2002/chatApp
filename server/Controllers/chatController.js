@@ -117,7 +117,6 @@ const createGroupChat = asynceHandle(async (req, res) => {
         res.status(400).send("more 2 to create group chat")
     }
 
-    users.push(req.user);
 
     try {
         const groupChat = await Chat.create({
@@ -130,7 +129,7 @@ const createGroupChat = asynceHandle(async (req, res) => {
         const fullGroupChat = await Chat.findOne({ _id: groupChat._id })
             .populate("users", "-password")
             .populate("groupAdmin", "-password");
-
+        users.push("userAdmin: ", req.user);
         res.status(200).json(fullGroupChat);
     } catch (error) {
         res.status(400);
@@ -232,6 +231,18 @@ const findChatByName = asynceHandle(async (req, res) => {
     } catch (error) {
         console.error("Error in findChatByName:", error);
         res.status(500).send("Internal Server Error");
+    }
+})
+
+const transAdminKey = asynceHandle(async (req, res) => {
+    const { chatId, userId } = req.body
+    const userTrans = User.findOne({ _id: userId })
+    try {
+        const result = Chat.findByIdAndUpdate(chatId, { groupAdmin: userTrans })
+        res.status(200).send(result)
+    } catch (error) {
+        res.status(404).send(error)
+        console.log(error);
     }
 })
 
