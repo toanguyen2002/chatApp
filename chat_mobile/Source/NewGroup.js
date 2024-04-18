@@ -50,9 +50,6 @@ export default function NewGroup({ navigation }) {
   const createGroupChat = async () => {
     try {
       const filteredCheckedUsers = checkedUsers.filter(item => item !== undefined);
-      console.log('====================================');
-      console.log(filteredCheckedUsers);
-      console.log('====================================');
       if (checkedUsers.length === 0) {
         Alert.alert("Thông báo", "Bạn chưa chọn thành viên!!!!!");
         return;
@@ -80,7 +77,7 @@ export default function NewGroup({ navigation }) {
       // Gửi thông báo tới server socket khi nhóm mới được tạo
       socket.emit("new-group", responseData);
       // Đóng modal hoặc thực hiện các thao tác khác sau khi tạo nhóm thành công
-      clockModal(false);
+      navigation.navigate("MessageTC")
       Alert.alert("Thông báo", "Tạo thành công nhóm " + name);
     } catch (error) {
       console.log("Error creating group chat: ", error);
