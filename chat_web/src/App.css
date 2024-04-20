@@ -425,9 +425,38 @@
   font-weight: 400;
   overflow: hidden;
   font-family: Arial, Helvetica, sans-serif;
-
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
 }
+.chat-title2 {
+  color: 	#4169E1;
+  font-weight: 400;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  position: relative;
+  left: 43px;
+  top: 10px;
+}
+.cap-video{
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+.call-cap{
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  top: 4px;
+  left: 2px;
+  color: #696969;
+}
+.call-btn{
 
+  height: 30px;
+  width: 100px;
+  border-radius: 10px;
+}
 .chat-area {
   display: flex;
   flex-direction: column;
@@ -942,5 +971,16 @@ input[type="file"] {
   right: 5px;
   top: 5px;
 }
-
+.separator2 {
+  height: 0.5px;
+  width: calc(100%); 
+  margin: 0 auto;
+  background-color: #ccc;
+}
+.separator {
+  height: 1px;
+  width: calc(100% - 40px); 
+  margin: 0 auto;
+  background-color: #ccc;
+}
 /* 2/4/2024 */
