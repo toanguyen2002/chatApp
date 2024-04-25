@@ -48,7 +48,7 @@
   border-radius: 0px;
   display: flex;
   flex-direction: column;
-  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1712134367/gqqby58c4o90gursep6a.png');
+  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1713257263/ojqyikpj9a9h3fkuude3.jpg');
   background-position: center;
   background-size: cover;
   border-radius: 15px;
@@ -425,9 +425,38 @@
   font-weight: 400;
   overflow: hidden;
   font-family: Arial, Helvetica, sans-serif;
-
+  text-decoration: none;
+  justify-content: center;
+  align-items: center;
 }
+.chat-title2 {
+  color: 	#4169E1;
+  font-weight: 400;
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  position: relative;
+  left: 43px;
+  top: 10px;
+}
+.cap-video{
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+.call-cap{
+  font-family: Arial, Helvetica, sans-serif;
+  position: relative;
+  top: 4px;
+  left: 2px;
+  color: #696969;
+}
+.call-btn{
 
+  height: 30px;
+  width: 100px;
+  border-radius: 10px;
+}
 .chat-area {
   display: flex;
   flex-direction: column;
@@ -521,12 +550,12 @@
   bottom: -10px;
   display: none;
   z-index: 1000;
-  background-color: white;
   width: 100px;
   height: max-content;
   border-radius: 5px;
   color: #FF0000;
   background: 1px;
+  background-color: white;
 }
 
 .hidden-button {
@@ -546,10 +575,16 @@
 }
 
 .hidden-client {
+  z-index: 500;
   display: none;
   position: absolute;
-  right: -35px;
+  right: -75px;
   bottom: 0px;
+  background-color: white;
+  border-radius: 5px;
+  width: 70px;
+  justify-content: center;
+  align-items: center;
 }
 
 .message-container:hover .hidden-client {
@@ -603,17 +638,19 @@
   border-width: 0px;
   justify-content: center;
   align-items: center;
-
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 
 .modal-upper {
-  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1709910003/flevwdswocuiefukymtl.jpg');
+  background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1713258763/mkcpo78s2ohayv513eqk.gif');
   height: 100vh;
   background-position: center;
   background-size: cover;
   width: 450px;
   height: 100px;
-
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
 }
 
 .modal-header {
@@ -935,6 +972,7 @@ input[type="file"] {
   top: 5px;
 }
 
+
 .notification {
   display: flex;
   flex-direction: row;
@@ -942,6 +980,20 @@ input[type="file"] {
   color: white;
   text-shadow: 1px 1px black;
   margin-top: 20px;
+}
+
+
+.separator2 {
+  height: 0.5px;
+  width: calc(100%); 
+  margin: 0 auto;
+  background-color: #ccc;
+}
+.separator {
+  height: 1px;
+  width: calc(100% - 40px); 
+  margin: 0 auto;
+  background-color: #ccc;
 }
 
 /* 2/4/2024 */

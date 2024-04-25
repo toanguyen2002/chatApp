@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.1.6";
+const ip = "192.168.110.194";
 export default function Phonebook() {
   const navigation = useNavigation();
 
@@ -31,26 +31,25 @@ export default function Phonebook() {
 
   const [usersNotFriend, setUsersNotFriend] = useState([]);
 
-  //lỗi socket ở chỗ này gọi ra mà ko sài nên nó lỗi
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const userDataString = await AsyncStorage.getItem("userData");
-  //       const userDataObject = JSON.parse(userDataString);
-  //       const response = await axios.get("http://" + ip + ":5678/chat/", {
-  //         headers: {
-  //           Authorization: `Bearer ${userDataObject.token}`,
-  //         },
-  //       });
-  //       setDataChatBox(response.data);
-  //       socket.emit("render-box-chat", true);
-  //       // console.log(response.data)
-  //     } catch (error) {
-  //       console.log("Error fetching data:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, [dataChatBox]);
+  // lỗi socket ở chỗ này gọi ra mà ko sài nên nó lỗi
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userDataString = await AsyncStorage.getItem("userData");
+        const userDataObject = JSON.parse(userDataString);
+        const response = await axios.get("http://" + ip + ":5678/chat/", {
+          headers: {
+            Authorization: `Bearer ${userDataObject.token}`,
+          },
+        });
+        setDataChatBox(response.data);
+        // console.log(response.data)
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [dataChatBox]);
 
   useEffect(() => {
     const getUser = async () => {
@@ -202,6 +201,7 @@ export default function Phonebook() {
                   <Image
                     style={{ width: 70, height: 70, resizeMode: "contain" }}
                     source={require("../assets/newgrp.png")}
+                    
                   />
                   <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
                 </View>

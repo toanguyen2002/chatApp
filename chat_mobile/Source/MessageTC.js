@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.1.6";
+const ip = "192.168.110.194";
 
 const socket = io("http://localhost:5678");
 const MessageTC = ({ navigation }) => {
@@ -187,8 +187,14 @@ const MessageTC = ({ navigation }) => {
 const MessageItem = (props) => {
   const navigation = useNavigation();
   const handlePress = () => {
-    navigation.navigate("SenddMessage", props); // Navigate to SendMessage screen
+    if (props.isGroup) {
+      navigation.navigate("SendMessageGroup", props); // Navigate to SendMessageGroup screen
+    } else {
+      navigation.navigate("SenddMessage", props); // Navigate to SendMessage screen
+    }
   };
+
+
 
   return (
     <TouchableOpacity onPress={handlePress}>

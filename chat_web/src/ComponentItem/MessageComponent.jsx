@@ -3,6 +3,7 @@ import React, { useContext, useRef } from 'react'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import UndoIcon from '@mui/icons-material/Undo';
 import { myContext } from '../Component/MainComponent';
+import VideocamIcon from '@mui/icons-material/Videocam';
 function MessageComponent({ props }) {
     const refBox = useRef(null)
     const { refresh, setRefresh } = useContext(myContext)
@@ -47,7 +48,14 @@ function MessageComponent({ props }) {
             else if (props.typeMess === 'videoCall') {
                 return (
                     <div className='text-content'>
-                        <a href={props.content} className='chat-title'>Click To Join</a>
+                        <div className='cap-video'>
+                            <VideocamIcon className='iconColor' />
+                            <p className='call-cap'>Cuộc gọi video</p>
+                        </div>
+                        <div class="separator2"></div>
+                        <div className='call-btn'>
+                            <a href={props.content} className='chat-title2'>Gọi lại</a>
+                        </div>
                     </div>
                 );
             }

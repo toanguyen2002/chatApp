@@ -24,7 +24,7 @@ import Video from "react-native-video";
 import axios from "axios";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.1.6";
+const ip = "192.168.110.194";
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
