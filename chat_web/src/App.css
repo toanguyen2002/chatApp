@@ -971,6 +971,18 @@ input[type="file"] {
   right: 5px;
   top: 5px;
 }
+
+
+.notification {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: white;
+  text-shadow: 1px 1px black;
+  margin-top: 20px;
+}
+
+
 .separator2 {
   height: 0.5px;
   width: calc(100%); 
@@ -983,4 +995,5 @@ input[type="file"] {
   margin: 0 auto;
   background-color: #ccc;
 }
+
 /* 2/4/2024 */
