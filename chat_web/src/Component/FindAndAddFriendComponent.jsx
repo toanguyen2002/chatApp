@@ -34,7 +34,9 @@ function FindAndAddFriendComponent({ closemodal }) {
     ]);
     const clickToaddFriend = async (userIdWantToAdd) => {
         // console.log(userIdWantToAdd);
+
         try {
+
             await axios.post(`${IP}/user/addfriend`, {
                 userid: userData.data._id,
                 friendId: userIdWantToAdd

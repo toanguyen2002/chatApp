@@ -129,8 +129,7 @@ function MyMessageConponent({ props }) {
     };
 
     return (
-        <div className='my-message'>
-
+        props.typeMess !== 'notification' ? <div className='my-message'>
             <div className="my-message-row">
                 <div className='hidden-form'>
                     <button className='hidden-button' onClick={handleGetidMessAndReplaceToNone}>
@@ -149,6 +148,8 @@ function MyMessageConponent({ props }) {
                 }
             </div>
 
+        </div> : <div className='notification'>
+            <p className='notification-text'>{props.content}</p>
         </div>
     )
 }

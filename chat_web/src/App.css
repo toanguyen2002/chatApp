@@ -935,4 +935,13 @@ input[type="file"] {
   top: 5px;
 }
 
+.notification {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  color: white;
+  text-shadow: 1px 1px black;
+  margin-top: 20px;
+}
+
 /* 2/4/2024 */

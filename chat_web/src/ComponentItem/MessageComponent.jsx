@@ -51,6 +51,13 @@ function MessageComponent({ props }) {
                     </div>
                 );
             }
+            else if (props.typeMess === 'notification') {
+                return (
+                    <div className='notification'>
+                        <p className='notification-text'>{props.content}</p>
+                    </div>
+                )
+            }
             else {
                 return (
                     <div className='img-box' ref={refBox}>
@@ -109,7 +116,7 @@ function MessageComponent({ props }) {
         }
     };
     return (
-        <div className='message-container'>
+        props.typeMess !== 'notification' ? <div className='message-container'>
             <p className='chat-icon'>{props.sender.name[0]}</p>
             <br />
             <div className='hidden-client'>
@@ -123,7 +130,9 @@ function MessageComponent({ props }) {
 
             </div>
 
-        </div >
+        </div > : <div className='notification'>
+            <p className='notification-text'>{props.content}</p>
+        </div>
     )
 }
 

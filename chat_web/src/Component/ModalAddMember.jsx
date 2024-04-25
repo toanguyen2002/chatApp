@@ -28,9 +28,21 @@ function ModalAddMember({ closemodal, prop }) {
     }, [
         prop._id, refresh
     ]);
-    const handleAddmem = async (idUser) => {
+    const handleAddmem = async (idUser, name) => {
         try {
-            const deleteUser = await axios.post(`${IP}/chat/addUserToGroupChat`, {
+            await axios.post(
+                `${IP}/message/`, {
+                chatId: prop._id,
+                content: `${userData.data.name} đã thêm ${name} vào phòng`,
+                typeMess: "notification"
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userData.data.token}`,
+                    }
+                }
+            )
+            await axios.post(`${IP}/chat/addUserToGroupChat`, {
                 chatId: prop._id,
                 userId: idUser
             }, {
@@ -60,7 +72,7 @@ function ModalAddMember({ closemodal, prop }) {
                                 <p className='chat-icon'>{item.name[0]}</p>
                                 <p className='chat-name'>{item.name}</p>
                                 <div className="btn-group">
-                                    {item._id !== userData.data._id ? <button className='btn-style' onClick={() => handleAddmem(item._id)}>Thêm Vào Nhóm</button> : <></>}
+                                    {item._id !== userData.data._id ? <button className='btn-style' onClick={() => handleAddmem(item._id, item.name)}>Thêm Vào Nhóm</button> : <></>}
                                 </div>
                             </div>
                         </>
