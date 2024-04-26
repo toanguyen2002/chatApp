@@ -3,7 +3,7 @@ const Chat = require("../Entity/chatEntity")
 const User = require("../Entity/userEntity")
 const { protect } = require("../middleware/auth")
 const { use } = require("../Router/chatRouter")
-
+const { default: mongoose } = require("mongoose");
 const accessChat = asynceHandle(async (req, res) => {
     const { userId, chatNameValue } = req.body
     if (!userId) {
@@ -234,7 +234,26 @@ const findChatByName = asynceHandle(async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 })
+const sendGoldkey = asynceHandle(async (req, res) => {
+    {
+        const chat = await Chat.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(req.body.chatId) } }])
+        // const ownGroup = await User.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(req.body.ownGroup) } }])
+        const newOwnGroup = await User.aggregate([{ $match: { _id: new mongoose.Types.ObjectId(req.body.newOwnGroup) } }])
+        const chatFindByid = await Chat.findOne({ _id: new mongoose.Types.ObjectId(req.body.chatId) })
+        chatFindByid.groupAdmin = new mongoose.Types.ObjectId(req.body.newOwnGroup)
+        chatFindByid.save()
 
+        res.send(chatFindByid)
+    }
+})
+const sendSilverkey = asynceHandle(async (req, res) => {
+    {
+        const chatFindByid1 = await Chat.findOne({ _id: new mongoose.Types.ObjectId(req.body.chatId) })
+        chatFindByid1.silverKey.push(new mongoose.Types.ObjectId(req.body.newOwnGroup))
+        chatFindByid1.save()
+        res.send(chatFindByid1)
+    }
+})
 module.exports = {
     accessChat,
     fetchChats,
@@ -245,5 +264,7 @@ module.exports = {
     removeUserFromGroup,
     findChatByName,
     fetchChatsById,
-    removeAllUserFromGroup
+    removeAllUserFromGroup,
+    sendGoldkey,
+    sendSilverkey
 }

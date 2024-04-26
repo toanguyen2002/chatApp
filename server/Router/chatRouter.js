@@ -4,7 +4,7 @@ const User = require("../Entity/userEntity")
 
 
 const { protect } = require("../middleware/auth")
-const { fetchChats, accessChat, createGroupChat, fetchGroups, renameGroupChat, addUserToGroup, removeUserFromGroup, findChatByName, fetchChatsById, removeAllUserFromGroup } = require("../Controllers/chatController")
+const { fetchChats, accessChat, createGroupChat, fetchGroups, renameGroupChat, addUserToGroup, removeUserFromGroup, findChatByName, fetchChatsById, removeAllUserFromGroup, sendGoldkey, sendSilverkey } = require("../Controllers/chatController")
 
 const express = require("express")
 const Router = express.Router();
@@ -18,9 +18,9 @@ Router.route("/removeUserFromGroup").post(protect, removeUserFromGroup)
 Router.route("/findChatByName").get(protect, findChatByName)
 Router.route("/fetchChatsById").post(protect, fetchChatsById)
 Router.route("/removeAllUserFromGroup").post(protect, removeAllUserFromGroup)
+Router.route("/sendGoldkey").post(protect, sendGoldkey)
+Router.route("/sendSilverkey").post(protect, sendSilverkey)
 
-// router.route("/fetchGroups").get(protect, fetchGroups)
-// router.route("/").post(protect, fetchChats)
 
 
 module.exports = Router
