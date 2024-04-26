@@ -4,6 +4,7 @@ import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import UndoIcon from '@mui/icons-material/Undo';
 import { myContext } from '../Component/MainComponent';
 import VideocamIcon from '@mui/icons-material/Videocam';
+const IP = "http://localhost:5678"
 function MessageComponent({ props }) {
     const refBox = useRef(null)
     const { refresh, setRefresh } = useContext(myContext)
@@ -12,9 +13,30 @@ function MessageComponent({ props }) {
         //http://localhost:5678/message/deleteMess
         // console.log(props._id);
         try {
-            const rs = await axios.post(`http://localhost:5678/message/removeMess`, {
+            const rs = await axios.post(`${IP}/message/removeMess`, {
                 messId: props._id,
                 userId: userData.data._id
+            }, {
+                headers: {
+                    Authorization: `Bearer ${userData.data.token}`,
+                },
+            })
+            setRefresh(!refresh)
+            console.log(rs);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const handlesendKey = async (idChat, idNewOwn) => {
+
+
+        console.log(props.sender._id);
+        console.log(props.chat._id);
+
+        try {
+            const rs = await axios.post(`${IP}/chat/sendGoldkey`, {
+                chatId: props.chat._id,
+                newOwnGroup: props.sender._id
             }, {
                 headers: {
                     Authorization: `Bearer ${userData.data.token}`,
@@ -58,6 +80,13 @@ function MessageComponent({ props }) {
                         </div>
                     </div>
                 );
+            }
+            else if (props.typeMess === 'notification') {
+                return (
+                    <div className='notification'>
+                        <p className='notification-text'>{props.content}</p>
+                    </div>
+                )
             }
             else {
                 return (
@@ -117,12 +146,19 @@ function MessageComponent({ props }) {
         }
     };
     return (
-        <div className='message-container'>
-            <p className='chat-icon'>{props.sender.name[0]}</p>
+        props.typeMess !== 'notification' ? <div className='message-container'>
+
+            <div className='chat-icon show-option'>{props.sender.name[0]}
+            </div>
             <br />
             <div className='hidden-client'>
+                {props.chat.groupAdmin ?
+                    props.chat.groupAdmin === userData.data._id ?
+                        <button className='hidden-button ' onClick={handlesendKey}> <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>send Key
+                        </button> : <></> : <></>}
+
                 <button className='hidden-button ' onClick={handleGetidMessAndDelete}>
-                    <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>Xóa
+                    <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>Xóa123
                 </button>
             </div>
             <div className='text-content'>
@@ -131,7 +167,9 @@ function MessageComponent({ props }) {
 
             </div>
 
-        </div >
+        </div > : <div className='notification'>
+            <p className='notification-text'>{props.content}</p>
+        </div>
     )
 }
 

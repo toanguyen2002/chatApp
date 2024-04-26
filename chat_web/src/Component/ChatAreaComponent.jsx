@@ -259,8 +259,22 @@ export default function ChatAreaComponent() {
         renderChatGroup()
     }, [chat_id])
     const handleRemoveMember = async () => {
+        // notification
+
         try {
-            const deleteUser = await axios.post(`${IP}/chat/removeUserFromGroup`, {
+            await axios.post(
+                `${IP}/message/`, {
+                chatId: chat_id,
+                content: `${userData.data.name} đã rời khỏi phòng`,
+                typeMess: "notification"
+            },
+                {
+                    headers: {
+                        Authorization: `Bearer ${userData.data.token}`,
+                    }
+                }
+            )
+            await axios.post(`${IP}/chat/removeUserFromGroup`, {
                 chatId: chat_id,
                 userId: userData.data._id
             }, {
@@ -268,6 +282,7 @@ export default function ChatAreaComponent() {
                     Authorization: `Bearer ${userData.data.token}`,
                 },
             })
+
             setRefresh(!refresh)
             // socket.emit("render-box-chat", true)
             nav("/app")
@@ -415,7 +430,7 @@ export default function ChatAreaComponent() {
                         <IconButton>
                             <label htmlFor="">
                                 <AttachFileIcon />
-                                <input multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => uploadmultiImage()} />
+                                <input onClick={() => console.log(1)} multiple type="file" title='' content='' name='imageData' ref={fileRef} onChange={() => uploadmultiImage()} />
                             </label>
                         </IconButton>
                         <IconButton onClick={sendMess}>
