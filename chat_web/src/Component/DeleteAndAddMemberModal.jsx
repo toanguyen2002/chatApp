@@ -59,6 +59,20 @@ function DeleteAndAddMemberModal({ closemodal, prop }) {
             console.log(error);
         }
     }
+    const showbtnkickmember = (item) => {
+        console.log(prop);
+        if (item._id !== userData.data._id) {
+            return (
+                <button className='btn-style' onClick={() => handleRemoveMember(item._id, item.name)}>Xóa Khỏi Nhóm</button>
+            )
+        }
+        // else{
+        //     if (item.) {
+
+        //     }
+        // }
+
+    }
     return (
         <div>
             <div className="get-users-modal2">
@@ -76,7 +90,11 @@ function DeleteAndAddMemberModal({ closemodal, prop }) {
                                 <p className='chat-icon'>{item.name[0]}</p>
                                 <p className='chat-name'>{item.name}</p>
                                 <div className="btn-group">
-                                    {item._id !== userData.data._id ? <button className='btn-style' onClick={() => handleRemoveMember(item._id, item.name)}>Xóa Khỏi Nhóm</button> : <></>}
+                                    {
+
+                                        showbtnkickmember(item)
+
+                                    }
                                 </div>
                             </div>
                         </>

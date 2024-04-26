@@ -4,7 +4,7 @@ import { myContext } from '../Component/MainComponent'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import UndoIcon from '@mui/icons-material/Undo';
 import VideocamIcon from '@mui/icons-material/Videocam';
-
+const IP = "http://localhost:5678"
 function MyMessageConponent({ props }) {
     const refBox = useRef(null)
     const { refresh, setRefresh } = useContext(myContext)
@@ -12,7 +12,7 @@ function MyMessageConponent({ props }) {
 
     const handleGetidMessAndReplaceToNone = async () => {
         try {
-            await axios.post(`http://localhost:5678/message/blankMess`, {
+            await axios.post(`${IP}/message/blankMess`, {
                 messId: props._id
             }, {
                 headers: {
@@ -26,9 +26,9 @@ function MyMessageConponent({ props }) {
         // console.log(idUser);
     }
     const handleGetidMessAndDelete = async (e) => {
-        //http://localhost:5678/message/deleteMess
+        //${IP}/message/deleteMess
         try {
-            await axios.post(`http://localhost:5678/message/removeMess`, {
+            await axios.post(`${IP}/message/removeMess`, {
                 messId: props._id,
                 userId: userData.data._id
             }, {
@@ -140,6 +140,7 @@ function MyMessageConponent({ props }) {
         props.typeMess !== 'notification' ? <div className='my-message'>
             <div className="my-message-row">
                 <div className='hidden-form'>
+                    <button className="gold-key-hover">Chuyển Trưởng Phòng</button>
                     <button className='hidden-button' onClick={handleGetidMessAndReplaceToNone}>
                         <UndoIcon className='icon3'></UndoIcon>Thu Hồi
                     </button>
