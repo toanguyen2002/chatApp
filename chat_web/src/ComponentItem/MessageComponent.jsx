@@ -1,7 +1,8 @@
 import axios from 'axios'
 import React, { useContext, useRef } from 'react'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import UndoIcon from '@mui/icons-material/Undo';
+import KeyIcon from '@mui/icons-material/Key';
+import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import { myContext } from '../Component/MainComponent';
 import VideocamIcon from '@mui/icons-material/Videocam';
 const IP = "http://localhost:5678"
@@ -151,14 +152,14 @@ function MessageComponent({ props }) {
             <div className='chat-icon show-option'>{props.sender.name[0]}
             </div>
             <br />
-            <div className='hidden-client'>
+            <div className='hidden-client2'>
                 {props.chat.groupAdmin ?
                     props.chat.groupAdmin === userData.data._id ?
-                        <button className='hidden-button ' onClick={handlesendKey}> <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>send Key
+                        <button className='hidden-button ' onClick={handlesendKey}> <KeyIcon className='icon3'></KeyIcon>Send Key
                         </button> : <></> : <></>}
-
-                <button className='hidden-button ' onClick={handleGetidMessAndDelete}>
-                    <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>Xóa123
+                <div class="separator2"></div>
+                <button className='hidden-button2 ' onClick={handleGetidMessAndDelete}>
+                    <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>Xóa
                 </button>
             </div>
             <div className='text-content'>
