@@ -14,7 +14,6 @@ import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function User({ navigation }) {
-  
   const [userData, setUserData] = useState(null);
 
   const handlePress = () => {
@@ -35,6 +34,7 @@ export default function User({ navigation }) {
 
     fetchData();
   }, []);
+
   return (
     <ScrollView>
       <View>
@@ -48,12 +48,7 @@ export default function User({ navigation }) {
           <View style={styles.searchIconContainer}>
             <TextInput placeholder="Tìm kiếm" style={styles.input}></TextInput>
           </View>
-          <Pressable
-            onPress={() => {
-              navigation.navigate("Setting");
-            }}
-            style={styles.settingsIconContainer}
-          >
+          <Pressable style={styles.settingsIconContainer}>
             <SimpleLineIcons name="settings" size={24} color="white" />
           </Pressable>
         </View>
@@ -65,16 +60,23 @@ export default function User({ navigation }) {
               source={require("../assets/avt1.png")}
               style={styles.avatarImage}
             ></Image>
+            <View></View>
             <View style={styles.userInfoContainer}>
-              <Text style={styles.userNameText}>{userData && userData.name}</Text>
-              <Text style={styles.viewProfileText}>{userData && userData.email}</Text>
+              <Text style={styles.userNameText}>
+                {userData && userData.name}
+              </Text>
+              <Text style={styles.viewProfileText}>
+                {userData && userData.email}
+              </Text>
             </View>
             <View style={styles.exchangeIconContainer}>
               <FontAwesome name="exchange" size={24} color="black" />
+              <Text>hh</Text>
             </View>
           </View>
           <View style={styles.sectionDivider}></View>
         </View>
+
         <View>
           <Pressable style={styles.button} onPress={handlePress}>
             <Text style={styles.buttonText}>Đăng Xuất</Text>
@@ -87,7 +89,7 @@ export default function User({ navigation }) {
 const styles = {
   container: {
     flexDirection: "row",
-    backgroundColor: "blue",
+    backgroundColor: "#0099FF",
     height: 50,
     alignItems: "center",
     justifyContent: "center",
