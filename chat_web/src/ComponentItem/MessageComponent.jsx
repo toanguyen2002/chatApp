@@ -5,7 +5,7 @@ import KeyIcon from '@mui/icons-material/Key';
 import VpnKeyOutlinedIcon from '@mui/icons-material/VpnKeyOutlined';
 import { myContext } from '../Component/MainComponent';
 import VideocamIcon from '@mui/icons-material/Videocam';
-const IP = "http://localhost:5678"
+const IP = "https://mail.getandbuy.shop"
 function MessageComponent({ props }) {
     const refBox = useRef(null)
     const { refresh, setRefresh } = useContext(myContext)
