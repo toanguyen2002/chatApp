@@ -140,12 +140,14 @@ function MyMessageConponent({ props }) {
         props.typeMess !== 'notification' ? <div className='my-message'>
             <div className="my-message-row">
                 <div className='hidden-form'>
-                   
+                    <button className="gold-key-hover">Chuyển Trưởng Phòng</button>
+                    <div class="separator2"></div> 
                     <button className='hidden-button' onClick={handleGetidMessAndReplaceToNone}>
                         <UndoIcon className='icon3'></UndoIcon>Thu Hồi
                     </button>
                     <br />
-                    <button className='hidden-button' onClick={handleGetidMessAndDelete}>
+                    <div class="separator2"></div>
+                    <button className='hidden-button2' onClick={handleGetidMessAndDelete}>
                         <DeleteOutlineIcon className='icon3'></DeleteOutlineIcon>Xóa
                     </button>
                 </div>

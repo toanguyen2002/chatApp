@@ -10,7 +10,7 @@
   width: 300px;
   height: 400px;
   top: calc(100vh - 400px);
-  overflow: scroll;
+  overflow: auto;
   border-radius: 0px;
   display: flex;
   flex-direction: column;
@@ -27,17 +27,33 @@
   width: 600px;
   height: 500px;
   left: 40%;
-  top: 10%;
-  overflow: scroll;
-  border-radius: 0px;
-  border: 1px solid black;
+  top: 15%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   background-image: url('https://res.cloudinary.com/dhyt592i7/image/upload/v1712134367/gqqby58c4o90gursep6a.png');
   background-position: center;
   background-size: cover;
+  border-radius: 15px;
+}
+.get-users-modal::-webkit-scrollbar {
+  width: 12px; 
 }
 
+.get-users-modal::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border: 0; 
+}
+
+.get-users-modal::-webkit-scrollbar-thumb {
+  background-color: #888; 
+  border: 0; 
+  border-radius: 6px; 
+}
+
+.get-users-modal::-webkit-scrollbar-thumb:hover {
+  background-color: #555; 
+}
 .get-users-modal2 {
   z-index: 1000;
   position: absolute;
@@ -52,6 +68,7 @@
   background-position: center;
   background-size: cover;
   border-radius: 15px;
+  overflow-y: auto;
 }
 
 .model-header {
@@ -441,7 +458,7 @@
   font-family: Arial, Helvetica, sans-serif;
   text-decoration: none;
   position: relative;
-  left: 43px;
+  left: 45px;
   top: 10px;
 }
 
@@ -583,8 +600,19 @@
   position: relative;
   left: 15px;
   background: 1px;
-  z-index: 1000;
+  z-index: 500;
   font-family: Arial, Helvetica, sans-serif;
+}
+.hidden-button2 {
+  background-color: white;
+  border: none;
+  color: #FF0000;
+  position: relative;
+  left: 15px;
+  background: 1px;
+  z-index: 500;
+  font-family: Arial, Helvetica, sans-serif;
+  bottom: 3px;
 }
 
 .my-message-row:hover .hidden-form {
@@ -604,12 +632,27 @@
   justify-content: center;
   align-items: center;
 }
+.hidden-client2 {
+  z-index: 500;
+  display: none;
+  position: absolute;
+  right: -100px;
+  bottom: 0px;
+  background-color: white;
+  border-radius: 5px;
+  width: 100px;
+  justify-content: center;
+  align-items: center;
+}
 
 .message-container:hover .hidden-client {
   display: block;
   cursor: pointer;
 }
-
+.message-container:hover .hidden-client2 {
+  display: block;
+  cursor: pointer;
+}
 
 .chat-row-time {
   display: flex;
@@ -996,12 +1039,13 @@ input[type="file"] {
   color: white;
   text-shadow: 1px 1px black;
   margin-top: 20px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 
 .separator2 {
   height: 0.5px;
-  width: calc(100%);
+  width: calc(100% - 10px);
   margin: 0 auto;
   background-color: #ccc;
 }
@@ -1012,5 +1056,76 @@ input[type="file"] {
   margin: 0 auto;
   background-color: #ccc;
 }
+.slide-img{
+  width: 700px;
+  height: 400px;
+}
+#slideshow {
+  width: 700px;
+  height: 400px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+.slide-container {
+  width: 2100px; 
+  height: 400px; 
+  position: relative;
+  -webkit-animation: slide 8s ease-in-out infinite;
+  -moz-animation: slide 8s ease-in-out infinite;
+  -ms-animation: slide 8s ease-in-out infinite;
+  -o-animation: slide 8s ease-in-out infinite;
+  animation: slide 8s ease-in-out infinite;
+}
+.slide-container section {
+  width: 700px;
+  height: 400px;
+  float: left;
+}
+
+.slide-container section:nth-child(1) 
+.slide-container section:nth-child(2) 
+.slide-container section:nth-child(3) 
+
+.slide-container:hover {
+  animation-play-state: paused;
+  -webkit-animation-play-state: paused;
+}
+
+@-webkit-keyframes slide {
+  0% {left: 0;}
+  25% {left: -700px;} 
+  50% {left: -1400px;} 
+  75% {left: -2100px;} 
+  100% {left: 0;} 
+}
+@-moz-keyframes slide {
+  0% {left: 0;}
+  25% {left: -700px;} 
+  50% {left: -1400px;} 
+  75% {left: -2100px;} 
+  100% {left: 0;}
+}
+@-ms-keyframes slide {
+  0% {left: 0;}
+  25% {left: -700px;} 
+  50% {left: -1400px;} 
+  75% {left: -2100px;} 
+  100% {left: 0;}
+}
+@-o-keyframes slide {
+  0% {left: 0;}
+  25% {left: -700px;} 
+  50% {left: -1400px;} 
+  75% {left: -2100px;} 
+  100% {left: 0;}
+}
+@keyframes slide {
+  0% {left: 0;}
+  25% {left: -700px;} 
+  50% {left: -1400px;} 
+  75% {left: -2100px;} 
+  100% {left: 0;}
+}
+
 
 /* 2/4/2024 */
