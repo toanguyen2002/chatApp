@@ -5,7 +5,7 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.1.214";
+const ip = "192.168.1.149";
 const socket = io("http://localhost:5678");
 export default function NewGroup({ navigation }) {
   const [users, setUsers] = useState([]);
@@ -129,7 +129,7 @@ export default function NewGroup({ navigation }) {
       </View>
       <ScrollView style={styles.friendList}>
         <View>
-          <Text style={{ fontSize: 17 }}>Danh sách bạn bè</Text>
+          <Text style={{ fontSize: 17,fontWeight:"bold" }}>Danh sách bạn bè:</Text>
         </View>
         <View
           style={{

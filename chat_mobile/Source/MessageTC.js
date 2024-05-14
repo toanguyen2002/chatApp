@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.1.214";
+const ip = "192.168.1.149";
 
 const socket = io("http://localhost:5678");
 const MessageTC = ({ navigation }) => {
@@ -132,7 +132,7 @@ const MessageTC = ({ navigation }) => {
               <View style={styles.modalContent}>
                 <Pressable style={{ flexDirection: "row" }}>
                   <View style={{ marginLeft: 10 }}>
-                    <AntDesign name="adduser" size={25} color="#A9A9A9" />
+                    <AntDesign name="adduser" size={25} color="#FFF68F" />
                   </View>
 
                   <Pressable
@@ -157,7 +157,7 @@ const MessageTC = ({ navigation }) => {
                   style={{ flexDirection: "row", marginTop: 25 }}
                 >
                   <View style={{ marginLeft: 10 }}>
-                    <AntDesign name="addusergroup" size={25} color="#A9A9A9" />
+                    <AntDesign name="addusergroup" size={25} color="#FFF68F" />
                   </View>
                   <View style={{ marginLeft: 10, marginTop: 2 }}>
                     <Text style={{ fontSize: 20, fontWeight: 400 }}>
@@ -167,7 +167,7 @@ const MessageTC = ({ navigation }) => {
                 </Pressable>
                 <Pressable style={{ flexDirection: "row", marginTop: 25 }}>
                   <View style={{ marginLeft: 10 }}>
-                    <AntDesign name="cloudo" size={25} color="#A9A9A9" />
+                    <AntDesign name="cloudo" size={25} color="#FFF68F" />
                   </View>
                   <View style={{ marginLeft: 10, marginTop: 2 }}>
                     <Text style={{ fontSize: 20, fontWeight: 400 }}>
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     marginLeft: 160,
   },
   modalContent: {
-    backgroundColor: "#1C86EE",
+    backgroundColor: "#00BFFF",
     padding: 20,
     borderRadius: 10,
     width: 230,

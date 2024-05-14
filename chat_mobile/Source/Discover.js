@@ -9,16 +9,22 @@ import {
 import React from "react";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons';
-import { EvilIcons } from '@expo/vector-icons';
-
+import { Entypo } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 
 export default function User({ navigation }) {
   return (
     <ScrollView>
-
       <View>
-        <View style={{ flexDirection: "row", backgroundColor: "blue", height: 50, alignItems: "center", justifyContent: 'center' }}>
+        <View
+          style={{
+            flexDirection: "row",
+            backgroundColor: "blue",
+            height: 50,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <AntDesign name="search1" size={25} color="white" />
           <View style={{ marginLeft: 20, marginTop: 2 }}>
             <TextInput
@@ -42,7 +48,6 @@ export default function User({ navigation }) {
         </View>
       </View>
 
-
       <View style={{ width: 420, height: 2800, backgroundColor: "#DCDCDC" }}>
         <View style={{ width: 420, height: 2800, backgroundColor: "white" }}>
           <View style={{ flexDirection: "row" }}>
@@ -54,7 +59,7 @@ export default function User({ navigation }) {
                 marginTop: 10,
                 marginLeft: 20,
                 borderRadius: 90,
-                resizeMode: 'contain'
+                resizeMode: "contain",
               }}
             ></Image>
             <View style={{ top: 10 }}>
@@ -64,18 +69,15 @@ export default function User({ navigation }) {
                   fontSize: 20,
                   marginLeft: 20,
                   fontWeight: 400,
-
                 }}
               >
                 Zalo video
               </Text>
-
             </View>
             <View style={{ marginTop: 25, marginLeft: 170 }}>
               <AntDesign name="right" size={20} color="black" />
             </View>
           </View>
-
 
           <View
             style={{
@@ -88,7 +90,6 @@ export default function User({ navigation }) {
           {/* ------------------------- */}
 
           <View style={{ flexDirection: "row" }}>
-
             <View>
               <Text
                 style={{
@@ -108,7 +109,7 @@ export default function User({ navigation }) {
                   fontSize: 15,
                   marginLeft: 140,
                   fontWeight: 600,
-                  color: 'blue',
+                  color: "blue",
                 }}
               >
                 Chỉnh sửa
@@ -118,8 +119,14 @@ export default function User({ navigation }) {
 
           {/* list App */}
 
-          <View style={{ flexDirection: "row", justifyContent: "space-around", right: 20 }}>
-            <View style={{ flexDirection: 'column' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              right: 20,
+            }}
+          >
+            <View style={{ flexDirection: "column" }}>
               <Image
                 source={require("../assets/gameicon.png")}
                 style={{
@@ -127,7 +134,7 @@ export default function User({ navigation }) {
                   height: 50,
                   marginTop: 10,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -136,10 +143,11 @@ export default function User({ navigation }) {
                   fontSize: 12,
                   fontWeight: 400,
                 }}
-              >Zalo games
+              >
+                Zalo games
               </Text>
             </View>
-            <View style={{ flexDirection: 'column', right: 10 }}>
+            <View style={{ flexDirection: "column", right: 10 }}>
               <Image
                 source={require("../assets/fe.png")}
                 style={{
@@ -148,7 +156,7 @@ export default function User({ navigation }) {
                   marginTop: 10,
                   marginRight: 5,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -157,13 +165,12 @@ export default function User({ navigation }) {
                   fontSize: 12,
                   marginRight: 5,
                   fontWeight: 400,
-                  
                 }}
               >
                 FE Credit
               </Text>
             </View>
-            <View style={{ flexDirection: 'column', right: 10 }}>
+            <View style={{ flexDirection: "column", right: 10 }}>
               <Image
                 source={require("../assets/zalopay.png")}
                 style={{
@@ -172,7 +179,7 @@ export default function User({ navigation }) {
                   marginTop: 10,
                   marginRight: 5,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -186,7 +193,7 @@ export default function User({ navigation }) {
                 Zalo pay
               </Text>
             </View>
-            <View style={{ flexDirection: 'column' }}>
+            <View style={{ flexDirection: "column" }}>
               <Image
                 source={require("../assets/dvu.png")}
                 style={{
@@ -195,7 +202,7 @@ export default function User({ navigation }) {
                   marginTop: 10,
                   borderRadius: 90,
                   marginRight: 15,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -205,14 +212,20 @@ export default function User({ navigation }) {
                   marginRight: 15,
                   fontWeight: 400,
                 }}
-              >Dịch vụ
+              >
+                Dịch vụ
               </Text>
             </View>
-
           </View>
 
-          <View style={{ flexDirection: "row", justifyContent: 'space-around', right: 20 }}>
-            <View style={{ flexDirection: 'column' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              right: 20,
+            }}
+          >
+            <View style={{ flexDirection: "column" }}>
               <Image
                 source={require("../assets/zalovideo.png")}
                 style={{
@@ -220,7 +233,7 @@ export default function User({ navigation }) {
                   height: 50,
                   marginTop: 10,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -229,10 +242,11 @@ export default function User({ navigation }) {
                   fontSize: 12,
                   fontWeight: 400,
                 }}
-              >Zalo video
+              >
+                Zalo video
               </Text>
             </View>
-            <View style={{ flexDirection: 'column' }}>
+            <View style={{ flexDirection: "column" }}>
               <Image
                 source={require("../assets/job.png")}
                 style={{
@@ -241,7 +255,7 @@ export default function User({ navigation }) {
                   marginTop: 10,
                   marginRight: 5,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -255,7 +269,7 @@ export default function User({ navigation }) {
                 Tìm việc
               </Text>
             </View>
-            <View style={{ flexDirection: 'column' }}>
+            <View style={{ flexDirection: "column" }}>
               <Image
                 source={require("../assets/ticket.png")}
                 style={{
@@ -264,7 +278,7 @@ export default function User({ navigation }) {
                   marginTop: 10,
                   marginRight: 5,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -278,7 +292,7 @@ export default function User({ navigation }) {
                 Đặt vé phim
               </Text>
             </View>
-            <View style={{ flexDirection: 'column' }}>
+            <View style={{ flexDirection: "column" }}>
               <Image
                 source={require("../assets/more.png")}
                 style={{
@@ -287,7 +301,7 @@ export default function User({ navigation }) {
                   marginTop: 10,
                   marginRight: 5,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
               <Text
@@ -297,12 +311,11 @@ export default function User({ navigation }) {
                   marginRight: 5,
                   fontWeight: 400,
                 }}
-              >Xem thêm
+              >
+                Xem thêm
               </Text>
             </View>
-
           </View>
-
 
           {/* ------------------------ */}
           {/* border */}
@@ -316,7 +329,6 @@ export default function User({ navigation }) {
           ></View> */}
 
           <View style={{ flexDirection: "row" }}>
-
             <View>
               <Text
                 style={{
@@ -331,10 +343,11 @@ export default function User({ navigation }) {
             </View>
           </View>
           <View style={{ flexDirection: "row" }}>
-
             <ScrollView>
-              <View style={{ flexDirection: "row", justifyContent: 'flex-start' }}>
-                <View style={{ flexDirection: 'column' }}>
+              <View
+                style={{ flexDirection: "row", justifyContent: "flex-start" }}
+              >
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/avatar.png")}
                     style={{
@@ -343,7 +356,7 @@ export default function User({ navigation }) {
                       marginTop: 10,
                       marginLeft: 20,
                       borderRadius: 90,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                   <Text
@@ -353,11 +366,12 @@ export default function User({ navigation }) {
                       marginLeft: 20,
                       fontWeight: 400,
                     }}
-                  >AL Avatar
+                  >
+                    AL Avatar
                   </Text>
                   <View></View>
                 </View>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/job.png")}
                     style={{
@@ -366,7 +380,7 @@ export default function User({ navigation }) {
                       marginTop: 10,
                       marginLeft: 20,
                       borderRadius: 90,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                   <Text
@@ -380,7 +394,7 @@ export default function User({ navigation }) {
                     Tìm việc
                   </Text>
                 </View>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/qr.png")}
                     style={{
@@ -389,7 +403,7 @@ export default function User({ navigation }) {
                       marginTop: 10,
                       marginLeft: 20,
                       borderRadius: 90,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                   <Text
@@ -404,7 +418,7 @@ export default function User({ navigation }) {
                   </Text>
                 </View>
 
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/music.png")}
                     style={{
@@ -413,7 +427,7 @@ export default function User({ navigation }) {
                       marginTop: 10,
                       marginLeft: 20,
                       borderRadius: 90,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                   <Text
@@ -423,10 +437,11 @@ export default function User({ navigation }) {
                       marginLeft: 20,
                       fontWeight: 400,
                     }}
-                  >nhạc chờ
+                  >
+                    nhạc chờ
                   </Text>
                 </View>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/ticket.png")}
                     style={{
@@ -435,7 +450,7 @@ export default function User({ navigation }) {
                       marginTop: 10,
                       marginLeft: 20,
                       borderRadius: 90,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                   <Text
@@ -445,10 +460,11 @@ export default function User({ navigation }) {
                       marginLeft: 20,
                       fontWeight: 400,
                     }}
-                  >Đặt vé phim
+                  >
+                    Đặt vé phim
                   </Text>
                 </View>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/sticker.png")}
                     style={{
@@ -457,7 +473,7 @@ export default function User({ navigation }) {
                       marginTop: 10,
                       marginLeft: 20,
                       borderRadius: 90,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                   <Text
@@ -466,16 +482,13 @@ export default function User({ navigation }) {
                       fontSize: 12,
                       marginLeft: 20,
                       fontWeight: 400,
-
                     }}
-                  >ZSticker Store
+                  >
+                    ZSticker Store
                   </Text>
                 </View>
-
               </View>
-
             </ScrollView>
-
           </View>
 
           {/* border */}
@@ -489,7 +502,6 @@ export default function User({ navigation }) {
           ></View>
 
           <View style={{ flexDirection: "row" }}>
-
             <View>
               <Text
                 style={{
@@ -504,7 +516,14 @@ export default function User({ navigation }) {
             </View>
           </View>
 
-          <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingBottom: 15, borderColor: 'gray' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              borderBottomWidth: 1,
+              paddingBottom: 15,
+              borderColor: "gray",
+            }}
+          >
             <View style={{ marginLeft: 20, marginTop: 20 }}>
               <Image
                 source={require("../assets/bh.png")}
@@ -513,18 +532,17 @@ export default function User({ navigation }) {
                   width: 50,
                   height: 50,
                   borderRadius: 90,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
             </View>
-            <View >
+            <View>
               <Text
                 style={{
                   marginTop: 20,
                   fontSize: 20,
                   marginLeft: 20,
                   fontWeight: 400,
-
                 }}
               >
                 Bảo hiểm online
@@ -532,18 +550,25 @@ export default function User({ navigation }) {
               <Text style={{ fontSize: 15, marginLeft: 20 }}>
                 Dễ dàng mua bảo hiểm xe máy, ô tô, tai nạn
               </Text>
-              <View style={{ flexDirection: 'row', left: 20, top: 5 }}>
+              <View style={{ flexDirection: "row", left: 20, top: 5 }}>
                 <Entypo name="users" size={13} color="black" />
-                <Text style={{ fontSize: 15, marginLeft: 20, bottom: 2, right: 10 }}>
+                <Text
+                  style={{ fontSize: 15, marginLeft: 20, bottom: 2, right: 10 }}
+                >
                   Hơn 3.5 triệu người dùng
                 </Text>
               </View>
-
             </View>
-
           </View>
 
-          <View style={{ flexDirection: "row", borderBottomWidth: 1, paddingBottom: 15, borderColor: 'gray' }}>
+          <View
+            style={{
+              flexDirection: "row",
+              borderBottomWidth: 1,
+              paddingBottom: 15,
+              borderColor: "gray",
+            }}
+          >
             <View style={{ marginLeft: 20, marginTop: 20 }}>
               <Image
                 source={require("../assets/sticker.png")}
@@ -552,18 +577,17 @@ export default function User({ navigation }) {
                   height: 50,
                   borderRadius: 90,
                   marginTop: 10,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
             </View>
-            <View >
+            <View>
               <Text
                 style={{
                   marginTop: 20,
                   fontSize: 20,
                   marginLeft: 20,
                   fontWeight: 400,
-
                 }}
               >
                 ZSticker
@@ -571,16 +595,17 @@ export default function User({ navigation }) {
               <Text style={{ fontSize: 15, marginLeft: 20 }}>
                 Khám phá & quản lý sticker zalo
               </Text>
-              <View style={{ flexDirection: 'row', left: 20, top: 5 }}>
+              <View style={{ flexDirection: "row", left: 20, top: 5 }}>
                 <Entypo name="users" size={13} color="black" />
-                <Text style={{ fontSize: 15, marginLeft: 20, bottom: 2, right: 10 }}>
+                <Text
+                  style={{ fontSize: 15, marginLeft: 20, bottom: 2, right: 10 }}
+                >
                   Hơn 900.000 người dùng
                 </Text>
               </View>
             </View>
-
           </View>
-          <View style={{ flexDirection: "row", }}>
+          <View style={{ flexDirection: "row" }}>
             <View style={{ marginLeft: 20, marginTop: 20 }}>
               <Image
                 source={require("../assets/avatar.png")}
@@ -589,18 +614,17 @@ export default function User({ navigation }) {
                   height: 50,
                   borderRadius: 90,
                   marginTop: 10,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
             </View>
-            <View >
+            <View>
               <Text
                 style={{
                   marginTop: 20,
                   fontSize: 20,
                   marginLeft: 20,
                   fontWeight: 400,
-
                 }}
               >
                 AI Avatar
@@ -608,14 +632,15 @@ export default function User({ navigation }) {
               <Text style={{ fontSize: 15, marginLeft: 20 }}>
                 Tạo ảnh đại diện bằng công nghệ AI
               </Text>
-              <View style={{ flexDirection: 'row', left: 20, top: 5 }}>
+              <View style={{ flexDirection: "row", left: 20, top: 5 }}>
                 <Entypo name="users" size={13} color="black" />
-                <Text style={{ fontSize: 15, marginLeft: 20, bottom: 2, right: 10 }}>
+                <Text
+                  style={{ fontSize: 15, marginLeft: 20, bottom: 2, right: 10 }}
+                >
                   Hơn 8 triệu người dùng
                 </Text>
               </View>
             </View>
-
           </View>
           {/* border */}
           <View
@@ -628,7 +653,6 @@ export default function User({ navigation }) {
           ></View>
 
           <View style={{ flexDirection: "row" }}>
-
             <View>
               <Text
                 style={{
@@ -656,7 +680,7 @@ export default function User({ navigation }) {
                   borderRadius: 90,
                   right: 15,
                   bottom: 25,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
             </View>
@@ -671,14 +695,25 @@ export default function User({ navigation }) {
               >
                 Tuyển 20 Shipperw khu vực Tân Bình
               </Text>
-              <View style={{ flexDirection: 'row' }}>
-                <AntDesign name="enviroment" size={14} color="black" style={{ left: 15, top: 4 }} />
+              <View style={{ flexDirection: "row" }}>
+                <AntDesign
+                  name="enviroment"
+                  size={14}
+                  color="black"
+                  style={{ left: 15, top: 4 }}
+                />
                 <Text style={{ fontSize: 15, marginLeft: 20 }}>
                   TP. HCM, Tân Bình
                 </Text>
-
               </View>
-              <Text style={{ fontSize: 15, marginLeft: 20, color: 'orange', fontWeight: '400' }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  marginLeft: 20,
+                  color: "orange",
+                  fontWeight: "400",
+                }}
+              >
                 10-20 triệu/tháng
               </Text>
             </View>
@@ -694,7 +729,7 @@ export default function User({ navigation }) {
                   borderRadius: 90,
                   right: 15,
                   bottom: 25,
-                  resizeMode: 'contain'
+                  resizeMode: "contain",
                 }}
               ></Image>
             </View>
@@ -709,14 +744,25 @@ export default function User({ navigation }) {
               >
                 GHTK tuyển Nhân viên giao hàng
               </Text>
-              <View style={{ flexDirection: 'row' }}>
-                <AntDesign name="enviroment" size={14} color="black" style={{ left: 15, top: 4 }} />
+              <View style={{ flexDirection: "row" }}>
+                <AntDesign
+                  name="enviroment"
+                  size={14}
+                  color="black"
+                  style={{ left: 15, top: 4 }}
+                />
                 <Text style={{ fontSize: 15, marginLeft: 20 }}>
                   TP. HCM, Quận 2
                 </Text>
-
               </View>
-              <Text style={{ fontSize: 15, marginLeft: 20, color: 'orange', fontWeight: '400' }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  marginLeft: 20,
+                  color: "orange",
+                  fontWeight: "400",
+                }}
+              >
                 15-20 triệu/tháng
               </Text>
             </View>
@@ -732,7 +778,6 @@ export default function User({ navigation }) {
           ></View>
 
           <View style={{ flexDirection: "column" }}>
-
             <View>
               <Text
                 style={{
@@ -747,43 +792,43 @@ export default function User({ navigation }) {
             </View>
             <ScrollView>
               <View style={{ flexDirection: "row" }}>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/tran1.png")}
                     style={{
                       width: 200,
                       height: 200,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                 </View>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/tran2.png")}
                     style={{
                       width: 200,
                       height: 200,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                 </View>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/tran3.png")}
                     style={{
                       width: 200,
                       height: 200,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                 </View>
-                <View style={{ flexDirection: 'column' }}>
+                <View style={{ flexDirection: "column" }}>
                   <Image
                     source={require("../assets/tran4.png")}
                     style={{
                       width: 200,
                       height: 200,
-                      resizeMode: 'contain'
+                      resizeMode: "contain",
                     }}
                   ></Image>
                 </View>
@@ -801,8 +846,7 @@ export default function User({ navigation }) {
           ></View>
 
           <View style={{ flexDirection: "column" }}>
-
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
                   marginTop: 10,
@@ -819,7 +863,7 @@ export default function User({ navigation }) {
                   fontSize: 15,
                   marginLeft: 10,
                   fontWeight: 600,
-                  color: "gray"
+                  color: "gray",
                 }}
               >
                 : Miền Nam 22/2
@@ -827,36 +871,34 @@ export default function User({ navigation }) {
             </View>
             <ScrollView>
               <View style={{ flexDirection: "row" }}>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <Image
                     source={require("../assets/lottery.png")}
                     style={{
                       width: 350,
                       height: 250,
-                      resizeMode: 'contain',
+                      resizeMode: "contain",
                       bottom: 20,
-                      marginLeft: 20
+                      marginLeft: 20,
                     }}
                   ></Image>
                 </View>
-
               </View>
             </ScrollView>
           </View>
-
 
           <View
             style={{
               borderWidth: 3,
               borderColor: "#D3D3D3",
               width: 420,
-
             }}
           ></View>
 
           <View style={{ flexDirection: "column" }}>
-
-            <View style={{ flexDirection: 'row' }}>
+            <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
                   marginTop: 10,
@@ -873,7 +915,7 @@ export default function User({ navigation }) {
                   fontSize: 15,
                   marginLeft: 10,
                   fontWeight: 600,
-                  color: "gray"
+                  color: "gray",
                 }}
               >
                 : Xem lịch tháng
@@ -881,19 +923,20 @@ export default function User({ navigation }) {
             </View>
             <ScrollView>
               <View style={{ flexDirection: "row" }}>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <Image
                     source={require("../assets/calender.png")}
                     style={{
                       width: 350,
                       height: 250,
-                      resizeMode: 'contain',
+                      resizeMode: "contain",
                       bottom: 40,
-                      marginLeft: 20
+                      marginLeft: 20,
                     }}
                   ></Image>
                 </View>
-
               </View>
             </ScrollView>
           </View>
@@ -903,13 +946,12 @@ export default function User({ navigation }) {
               borderWidth: 3,
               borderColor: "#D3D3D3",
               width: 420,
-              bottom:70
+              bottom: 70,
             }}
           ></View>
 
-          <View style={{ flexDirection: "column",bottom:70 }}>
-
-            <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: "column", bottom: 70 }}>
+            <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
                   marginTop: 10,
@@ -920,12 +962,21 @@ export default function User({ navigation }) {
               >
                 Zalo Connect
               </Text>
-              <View style={{backgroundColor:'#F0FFFF', borderRadius: 20, justifyContent:'center', alignItems:'center', marginTop: 10, marginLeft: 10,}}>
+              <View
+                style={{
+                  backgroundColor: "#F0FFFF",
+                  borderRadius: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 10,
+                  marginLeft: 10,
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 15,
                     fontWeight: 600,
-                    color: 'blue'
+                    color: "blue",
                   }}
                 >
                   15+ Bài mới
@@ -933,32 +984,34 @@ export default function User({ navigation }) {
               </View>
             </View>
             <ScrollView>
-              <View style={{ flexDirection: "row",  }}>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ flexDirection: "row" }}>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <Image
                     source={require("../assets/con1.png")}
                     style={{
                       width: 400,
                       height: 300,
-                      resizeMode: 'contain',
+                      resizeMode: "contain",
                       marginBottom: 15,
-                      
                     }}
                   ></Image>
                 </View>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <Image
                     source={require("../assets/con2.png")}
                     style={{
                       width: 400,
                       height: 300,
-                      resizeMode: 'contain',
+                      resizeMode: "contain",
                       marginBottom: 15,
-                      marginLeft: 20
+                      marginLeft: 20,
                     }}
                   ></Image>
                 </View>
-
               </View>
             </ScrollView>
           </View>
@@ -968,13 +1021,12 @@ export default function User({ navigation }) {
               borderWidth: 3,
               borderColor: "#D3D3D3",
               width: 420,
-              bottom:70
+              bottom: 70,
             }}
           ></View>
 
-          <View style={{ flexDirection: "column",bottom:70 }}>
-
-            <View style={{ flexDirection: 'row' }}>
+          <View style={{ flexDirection: "column", bottom: 70 }}>
+            <View style={{ flexDirection: "row" }}>
               <Text
                 style={{
                   marginTop: 10,
@@ -985,12 +1037,21 @@ export default function User({ navigation }) {
               >
                 Gợi ý Official Account
               </Text>
-              <View style={{backgroundColor:'#F0FFFF', borderRadius: 20, justifyContent:'center', alignItems:'center', marginTop: 10, marginLeft: 10,}}>
+              <View
+                style={{
+                  backgroundColor: "#F0FFFF",
+                  borderRadius: 20,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginTop: 10,
+                  marginLeft: 10,
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 15,
                     fontWeight: 600,
-                    color: 'blue'
+                    color: "blue",
                   }}
                 >
                   15+ Bài mới
@@ -998,45 +1059,40 @@ export default function User({ navigation }) {
               </View>
             </View>
             <ScrollView>
-              <View style={{ flexDirection: "row", marginTop:10 }}>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <View style={{ flexDirection: "row", marginTop: 10 }}>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <Image
                     source={require("../assets/ac1.png")}
                     style={{
                       width: 400,
                       height: 300,
-                      resizeMode: 'contain',
+                      resizeMode: "contain",
                       marginBottom: 15,
-                      right:40
-                      
+                      right: 40,
                     }}
                   ></Image>
                 </View>
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
                   <Image
                     source={require("../assets/ac2.png")}
                     style={{
                       width: 400,
                       height: 300,
-                      resizeMode: 'contain',
+                      resizeMode: "contain",
                       marginBottom: 15,
-                      right:150
+                      right: 150,
                     }}
                   ></Image>
                 </View>
-
               </View>
             </ScrollView>
           </View>
-
-
-
-
-
-
         </View>
       </View>
     </ScrollView>
-
   );
 }
