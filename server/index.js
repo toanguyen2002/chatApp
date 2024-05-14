@@ -11,7 +11,7 @@ const post = 8080
 const app = express()
 const server = http.createServer(app);
 require('dotenv').config()
-app.use(cors())
+app.use(cors({ origin: '*' }))
 app.use(express.json())
 const io = new Server(server, {
     pingTimeout: 5000,

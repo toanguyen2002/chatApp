@@ -141,7 +141,7 @@ function MyMessageConponent({ props }) {
             <div className="my-message-row">
                 <div className='hidden-form'>
                     <button className="gold-key-hover">Chuyển Trưởng Phòng</button>
-                    <div class="separator2"></div>
+                    <div class="separator2"></div> 
                     <button className='hidden-button' onClick={handleGetidMessAndReplaceToNone}>
                         <UndoIcon className='icon3'></UndoIcon>Thu Hồi
                     </button>
