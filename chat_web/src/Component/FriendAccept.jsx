@@ -5,7 +5,7 @@ import axios from 'axios';
 import UserComponent from '../ComponentItem/UserComponent';
 import { myContext } from './MainComponent';
 //${IP}
-const IP = "http://localhost:5678"
+const IP = "https://mail.getandbuy.shop"
 function FriendAccept({ closemodal }) {
     const [users, setUsers] = useState([])
     const userData = JSON.parse(localStorage.getItem("userData"));

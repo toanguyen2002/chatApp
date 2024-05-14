@@ -4,7 +4,7 @@ import { myContext } from '../Component/MainComponent'
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import UndoIcon from '@mui/icons-material/Undo';
 import VideocamIcon from '@mui/icons-material/Videocam';
-const IP = "http://localhost:5678"
+const IP = "https://mail.getandbuy.shop"
 function MyMessageConponent({ props }) {
     const refBox = useRef(null)
     const { refresh, setRefresh } = useContext(myContext)
@@ -141,7 +141,7 @@ function MyMessageConponent({ props }) {
             <div className="my-message-row">
                 <div className='hidden-form'>
                     <button className="gold-key-hover">Chuyển Trưởng Phòng</button>
-                    <div class="separator2"></div> 
+                    <div class="separator2"></div>
                     <button className='hidden-button' onClick={handleGetidMessAndReplaceToNone}>
                         <UndoIcon className='icon3'></UndoIcon>Thu Hồi
                     </button>

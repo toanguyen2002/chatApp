@@ -7,7 +7,7 @@ import ChatBox from '../ComponentItem/ChatBox';
 // import { io } from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 //${IP}
-const IP = "http://localhost:5678"
+const IP = "https://mail.getandbuy.shop"
 function ModalChatOne({ clockModal }) {
     const navigate = useNavigate()
     const [users, setUsers] = useState([]);

@@ -17,7 +17,7 @@ import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import DeleteAndAddMemberModal from './DeleteAndAddMemberModal'
 import ModalAddMember from './ModalAddMember'
 import LogoutIcon from '@mui/icons-material/Logout';
-const IP = "http://localhost:5678"
+const IP = "https://mail.getandbuy.shop"
 var socket = io(IP)
 
 
