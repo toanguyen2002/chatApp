@@ -8,8 +8,5 @@ export default defineConfig({
     protocolImports: true,
   }),],
   resolve: { alias: { src: "/src" } },
-  define: { global: {} },
-  build: {
-    outDir: 'dist',
-  }
+  define: { global: {} }
 })
