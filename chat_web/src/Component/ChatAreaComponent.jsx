@@ -17,12 +17,11 @@ import ReduceCapacityIcon from '@mui/icons-material/ReduceCapacity';
 import DeleteAndAddMemberModal from './DeleteAndAddMemberModal'
 import ModalAddMember from './ModalAddMember'
 import LogoutIcon from '@mui/icons-material/Logout';
-const IP = "http://localhost:5678"
+const IP = "https://mail.getandbuy.shop"
 var socket = io(IP)
 
 
 export default function ChatAreaComponent() {
-    // const navigate = useNA
     const [contentMess, setContentMess] = useState('')
     const [mess, setMess] = useState([])
     const { refresh, setRefresh } = useContext(myContext)
@@ -190,10 +189,7 @@ export default function ChatAreaComponent() {
                 )
                 socket.emit("new message", dataSend.data)
                 socket.emit("render-box-chat", true)
-
-                // setMess([...mess, dataSend.data])
                 setContentMess("")
-                // setRenderMess(!renderMess)
             } catch (error) {
                 console.log(error);
             }
@@ -257,7 +253,7 @@ export default function ChatAreaComponent() {
             }
         }
         renderChatGroup()
-    }, [chat_id])
+    }, [chat_id, refresh])
     const handleRemoveMember = async () => {
         // notification
 
@@ -350,8 +346,6 @@ export default function ChatAreaComponent() {
 
                     <div className="chat-area-text">
                         <p className='chat-name'>{chat_user}</p>
-                        {/* <div className="online">online</div> */}
-                        {/* <p className='chat-time'>{data.timeSend}</p> */}
                     </div>
 
 

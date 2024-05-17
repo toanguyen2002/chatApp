@@ -1,7 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { io } from 'socket.io-client'
-
+const IP = "https://mail.getandbuy.shop"
 // const socket = io("http://localhost:5678")
 function ChatBox({ props }) {
     const nav = useNavigate()

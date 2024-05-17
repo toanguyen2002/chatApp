@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.110.194";
+const ip = "192.168.110.193";
 export default function Phonebook() {
   const navigation = useNavigation();
 
@@ -162,9 +162,11 @@ export default function Phonebook() {
               </View>
             </Pressable>
             <View style={styles.tabItem}>
-              <Text style={{ fontSize: 17 ,fontWeight:"bold"}}>Danh sách bạn bè : </Text>
+              <Text style={{ fontSize: 17, fontWeight: "bold" }}>
+                Danh sách bạn bè :{" "}
+              </Text>
             </View>
-           
+
             <View
               style={{
                 flexDirection: "column",
@@ -173,10 +175,10 @@ export default function Phonebook() {
                 right: 5,
               }}
             >
-              <View >
+              <View>
                 {users.map((item, index) => (
                   <React.Fragment key={item.id || index.toString()}>
-                    <MessageItem  {...item} />
+                    <MessageItem {...item} />
                     {index !== users.length - 1 && (
                       <View style={styles.separator1} />
                     )}
@@ -201,7 +203,6 @@ export default function Phonebook() {
                   <Image
                     style={{ width: 70, height: 70, resizeMode: "contain" }}
                     source={require("../assets/newgrp.png")}
-                    
                   />
                   <Text style={{ fontSize: 20 }}> Tạo nhóm mới</Text>
                 </View>
@@ -282,12 +283,14 @@ export default function Phonebook() {
                 </View>
               </View>
               <View style={styles.separator}></View>
+
               <View style={{ flexDirection: "column" }}>
                 <View style={{ left: 20, bottom: 10 }}>
-                  <Text style={{ fontWeight: "600", fontSize: 15 }}>
-                    Nhóm đang tham gia
+                  <Text style={{ fontWeight: "bold", fontSize: 15 }}>
+                    Nhóm đang tham gia :
                   </Text>
                 </View>
+
                 <View
                   style={{
                     flex: 1,
@@ -296,6 +299,7 @@ export default function Phonebook() {
                     marginBottom: 20,
                   }}
                 >
+                  {/* bạn thêm chữ cái đầu làm avatar được không  */}
                   {/* ở đây */}
                   <View style={styles.container1}>
                     {dataChatBox
@@ -306,22 +310,30 @@ export default function Phonebook() {
                             navigation.navigate("SenddMessage", item)
                           }
                           key={item._id || index.toString()}
+                          style={styles.itemContainer}
                         >
-                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                            {item.chatName}
-                          </Text>
-                          {item.lastMessage ? (
-                            item.lastMessage.typeMess === "text" ? (
-                              <Text style={{ fontSize: 14 }}>
-                                {item.lastMessage.content}
-                              </Text>
+                          <View style={styles.avatarContainer}>
+                            <Text style={styles.avatarText}>
+                              {item.chatName.charAt(0).toUpperCase()}
+                            </Text>
+                          </View>
+                          <View style={styles.itemContent}>
+                            <Text style={styles.itemTitle}>
+                              {item.chatName}
+                            </Text>
+                            {item.lastMessage ? (
+                              item.lastMessage.typeMess === "text" ? (
+                                <Text style={styles.itemMessage}>
+                                  {item.lastMessage.content}
+                                </Text>
+                              ) : (
+                                <Text style={styles.itemMessage}>hình ảnh</Text>
+                              )
                             ) : (
-                              <Text style={{ fontSize: 14 }}>hình ảnh</Text>
-                            )
-                          ) : (
-                            <Text></Text>
-                          )}
-                          <Text style={{ fontSize: 12 }}>{item.timeSend}</Text>
+                              <View style={styles.separator3} />
+                            )}
+                            <Text style={styles.itemTime}>{item.timeSend}</Text>
+                          </View>
                         </TouchableOpacity>
                       ))}
                   </View>
@@ -450,7 +462,7 @@ const styles = StyleSheet.create({
     borderColor: "#C6C4C4",
     width: "100%",
     marginVertical: 20,
-    fontSize: 45,
+    fontSize: 4,
   },
   tabButtonsContainer: {
     flexDirection: "row",
@@ -540,11 +552,14 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   container1: {
+    flexDirection: "column",
     //style của nhóm chat
     flex: 9,
-    backgroundColor: "gray",
-    padding: 10,
-    width: 100,
+    backgroundColor: "#98F5FF",
+    padding: 1,
+    width: 200,
+    borderRadius: 10,
+    marginTop: 10,
   },
   separator1: {
     borderBottomColor: "#EAEAEA",
@@ -554,10 +569,45 @@ const styles = StyleSheet.create({
   },
   listFriend: {
     // backgroundColor: "red"
-    
   },
-  customStyle:{
-    color:"black",
+  customStyle: {
+    color: "black",
+  },
+  separator3: {
+    borderBottomColor: "#EAEAEA",
+    borderBottomWidth: 1,
+    marginVertical: 10,
+  },
+ itemContainer: {
+  flexDirection: "row",
+  alignItems: "center",
+  marginVertical: 10,
+},
+avatarContainer: {
+  width: 50,
+  height: 50,
+  borderRadius: 25,
+  backgroundColor: "#1E90FF",
+  justifyContent: "center",
+  alignItems: "center",
+},
+avatarText: {
+  fontSize: 24,
+  color: "white",
+},
+itemContent: {
+  marginLeft: 10,
+},
+itemTitle: {
+  fontSize: 20,
+  fontWeight: "bold",
+  marginTop:10
+},
+itemMessage: {
+  fontSize: 14,
+},
+itemTime: {
+  fontSize: 12,
+},
 
-  },
 });

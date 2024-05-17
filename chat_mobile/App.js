@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
+import 'react-native-reanimated';
 import {
   MessageTC,
   Personal,
