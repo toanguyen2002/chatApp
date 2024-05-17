@@ -4,7 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.1.149";
+const ip = "https://mail.getandbuy.shop";
 
 export default function Friend({ navigation }) {
     const [users, setUsers] = useState([]);
@@ -15,7 +15,7 @@ export default function Friend({ navigation }) {
                 const userDataString = await AsyncStorage.getItem("userData");
                 const userData = JSON.parse(userDataString);
                 const response = await axios.post(
-                    `http://${ip}:5678/user/getUserwaitAccept`,
+                    `${ip}/user/getUserwaitAccept`,
                     {
                         name: userData.name,
                         userId: userData._id,
@@ -39,7 +39,7 @@ export default function Friend({ navigation }) {
         const userDataString = await AsyncStorage.getItem("userData");
         const userData = JSON.parse(userDataString);
         try {
-            await axios.post(`http://${ip}:5678/user/acceptFriend`, {
+            await axios.post(`${ip}/user/acceptFriend`, {
                 userid: userData._id,
                 friendId: userId
             }, {
@@ -59,7 +59,7 @@ export default function Friend({ navigation }) {
             const userDataString = await AsyncStorage.getItem("userData");
             const userData = JSON.parse(userDataString);
             const response = await axios.post(
-                `http://${ip}:5678/user/getUserwaitAccept`,
+                `${ip}/user/getUserwaitAccept`,
                 {
                     name: userData.name,
                     userId: userData._id,
@@ -82,7 +82,7 @@ export default function Friend({ navigation }) {
         const userDataString = await AsyncStorage.getItem("userData");
         const userData = JSON.parse(userDataString);
         try {
-            await axios.post(`http://${ip}:5678/user/removeAddFriend`, {
+            await axios.post(`${ip}/user/removeAddFriend`, {
                 userid: userData._id,
                 friendId: userId
             }, {

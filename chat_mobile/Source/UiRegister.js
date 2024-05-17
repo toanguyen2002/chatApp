@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, TextInput, Button, View, Image, Pressable, Modal, Alert } from 'react-native';
 import axios from "axios";
-const ip = "192.168.110.193";
+const ip = "https://mail.getandbuy.shop";
 const UiRegister = ({ navigation }) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -47,7 +47,7 @@ const UiRegister = ({ navigation }) => {
     } else {
       openModal();
       try {
-        const response = await fetch(`http://${ip}:5678/user/getotp`, {
+        const response = await fetch(`${ip}/user/getotp`, {
           method: 'POST',
           headers: {
             'Content-type': 'application/json'
@@ -70,7 +70,7 @@ const UiRegister = ({ navigation }) => {
     } else {
       try {
         const data = { name, email, password };
-        const response = await fetch("http://" + ip + ":5678/user/register", {
+        const response = await fetch( ip + "/user/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json"

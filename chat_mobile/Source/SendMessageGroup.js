@@ -27,7 +27,7 @@ import Video from "react-native-video";
 import axios from "axios";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.110.193";
+const ip = "https://mail.getandbuy.shop";
 const SendMessageGroup = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -55,7 +55,7 @@ const SendMessageGroup = () => {
       const userData = JSON.parse(userDataString);
       setUserData(userData);
       const dataUser = await axios.post(
-        `http://${ip}:5678/user/getUserOutCurrentGroupChat`,
+        `${ip}/user/getUserOutCurrentGroupChat`,
         {
           chatId: route.params._id,
           userId: userData._id,
@@ -107,7 +107,7 @@ const SendMessageGroup = () => {
     setUserData(userData);
     try {
       const response = await fetch(
-        `http://${ip}:5678/message/${route.params._id}`,
+        `${ip}/message/${route.params._id}`,
         {
           method: "GET",
           headers: {
@@ -216,7 +216,7 @@ const SendMessageGroup = () => {
             name: uri.fileName,
           });
 
-          const response = await fetch(`http://${ip}:5678/message/messImage`, {
+          const response = await fetch(`${ip}/message/messImage`, {
             method: "POST",
             body: formData,
             headers: {
@@ -234,7 +234,7 @@ const SendMessageGroup = () => {
           const responseData = await response.json();
 
           const dataSend = await axios.post(
-            "http://" + ip + ":5678/message/",
+            ip + "/message/",
             {
               chatId: route.params._id,
               ImageUrl: responseData,
@@ -271,7 +271,7 @@ const SendMessageGroup = () => {
           sendMessImg(selectedImage);
         } else {
           const dataSend = await axios.post(
-            "http://" + ip + ":5678/message/",
+            ip + "/message/",
             {
               chatId: route.params._id,
               content: text,
@@ -305,7 +305,7 @@ const SendMessageGroup = () => {
       const userData = JSON.parse(userDataString);
 
       const response = await axios.post(
-        `http://${ip}:5678/message/deleteMess`,
+        `${ip}/message/deleteMess`,
         {
           messId: messId,
         },
@@ -332,7 +332,7 @@ const SendMessageGroup = () => {
       const userData = JSON.parse(userDataString);
 
       const response = await axios.post(
-        `http://${ip}:5678/message/blankMess`,
+        `${ip}/message/blankMess`,
         {
           messId: messId,
         },
@@ -689,7 +689,7 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
     const userDataString = await AsyncStorage.getItem("userData");
     const userData = JSON.parse(userDataString);
     const dataUser = await axios.post(
-      `http://${ip}:5678/user/getUserOutCurrentGroupChat`,
+      `${ip}/user/getUserOutCurrentGroupChat`,
       {
         chatId: route._id,
         userId: userData._id,
@@ -733,7 +733,7 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
               try {
                 // Gửi yêu cầu thêm thành viên nếu người dùng đồng ý
                 const addUser = await axios.post(
-                  `http://${ip}:5678/chat/addUserToGroupChat`,
+                  `${ip}/chat/addUserToGroupChat`,
                   {
                     chatId: route._id,
                     userId: idUser,
@@ -805,7 +805,7 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
               try {
                 // Gửi yêu cầu xóa thành viên nếu người dùng đồng ý
                 const deleteUser = await axios.post(
-                  `http://${ip}:5678/chat/removeUserFromGroup`,
+                  `${ip}/chat/removeUserFromGroup`,
                   {
                     chatId: route._id,
                     userId: userId,
@@ -867,7 +867,7 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
               try {
                 // Gửi yêu cầu xóa thành viên nếu người dùng đồng ý
                 const deleteUser = await axios.post(
-                  `http://${ip}:5678/chat/removeAllUserFromGroup`,
+                  `${ip}/chat/removeAllUserFromGroup`,
                   {
                     chatId: route._id,
                   },
@@ -939,7 +939,7 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
               try {
                 // Gửi yêu cầu xóa thành viên nếu người dùng đồng ý
                 const deleteUser = await axios.post(
-                  `http://${ip}:5678/chat/sendGoldkey`,
+                  `${ip}/chat/sendGoldkey`,
                   {
                     chatId: route._id,
                     newOwnGroup: userId,
@@ -995,7 +995,7 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
               try {
                 // Gửi yêu cầu xóa thành viên nếu người dùng đồng ý
                 const reNameChat = await axios.post(
-                  `http://${ip}:5678/chat/renameGroupChat`,
+                  `${ip}/chat/renameGroupChat`,
                   {
                     chatId: route._id,
                     chatName: newChatName,

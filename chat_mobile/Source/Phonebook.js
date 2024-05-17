@@ -17,7 +17,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.110.193";
+const ip = "https://mail.getandbuy.shop";
 export default function Phonebook() {
   const navigation = useNavigation();
 
@@ -37,7 +37,7 @@ export default function Phonebook() {
       try {
         const userDataString = await AsyncStorage.getItem("userData");
         const userDataObject = JSON.parse(userDataString);
-        const response = await axios.get("http://" + ip + ":5678/chat/", {
+        const response = await axios.get(ip + "/chat/", {
           headers: {
             Authorization: `Bearer ${userDataObject.token}`,
           },
@@ -57,7 +57,7 @@ export default function Phonebook() {
       const userData = JSON.parse(userDataString);
       setUsersData(userData);
       const dataUser = await axios.post(
-        `http://${ip}:5678/user/getUserAccept`,
+        `${ip}/user/getUserAccept`,
         {
           name: userData.name,
           userId: userData._id,
@@ -77,7 +77,7 @@ export default function Phonebook() {
     const userData = JSON.parse(userDataString);
     try {
       const respone = await axios.post(
-        "http://" + ip + ":5678/chat/",
+        ip + "/chat/",
         {
           userId: item._id,
         },

@@ -5,7 +5,7 @@ import axios from "axios";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.110.193";
+const ip = "https://mail.getandbuy.shop";
 const socket = io("http://localhost:5678");
 export default function NewGroup({ navigation }) {
   const [users, setUsers] = useState([]);
@@ -18,7 +18,7 @@ export default function NewGroup({ navigation }) {
         const userDataString = await AsyncStorage.getItem("userData");
         const userData = JSON.parse(userDataString);
         const response = await axios.post(
-          `http://${ip}:5678/user/getUserAccept`,
+          `${ip}/user/getUserAccept`,
           {
             name: userData.name,
             userId: userData._id,
@@ -61,7 +61,7 @@ export default function NewGroup({ navigation }) {
       const userDataString = await AsyncStorage.getItem("userData");
       const userData = JSON.parse(userDataString);
       const response = await axios.post(
-        `http://${ip}:5678/chat/createGroupChat`,
+        `${ip}/chat/createGroupChat`,
         {
           name: name,
           users: JSON.stringify(filteredCheckedUsers),

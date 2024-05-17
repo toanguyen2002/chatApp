@@ -24,7 +24,7 @@ import Video from "react-native-video";
 import axios from "axios";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.110.193";
+const ip = "https://mail.getandbuy.shop";
 const SendMessage = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -73,7 +73,7 @@ const SendMessage = () => {
     setUserData(userData);
     try {
       const response = await fetch(
-        `http://${ip}:5678/message/${route.params._id}`,
+        `${ip}/message/${route.params._id}`,
         {
           method: "GET",
           headers: {
@@ -182,7 +182,7 @@ const SendMessage = () => {
             name: uri.fileName,
           });
 
-          const response = await fetch(`http://${ip}:5678/message/messImage`, {
+          const response = await fetch(`${ip}/message/messImage`, {
             method: "POST",
             body: formData,
             headers: {
@@ -200,7 +200,7 @@ const SendMessage = () => {
           const responseData = await response.json();
 
           const dataSend = await axios.post(
-            "http://" + ip + ":5678/message/",
+            ip + "/message/",
             {
               chatId: route.params._id,
               ImageUrl: responseData,
@@ -237,7 +237,7 @@ const SendMessage = () => {
           sendMessImg(selectedImage);
         } else {
           const dataSend = await axios.post(
-            "http://" + ip + ":5678/message/",
+            ip + "/message/",
             {
               chatId: route.params._id,
               content: text,
@@ -271,7 +271,7 @@ const SendMessage = () => {
       const userData = JSON.parse(userDataString);
 
       const response = await axios.post(
-        `http://${ip}:5678/message/deleteMess`,
+        `${ip}/message/deleteMess`,
         {
           messId: messId,
         },
@@ -298,7 +298,7 @@ const SendMessage = () => {
       const userData = JSON.parse(userDataString);
 
       const response = await axios.post(
-        `http://${ip}:5678/message/blankMess`,
+        `${ip}/message/blankMess`,
         {
           messId: messId,
         },

@@ -4,7 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.110.193";
+const ip = "https://mail.getandbuy.shop";
 
 export default function AddFriend({ navigation }) {
     const [users, setUsers] = useState([]);
@@ -17,7 +17,7 @@ export default function AddFriend({ navigation }) {
                 const userDataString = await AsyncStorage.getItem("userData");
                 const userData = JSON.parse(userDataString);
                 const fetchedUsers = await axios.post(
-                    `http://${ip}:5678/user/getUserNotFriend`,
+                    `${ip}/user/getUserNotFriend`,
                     {
                         userId: userData._id,
                         name: userData.name,
@@ -40,7 +40,7 @@ export default function AddFriend({ navigation }) {
         const userDataString = await AsyncStorage.getItem("userData");
         const userData = JSON.parse(userDataString);
         try {
-            await axios.post(`http://${ip}:5678/user/addfriend`, {
+            await axios.post(`${ip}/user/addfriend`, {
                 userid: userData._id,
                 friendId: userIdWantToAdd
             }, {

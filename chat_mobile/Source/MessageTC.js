@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from "socket.io-client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-const ip = "192.168.110.193";
+const ip = "https://mail.getandbuy.shop";
 
 const socket = io("http://localhost:5678");
 const MessageTC = ({ navigation }) => {
@@ -55,7 +55,7 @@ const MessageTC = ({ navigation }) => {
         const userDataString = await AsyncStorage.getItem("userData");
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
-        const response = await axios.get("http://" + ip + ":5678/chat/", {
+        const response = await axios.get(ip + "/chat/", {
           headers: {
             Authorization: `Bearer ${userDataObject.token}`,
           },
