@@ -369,6 +369,13 @@ const SendMessage = () => {
             >
               {item.content}
             </Text>
+          ) : item.typeMess === "videoCall" ? (
+            <TouchableOpacity onPress={() => handleVideoCall(item)}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Icon name="videocam" size={20} color="red" /> 
+                <Text style={styles.textMess}>Video Call</Text>
+              </View>
+            </TouchableOpacity>
           ) : (
             <View>
               {item.ImageUrl.map((imgItem, index) => (

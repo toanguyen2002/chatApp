@@ -14,6 +14,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { io } from "socket.io-client";
+import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const ip = "https://mail.getandbuy.shop";
 
@@ -217,20 +218,22 @@ const MessageItem = (props) => {
                 {props.chatName}
               </Text>
             </View>
-
             {props.lastMessage ? (
               props.lastMessage.typeMess === "text" ? (
-                <Text style={{ fontSize: 14 }}>
-                  {props.lastMessage.content}
-                </Text>
-              ) : (
+                <Text style={{ fontSize: 14 }}>{props.lastMessage.content}</Text>
+              ) : props.lastMessage.typeMess === "Multimedia" ? (
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <AntDesign name="picture" size={14} color="black" />
-                  <Text style={{ fontSize: 14, marginLeft: 5 }}>Hình ảnh</Text>
+                  <AntDesign name="file1" size={14} color="black" />
+                  <Text style={{ fontSize: 14, marginLeft: 5 }}>File</Text>
                 </View>
-              )
+              ) : props.lastMessage.typeMess === "videoCall" ? (
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Icon name="videocam" size={14} color="black" />
+                  <Text style={{ fontSize: 14, marginLeft: 5 }}>Cuộc gọi</Text>
+                </View>
+              ) : null // Handle unknown message types gracefully
             ) : (
-              <Text></Text>
+              <Text></Text> // Placeholder for no message
             )}
           </View>
           {props.lastMessage && props.lastMessage.dateSend ? (
