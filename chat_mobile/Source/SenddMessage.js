@@ -56,7 +56,7 @@ const SendMessage = () => {
     };
     fetchData();
     socket.emit("setup", userData);
-    socket.on("connect", () => {});
+    socket.on("connect", () => { });
     socket.emit("render-box-chat", true);
   }, []);
 
@@ -230,6 +230,30 @@ const SendMessage = () => {
     setSelectedImage(null);
   };
 
+  const callUser = async (id) => {
+    // window.open(`/room/${id}`)
+    const userDataString = await AsyncStorage.getItem("userData");
+    const userData = JSON.parse(userDataString);
+    try {
+      const dataSend = await axios.post(
+        `${ip}/message/`, {
+        chatId: route.params._id,
+        content: "http://localhost:5173" + `/room/${route.params._id}`,
+        typeMess: "videoCall"
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          }
+        }
+      )
+      socket.emit("new message", dataSend.data)
+      socket.emit("render-box-chat", true)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const sendMess = async () => {
     if (messages) {
       try {
@@ -370,9 +394,9 @@ const SendMessage = () => {
               {item.content}
             </Text>
           ) : item.typeMess === "videoCall" ? (
-            <TouchableOpacity onPress={() => handleVideoCall(item)}>
+            <TouchableOpacity onPress={() => callUser(route.params._id)}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Icon name="videocam" size={20} color="red" /> 
+                <Icon name="videocam" size={20} color="red" />
                 <Text style={styles.textMess}>Video Call</Text>
               </View>
             </TouchableOpacity>
@@ -479,20 +503,20 @@ const SendMessage = () => {
                   {(imgItem.url.endsWith(".png") ||
                     imgItem.url.endsWith(".jpg") ||
                     imgItem.url.endsWith(".jpeg")) && (
-                    <Pressable
-                      onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: "transparent" }}
-                    >
-                      <Image
-                        style={{
-                          width: 150,
-                          height: 200,
-                          resizeMode: "contain",
-                        }}
-                        source={{ uri: imgItem.url }}
-                      />
-                    </Pressable>
-                  )}
+                      <Pressable
+                        onPress={() => handleOpenWebView(imgItem.url)}
+                        android_ripple={{ color: "transparent" }}
+                      >
+                        <Image
+                          style={{
+                            width: 150,
+                            height: 200,
+                            resizeMode: "contain",
+                          }}
+                          source={{ uri: imgItem.url }}
+                        />
+                      </Pressable>
+                    )}
                   {imgItem.url.endsWith(".mp4") && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}
@@ -573,7 +597,9 @@ const SendMessage = () => {
             </Text>
           </View>
           <View>
-            <TouchableOpacity >
+            <TouchableOpacity 
+            onPress={()=>{callUser(route.params._id)}}
+            >
               <Icon name="call-outline" size={24} color="white" />
             </TouchableOpacity>
           </View>
