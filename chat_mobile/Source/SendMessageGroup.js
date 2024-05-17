@@ -27,7 +27,7 @@ import Video from "react-native-video";
 import axios from "axios";
 
 const socket = io("http://localhost:5678");
-const ip = "192.168.1.149";
+const ip = "192.168.110.193";
 const SendMessageGroup = () => {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
@@ -902,8 +902,67 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
     openFriendListModal();
   };
 
-  const handleAssignGroupAdmin = () => {
+  const handleAssignGroupAdmin = async (userId) => {
     // xử lý khi người dùng chọn gán quyền nhóm trưởng
+    try {
+      const userDataString = await AsyncStorage.getItem("userData");
+      const userData = JSON.parse(userDataString);
+
+      if (!userDataString) {
+        console.log("userData không tồn tại trong AsyncStorage");
+        return;
+      }
+
+      if (!userData || !userData._id) {
+        console.log("Dữ liệu userData không hợp lệ");
+        return;
+      }
+
+      const isAdmin = route.groupAdmin._id === userData._id;
+      if (!isAdmin) {
+        Alert.alert("Cảnh báo", "Bạn không phải admin");
+        return;
+      }
+
+      // Hiển thị cửa sổ thông báo hỏi người dùng có muốn xóa thành viên không
+      Alert.alert(
+        "Xác nhận",
+        "Bạn có chắc chắn muốn chuyển quyền trưởng nhóm cho thành viên này?",
+        [
+          {
+            text: "Hủy",
+            style: "cancel",
+          },
+          {
+            text: "Chuyển",
+            onPress: async () => {
+              try {
+                // Gửi yêu cầu xóa thành viên nếu người dùng đồng ý
+                const deleteUser = await axios.post(
+                  `http://${ip}:5678/chat/sendGoldkey`,
+                  {
+                    chatId: route._id,
+                    newOwnGroup: userId,
+                  },
+                  {
+                    headers: {
+                      Authorization: `Bearer ${userData.token}`,
+                    },
+                  }
+                );
+                Alert.alert("Thông báo", "Thành viên đã được xóa thành công");
+                // console.log("Thành viên đã được xóa thành công");
+              } catch (error) {
+                console.log("Đã xảy ra lỗi khi xóa thành viên:", error);
+              }
+            },
+          },
+        ],
+        { cancelable: true }
+      );
+    } catch (error) {
+      console.log("Đã xảy ra lỗi:", error);
+    }
   };
   const handleRenameGroup = async () => {
     // Xử lý logic khi người dùng xác nhận sửa đổi tên nhóm
@@ -1031,7 +1090,7 @@ const MessageDetailModal = ({ message, onClose, route, navigation }) => {
             <View style={styles.buttonRow}>
               <Button
                 title="Gán quyền nhóm trưởng"
-                onPress={handleAssignGroupAdmin}
+                onPress={()=>{handleAssignGroupAdmin(selectedMemberId)}}
               />
             </View>
           </View>

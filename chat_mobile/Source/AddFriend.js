@@ -4,7 +4,7 @@ import { AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const ip = "192.168.1.149";
+const ip = "192.168.110.193";
 
 export default function AddFriend({ navigation }) {
     const [users, setUsers] = useState([]);
