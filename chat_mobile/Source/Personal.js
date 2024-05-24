@@ -4,14 +4,16 @@ import {
   Text,
   ScrollView,
   Image,
-  ImageBackground,
   TextInput,
   Pressable,
+  StyleSheet,
 } from "react-native";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function User({ navigation }) {
   const [userData, setUserData] = useState(null);
@@ -26,7 +28,6 @@ export default function User({ navigation }) {
         const userDataString = await AsyncStorage.getItem("userData");
         const userDataObject = JSON.parse(userDataString);
         setUserData(userDataObject);
-        // console.log(response.data)
       } catch (error) {
         console.log("Error fetching data:", error);
       }
@@ -36,126 +37,98 @@ export default function User({ navigation }) {
   }, []);
 
   return (
-    <ScrollView>
-      <View>
-        <View style={styles.container}>
-          <AntDesign
-            name="search1"
-            size={25}
-            color="white"
-            style={styles.searchIconContainer}
-          />
-          <View style={styles.searchIconContainer}>
-            <TextInput placeholder="Tìm kiếm" style={styles.input}></TextInput>
+    <SafeAreaView style={styles.scrollView}>
+      <View style={styles.profileSection}>
+        <View style={styles.profileContainer}>
+          <Image source={require("../assets/avt1.png")} style={styles.avatar} />
+          <View style={styles.userInfo}>
+            <Text style={styles.userName}>{userData && userData.name}</Text>
+            <Text style={styles.userEmail}>{userData && userData.email}</Text>
           </View>
-          <Pressable style={styles.settingsIconContainer}>
-            <SimpleLineIcons name="settings" size={24} color="white" />
+          <Pressable style={styles.exchangeButton}>
+            <AntDesign name="checkcircleo" size={24} color="green" backgroundColor = "" />
           </Pressable>
         </View>
+        <View style={styles.separator} />
+        <Pressable style={styles.logoutButton} onPress={handlePress}>
+          <Text style={styles.logoutButtonText}>Đăng Xuất</Text>
+        </Pressable>
       </View>
-      <View style={styles.sectionContainer}>
-        <View style={styles.innerSectionContainer}>
-          <View style={{ flexDirection: "row" }}>
-            <Image
-              source={require("../assets/avt1.png")}
-              style={styles.avatarImage}
-            ></Image>
-            <View></View>
-            <View style={styles.userInfoContainer}>
-              <Text style={styles.userNameText}>
-                {userData && userData.name}
-              </Text>
-              <Text style={styles.viewProfileText}>
-                {userData && userData.email}
-              </Text>
-            </View>
-            <View style={styles.exchangeIconContainer}>
-              <FontAwesome name="exchange" size={24} color="black" />
-              <Text>hh</Text>
-            </View>
-          </View>
-          <View style={styles.sectionDivider}></View>
-        </View>
-
-        <View>
-          <Pressable style={styles.button} onPress={handlePress}>
-            <Text style={styles.buttonText}>Đăng Xuất</Text>
-          </Pressable>
-        </View>
-      </View>
-    </ScrollView>
+    </SafeAreaView>
   );
 }
-const styles = {
-  container: {
+
+const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: "#f0f0f0",
+    marginBottom: 10, // Ensure enough space for the bottom tab bar
+    marginTop: 10
+  },
+  header: {
     flexDirection: "row",
     backgroundColor: "#0099FF",
-    height: 50,
+    padding: 10,
     alignItems: "center",
-    justifyContent: "center",
   },
-  searchIconContainer: {
-    marginLeft: 20,
-    marginTop: 2,
+  icon: {
+    marginLeft: 10,
   },
   input: {
-    width: 200,
+    flex: 1,
     fontSize: 18,
     color: "white",
+    marginLeft: 10,
   },
-  settingsIconContainer: {
-    marginLeft: 90,
+  settingsButton: {
+    marginLeft: 10,
   },
-  sectionContainer: {
-    width: 420,
-    height: 1000,
-    backgroundColor: "#DCDCDC",
+  profileSection: {
+    padding: 20,
+    backgroundColor: "#ffffff",
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    marginTop: -20,
+    height: "auto"
   },
-  innerSectionContainer: {
-    width: 420,
-    height: 470,
-    backgroundColor: "white",
-  },
-  avatarImage: {
-    width: 50,
-    height: 50,
-    marginTop: 10,
-    marginLeft: 20,
-    borderRadius: 90,
-  },
-  userInfoContainer: {
-    marginTop: 10,
-    marginLeft: 20,
-  },
-  userNameText: {
-    marginTop: 10,
-    fontSize: 20,
-    marginLeft: 20,
-    fontWeight: 400,
-  },
-  viewProfileText: {
-    fontSize: 15,
-    marginLeft: 20,
-  },
-  exchangeIconContainer: {
-    marginTop: 20,
-    marginLeft: 130,
-  },
-  sectionDivider: {
-    borderWidth: 3,
-    borderColor: "#D3D3D3",
-    width: 420,
-    marginTop: 20,
-  },
-  button: {
-    height: 40,
-    borderRadius: 5,
-    backgroundColor: "#0084ff",
-    justifyContent: "center",
+  profileContainer: {
+    flexDirection: "row",
     alignItems: "center",
   },
-  buttonText: {
+  avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 35,
+  },
+  userInfo: {
+    flex: 1,
+    marginLeft: 20,
+  },
+  userName: {
+    fontSize: 20,
+    fontWeight: "600",
+    color: "#333",
+  },
+  userEmail: {
+    fontSize: 16,
+    color: "#666",
+  },
+  exchangeButton: {
+    padding: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#e0e0e0",
+    marginVertical: 20,
+  },
+  logoutButton: {
+    backgroundColor: "#0084ff",
+    borderRadius: 5,
+    paddingVertical: 10,
+    alignItems: "center",
+    marginTop: "157%"
+  },
+  logoutButtonText: {
     color: "#fff",
     fontSize: 16,
   },
-};
+});

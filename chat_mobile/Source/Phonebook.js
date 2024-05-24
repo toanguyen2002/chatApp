@@ -189,7 +189,7 @@ export default function Phonebook() {
           </View>
         )}
         {formToShow === "group" && (
-          <View style={{}}>
+          <View style={{width: "150%", left: -10}}>
             <View style={styles.tabContainer2}>
               <Pressable onPress={() => navigation.navigate("NewGroup")}>
                 <View
@@ -334,12 +334,16 @@ export default function Phonebook() {
                             )}
                             <Text style={styles.itemTime}>{item.timeSend}</Text>
                           </View>
+                          
                         </TouchableOpacity>
-                      ))}
+                        
+                      )
+                      )}
+                      
                   </View>
                 </View>
               </View>
-              <View style={styles.separator}></View>
+              {/* <View style={styles.separator}></View> */}
               <View></View>
             </View>
           </View>
@@ -366,10 +370,12 @@ export default function Phonebook() {
             <View style={{ marginLeft: 5, marginTop: 2 }}>
               <TextInput
                 placeholder="Tìm kiếm"
+                placeholderTextColor="white"
                 style={{
                   width: 200,
                   fontSize: 18,
                   color: "white",
+
                 }}
               ></TextInput>
             </View>
@@ -474,7 +480,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 2,
-    borderColor: "#2D4ADF",
+    borderColor: "#3498DB",
     borderRadius: 10,
     marginHorizontal: 5,
   },
@@ -495,12 +501,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderWidth: 2,
-    borderColor: "#2D4ADF",
+    borderColor: "#3498DB",
     borderRadius: 5,
     marginHorizontal: 5,
   },
   selectedChar: {
-    backgroundColor: "#2D4ADF",
+    backgroundColor: "#3498DB",
   },
   charText: {
     fontSize: 18,

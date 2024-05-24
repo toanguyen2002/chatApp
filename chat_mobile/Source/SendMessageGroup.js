@@ -153,7 +153,29 @@ const SendMessageGroup = () => {
       // console.error("Error picking documents:", error);
     }
   };
-
+  const callUser = async (id) => {
+    // window.open(`/room/${id}`)
+    const userDataString = await AsyncStorage.getItem("userData");
+    const userData = JSON.parse(userDataString);
+    try {
+      const dataSend = await axios.post(
+        `${ip}/message/`, {
+        chatId: route.params._id,
+        content: "http://localhost:5173" + `/room/${route.params._id}`,
+        typeMess: "videoCall"
+      },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          }
+        }
+      )
+      socket.emit("new message", dataSend.data)
+      socket.emit("render-box-chat", true)
+    } catch (error) {
+      console.log(error);
+    }
+  }
   const pickImage = async () => {
     let permissionResult;
     if (Platform.OS !== "web") {
@@ -400,6 +422,13 @@ const SendMessageGroup = () => {
             >
               {item.content}
             </Text>
+          ) : item.typeMess === "videoCall" ? (
+            <TouchableOpacity onPress={() => callUser(route.params._id)}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Icon name="videocam" size={20} color="red" />
+                <Text style={styles.textMess}>Video Call</Text>
+              </View>
+            </TouchableOpacity>
           ) : (
             <View>
               {item.ImageUrl.map((imgItem, index) => (
@@ -503,20 +532,20 @@ const SendMessageGroup = () => {
                   {(imgItem.url.endsWith(".png") ||
                     imgItem.url.endsWith(".jpg") ||
                     imgItem.url.endsWith(".jpeg")) && (
-                    <Pressable
-                      onPress={() => handleOpenWebView(imgItem.url)}
-                      android_ripple={{ color: "transparent" }}
-                    >
-                      <Image
-                        style={{
-                          width: 150,
-                          height: 200,
-                          resizeMode: "contain",
-                        }}
-                        source={{ uri: imgItem.url }}
-                      />
-                    </Pressable>
-                  )}
+                      <Pressable
+                        onPress={() => handleOpenWebView(imgItem.url)}
+                        android_ripple={{ color: "transparent" }}
+                      >
+                        <Image
+                          style={{
+                            width: 150,
+                            height: 200,
+                            resizeMode: "contain",
+                          }}
+                          source={{ uri: imgItem.url }}
+                        />
+                      </Pressable>
+                    )}
                   {imgItem.url.endsWith(".mp4") && (
                     <Pressable
                       onPress={() => handleOpenWebView(imgItem.url)}

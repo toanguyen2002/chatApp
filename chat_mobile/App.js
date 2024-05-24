@@ -5,16 +5,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { AntDesign, FontAwesome, Ionicons } from "@expo/vector-icons";
 import 'react-native-reanimated';
-import {
-  MessageTC,
-  Personal,
-  PhoneBook,
-  SenddMessage,
-  UiLogin,
-  UiRegister,
-  Diary,
-  Discover,
-} from "./Source";
+
 import Phonebook from "./Source/Phonebook";
 import AddFriend from "./Source/AddFriend";
 import Friend from "./Source/Friend";
@@ -22,7 +13,12 @@ import NewGroup from "./Source/NewGroup";
 import Resetpassword from "./Source/Resetpassword";
 import WebViewScreen from "./Source/WebViewScreen";
 import SendMessageGroup from "./Source/SendMessageGroup";
-
+import UiRegister from "./Source/UiRegister";
+import UiLogin from "./Source/UiLogin";
+import MessageTC from "./Source/MessageTC";
+import SenddMessage from "./Source/SenddMessage";
+import Personal from "./Source/Personal"
+import Diary from "./Source/Diary"
 export default function App() {
   const Stack = createNativeStackNavigator();
   return (
@@ -35,7 +31,6 @@ export default function App() {
         <Stack.Screen name="PhoneBook" component={Phonebook} />
         <Stack.Screen name="Personal" component={Personal} />
         <Stack.Screen name="Diary" component={Diary} />
-        <Stack.Screen name="Discover" component={Discover} />
         <Stack.Screen name="AddFriend" component={AddFriend} />
         <Stack.Screen name="Friend" component={Friend} />
         <Stack.Screen name="NewGroup" component={NewGroup} />
@@ -83,6 +78,8 @@ function BottomNavigation() {
         alignItems: "center",
         height: 80,
         backgroundColor: "#fff",
+        borderTopWidth: 1, 
+        borderTopColor: "gray"
       }}
     >
       <BottomTabButton
@@ -96,20 +93,6 @@ function BottomNavigation() {
         iconName="contacts"
         label="Danh bạ"
         screenName="PhoneBook"
-        navigation={navigation}
-        currentScreen={currentScreen}
-      />
-      <BottomTabButton
-        iconName="windows"
-        label="Khám phá"
-        screenName="Discover"
-        navigation={navigation}
-        currentScreen={currentScreen}
-      />
-      <BottomTabButton
-        iconName="time-outline"
-        label="Nhật ký"
-        screenName="Diary"
         navigation={navigation}
         currentScreen={currentScreen}
       />
